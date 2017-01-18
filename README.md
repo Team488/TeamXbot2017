@@ -1,4 +1,4 @@
-# FRC CommonLib Robot Template Project [![Build Status](https://travis-ci.org/Team488/TeamXbot2017.svg?branch=master)](https://travis-ci.org/Team488/TeamXbot2017)
+# TeamXbot2017 [![Build Status](https://travis-ci.org/Team488/TeamXbot2017.svg?branch=master)](https://travis-ci.org/Team488/TeamXbot2017)
 
 This is the repository for Team XBOT's 2017 code.
 
