@@ -1,9 +1,5 @@
-# FRC CommonLib Robot Template Project [![Build Status](https://travis-ci.org/Team488/FRCRobotTemplate.svg?branch=master)](https://travis-ci.org/Team488/FRCRobotTemplate)
+# FRC CommonLib Robot Template Project [![Build Status](https://travis-ci.org/Team488/TeamXbot2017.svg?branch=master)](https://travis-ci.org/Team488/TeamXbot2017)
 
-This is a template project which includes all the boilerplate to use our Seriously Common Lib. It can be forked and used as a robot project for the season if you want to use our library.
+This is the repository for Team XBOT's 2017 code.
 
-To find out more about the library, visit the [Seriously Common Lib repo](https://github.com/Team488/SeriouslyCommonLib).
-
-## Up-front warning
-
-This template, like our library as a whole, is a work-in-progress. See the library readme for more information.
+To find out more about the library we used to build this, visit the [Seriously Common Lib repo](https://github.com/Team488/SeriouslyCommonLib).
