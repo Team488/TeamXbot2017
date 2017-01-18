@@ -2,5 +2,5 @@ language: java
 jdk:
   - oraclejdk8
 script: 
-  - cd CompetitionTemplate
+  - cd Competition2017
   - ant check -f travis-build.xml
