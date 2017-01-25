@@ -3,6 +3,10 @@ package competition.subsystems;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.subsystems.collector.CollectorSubsystem;
+import competition.subsystems.collector.commands.EjectCollectorCommand;
+import competition.subsystems.collector.commands.IntakeCollectorCommand;
+import competition.subsystems.collector.commands.StopCollectorCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 
@@ -13,5 +17,10 @@ public class SubsystemDefaultCommandMap {
     @Inject
     public void setupDriveSubsystem(DriveSubsystem driveSubsystem, TankDriveWithJoysticksCommand command) {
         driveSubsystem.setDefaultCommand(command);
+    }
+    
+    @Inject
+    public void setupColectorSubsystem(CollectorSubsystem collectorSystem,StopCollectorCommand stop){
+        collectorSystem.setDefaultCommand(stop);
     }
 }
