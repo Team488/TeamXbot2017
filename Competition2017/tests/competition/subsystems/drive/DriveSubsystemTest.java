@@ -1,14 +1,20 @@
 package competition.subsystems.drive;
 
-import static org.junit.Assert.assertEquals;
 
+import org.junit.Before;
 import org.junit.Test;
 
-import xbot.common.injection.BaseWPITest;
-
-public class DriveSubsystemTest extends BaseWPITest {
-    @Test
-    public void testTankDrive() {
+public class DriveSubsystemTest extends DriveTestBase {
     
+    @Before
+    public void setUp() {        
+        super.setUp();
+    }
+    
+    @Test
+    public void trivialTankDriveTest() {
+        drive.tankDrivePowerMode(0.5, 0.5);
+        
+        verifyDriveSetpoints(0.5, 0.5);
     }
 }
