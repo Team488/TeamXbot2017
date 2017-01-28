@@ -1,10 +1,7 @@
 package competition.subsystems.drive;
 
+
 import static org.junit.Assert.assertEquals;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import xbot.common.controls.actuators.MockCANTalon;
 import xbot.common.injection.BaseWPITest;
 
