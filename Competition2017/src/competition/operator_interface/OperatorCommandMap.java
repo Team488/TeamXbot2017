@@ -3,10 +3,11 @@ package competition.operator_interface;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-
+import competition.subsystems.agitator.commands.SpinAgitatorBackwardsCommand;
+import competition.subsystems.agitator.commands.SpinAgitatorForwardsCommand;
+import competition.subsystems.agitator.commands.StopAgitatorCommand;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
-import competition.subsystems.collector.commands.StopCollectorCommand;
 
 @Singleton
 public class OperatorCommandMap {
@@ -27,9 +28,21 @@ public class OperatorCommandMap {
     public void setupCollectorCommands(
             OperatorInterface oi,
             EjectCollectorCommand eject,
-            IntakeCollectorCommand intake
-    )   {
+            IntakeCollectorCommand intake)
+    {
         oi.leftButtons.getifAvailable(1).whileHeld(eject);
         oi.leftButtons.getifAvailable(2).whileHeld(intake);
+    }
+    
+    @Inject
+    public void setupAgitatorCommands(
+            OperatorInterface oi,
+            SpinAgitatorForwardsCommand forwards,
+            SpinAgitatorBackwardsCommand backwards,
+            StopAgitatorCommand stop)
+    {
+        oi.leftButtons.getifAvailable(3).whenPressed(forwards);
+        oi.leftButtons.getifAvailable(4).whenPressed(backwards);
+        oi.leftButtons.getifAvailable(5).whenPressed(stop);
     }
 }
