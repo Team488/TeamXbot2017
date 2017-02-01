@@ -29,7 +29,11 @@ public class DriveSubsystem extends BaseSubsystem {
     private final DoubleProperty iVelprop;
     private final DoubleProperty dVelProp;
     private final DoubleProperty fVelProp;
-
+    private final DoubleProperty leftDriveEncoderTicksProp;
+    private final DoubleProperty rightDriveEncoderTicksProp;
+    private final DoubleProperty ticksPerInch;
+    private final DoubleProperty startPositionTicks;
+    
     @Inject
     public DriveSubsystem(WPIFactory factory, XPropertyManager propManager) {
         log.info("Creating DriveSubsystem");
@@ -38,10 +42,17 @@ public class DriveSubsystem extends BaseSubsystem {
         encoderCodesProperty = propManager.createPersistentProperty("Drive encoder codes per rev", 512);
         maxSpeedProperty = propManager.createPersistentProperty("Max drive motor speed (rotations per second)", 5);
 
-        pVelProp = propManager.createPersistentProperty("Drive Vel P", 2);
-        iVelprop = propManager.createPersistentProperty("Drive Vel I", 0);
-        dVelProp = propManager.createPersistentProperty("Drive Vel D", -100);
-        fVelProp = propManager.createPersistentProperty("Drive Vel F", 0);
+        pVelProp = propManager.createPersistentProperty("Drive vel P", 2);
+        iVelprop = propManager.createPersistentProperty("Drive vel I", 0);
+        dVelProp = propManager.createPersistentProperty("Drive vel D", -100);
+        fVelProp = propManager.createPersistentProperty("Drive vel F", 0);
+        
+        leftDriveEncoderTicksProp = propManager.createEphemeralProperty("Left drive encoder ticks", 0);
+        rightDriveEncoderTicksProp = propManager.createEphemeralProperty("Right drive encoder ticks", 0);
+        
+        ticksPerInch = propManager.createPersistentProperty("Ticks per inch", 25.33);
+        
+        startPositionTicks = propManager.createEphemeralProperty("Start position ticks", 0);
         
         this.leftDrive = factory.getCANTalonSpeedController(3);
         this.leftDriveSlave = factory.getCANTalonSpeedController(4);
@@ -54,11 +65,13 @@ public class DriveSubsystem extends BaseSubsystem {
         configMotorTeam(rightDrive, rightDriveSlave);
         rightDrive.createTelemetryProperties("Right master", propManager);
         rightDriveSlave.createTelemetryProperties("Right slave", propManager);
+
+        resetDisplacement();
     }
 
     private void configMotorTeam(XCANTalon master, XCANTalon slave) {
         // TODO: Check faults and voltage/temp/current
-        
+      
         // Master config
         master.setFeedbackDevice(FeedbackDevice.QuadEncoder);
         master.setBrakeEnableDuringNeutral(false);
@@ -148,7 +161,6 @@ public class DriveSubsystem extends BaseSubsystem {
      * @param motor used to access the motor to set and give data
      */
     private void updateMotorConfig(XCANTalon motor) {
-        motor.configEncoderCodesPerRev((int)encoderCodesProperty.get());
         motor.setP(pVelProp.get());
         motor.setI(iVelprop.get());
         motor.setD(dVelProp.get());
@@ -164,5 +176,25 @@ public class DriveSubsystem extends BaseSubsystem {
         leftDriveSlave.updateTelemetryProperties();
         rightDrive.updateTelemetryProperties();
         rightDriveSlave.updateTelemetryProperties();
+        
+        leftDriveEncoderTicksProp.set(leftDrive.getPosition());
+        rightDriveEncoderTicksProp.set(rightDrive.getPosition());
+    }
+    
+    public double getDisplacement() {
+        /* TODO add more values from other motors for accuracy */
+        return convertTicksToInches(rightDrive.getPosition() - startPositionTicks.get());
+    }
+    
+    public void resetDisplacement() {
+        startPositionTicks.set(rightDrive.getPosition());
+    }
+    
+    public double convertTicksToInches(double ticks) {
+        return ticks * ticksPerInch.get();
+    }
+    
+    public double convertInchesToTicks(double inches) {
+        return inches / ticksPerInch.get();
     }
 }
