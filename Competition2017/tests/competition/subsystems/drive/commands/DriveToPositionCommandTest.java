@@ -29,21 +29,6 @@ public class DriveToPositionCommandTest extends DriveTestBase {
         
         verifyDriveNegative();
     }
-  
-    @Test
-    public void isFinishedTest() {
-        DriveToPositionCommand command = injector.getInstance(DriveToPositionCommand.class);
-        
-        command.initialize();
-        command.setTargetPosition(2.0);
-        
-        drive.leftDrive.setPosition(drive.convertInchesToTicks(1.1));
-        drive.rightDrive.setPosition(drive.convertInchesToTicks(1.1));
-        
-        command.execute();
-        
-        assertTrue(command.isFinished());
-    }
  
     @Test
     public void toleranceTest() {
@@ -59,6 +44,12 @@ public class DriveToPositionCommandTest extends DriveTestBase {
         
         drive.rightDrive.setPosition(drive.convertInchesToTicks(0.1));
         command.execute();
+        for (int i = 0; i < 100; i++) {
+            command.execute();
+            
+            if (command.isFinished())
+                break;
+        }
         assertTrue(command.isFinished());
     }
 }

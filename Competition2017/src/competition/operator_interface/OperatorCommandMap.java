@@ -8,6 +8,8 @@ import competition.subsystems.agitator.commands.SpinAgitatorForwardsCommand;
 import competition.subsystems.agitator.commands.StopAgitatorCommand;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
+import competition.subsystems.drive.commands.DriveToPositionCommand;
+import competition.subsystems.drive.commands.ResetDisplacementCommand;
 
 @Singleton
 public class OperatorCommandMap {
@@ -44,5 +46,15 @@ public class OperatorCommandMap {
         oi.leftButtons.getifAvailable(3).whenPressed(forwards);
         oi.leftButtons.getifAvailable(4).whenPressed(backwards);
         oi.leftButtons.getifAvailable(5).whenPressed(stop);
+    }
+    
+    @Inject
+    public void setupDriveCommand(
+            DriveToPositionCommand driveToPosition, 
+            ResetDisplacementCommand resetDisplacement)
+    {
+        resetDisplacement.includeOnSmartDashboard();
+        driveToPosition.setTargetPosition(24);
+        driveToPosition.includeOnSmartDashboard("Drive 24inches");
     }
 }

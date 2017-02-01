@@ -33,6 +33,7 @@ public class DriveSubsystem extends BaseSubsystem {
     private final DoubleProperty rightDriveEncoderTicksProp;
     private final DoubleProperty ticksPerInch;
     private final DoubleProperty startPositionTicks;
+    private final DoubleProperty currentDisplacementInchProp;
     
     @Inject
     public DriveSubsystem(WPIFactory factory, XPropertyManager propManager) {
@@ -50,9 +51,10 @@ public class DriveSubsystem extends BaseSubsystem {
         leftDriveEncoderTicksProp = propManager.createEphemeralProperty("Left drive encoder ticks", 0);
         rightDriveEncoderTicksProp = propManager.createEphemeralProperty("Right drive encoder ticks", 0);
         
-        ticksPerInch = propManager.createPersistentProperty("Ticks per inch", 25.33);
+        ticksPerInch = propManager.createPersistentProperty("Ticks per inch", 2.533);
         
         startPositionTicks = propManager.createEphemeralProperty("Start position ticks", 0);
+        currentDisplacementInchProp = propManager.createEphemeralProperty("Current position inches", 0);
         
         this.leftDrive = factory.getCANTalonSpeedController(3);
         this.leftDriveSlave = factory.getCANTalonSpeedController(4);
@@ -61,6 +63,7 @@ public class DriveSubsystem extends BaseSubsystem {
         leftDriveSlave.createTelemetryProperties("Left slave", propManager);
         
         this.rightDrive = factory.getCANTalonSpeedController(1);
+        this.rightDrive.setInverted(true);
         this.rightDriveSlave = factory.getCANTalonSpeedController(2);
         configMotorTeam(rightDrive, rightDriveSlave);
         rightDrive.createTelemetryProperties("Right master", propManager);
@@ -75,7 +78,7 @@ public class DriveSubsystem extends BaseSubsystem {
         // Master config
         master.setFeedbackDevice(FeedbackDevice.QuadEncoder);
         master.setBrakeEnableDuringNeutral(false);
-        master.reverseSensor(false);
+        master.reverseSensor(true);
         master.enableLimitSwitches(false, false);
         
         master.configNominalOutputVoltage(0,  -0);
@@ -179,6 +182,7 @@ public class DriveSubsystem extends BaseSubsystem {
         
         leftDriveEncoderTicksProp.set(leftDrive.getPosition());
         rightDriveEncoderTicksProp.set(rightDrive.getPosition());
+        currentDisplacementInchProp.set(getDisplacement());
     }
     
     public double getDisplacement() {
@@ -191,10 +195,10 @@ public class DriveSubsystem extends BaseSubsystem {
     }
     
     public double convertTicksToInches(double ticks) {
-        return ticks * ticksPerInch.get();
+        return ticks / ticksPerInch.get();
     }
     
     public double convertInchesToTicks(double inches) {
-        return inches / ticksPerInch.get();
+        return inches * ticksPerInch.get();
     }
 }
