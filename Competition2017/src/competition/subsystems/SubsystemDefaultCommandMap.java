@@ -3,6 +3,8 @@ package competition.subsystems;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.subsystems.climbing.ClimbingSubsystem;
+import competition.subsystems.climbing.commands.StopClimbingCommand;
 import competition.subsystems.agitator.AgitatorSubsystem;
 import competition.subsystems.agitator.commands.StopAgitatorCommand;
 import competition.subsystems.collector.CollectorSubsystem;
@@ -20,12 +22,17 @@ public class SubsystemDefaultCommandMap {
     }
     
     @Inject
-    public void setupCollectorSubsystem(CollectorSubsystem collectorSystem,StopCollectorCommand stop){
+    public void setupClimbingSubsystem(ClimbingSubsystem climbingSystem,StopClimbingCommand stop) {
+        climbingSystem.setDefaultCommand(stop);
+    }
+    
+    @Inject
+        public void setupCollectorSubsystem(CollectorSubsystem collectorSystem,StopCollectorCommand stop) {
         collectorSystem.setDefaultCommand(stop);
     }
     
     @Inject
-    public void setupAgitatorSubsystem(AgitatorSubsystem agitatorSubsystem, StopAgitatorCommand stop){
+    public void setupAgitatorSubsystem(AgitatorSubsystem agitatorSubsystem, StopAgitatorCommand stop) {
         agitatorSubsystem.setDefaultCommand(stop);
     }
 }

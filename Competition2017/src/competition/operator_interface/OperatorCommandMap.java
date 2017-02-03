@@ -2,7 +2,10 @@ package competition.operator_interface;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
+import competition.subsystems.climbing.commands.AscendCommand;
+import competition.subsystems.climbing.commands.DescendClimbingCommand;
+import competition.subsystems.collector.commands.EjectCollectorCommand;
+import competition.subsystems.collector.commands.IntakeCollectorCommand;
 import competition.subsystems.agitator.commands.SpinAgitatorBackwardsCommand;
 import competition.subsystems.agitator.commands.SpinAgitatorForwardsCommand;
 import competition.subsystems.agitator.commands.StopAgitatorCommand;
@@ -37,6 +40,15 @@ public class OperatorCommandMap {
     }
     
     @Inject
+    public void setupClimbingCommands(
+            OperatorInterface oi,
+            DescendClimbingCommand descend,
+            AscendCommand ascend
+    )   {
+        oi.leftButtons.getifAvailable(6).whileHeld(descend);
+        oi.leftButtons.getifAvailable(7).whileHeld(ascend);
+    }
+
     public void setupAgitatorCommands(
             OperatorInterface oi,
             SpinAgitatorForwardsCommand forwards,
