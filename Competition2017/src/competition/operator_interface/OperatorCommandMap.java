@@ -2,10 +2,14 @@ package competition.operator_interface;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import competition.subsystems.shooter.ShooterSubsystem;
+import competition.subsystems.shooter.commands.StepShooterPowerCommand;
+import competition.subsystems.shooter.commands.SetShooterSpeedCommand;
+import competition.subsystems.shooter.commands.StopShooterCommand;
+import xbot.common.properties.XPropertyManager;
 import competition.subsystems.climbing.commands.AscendCommand;
 import competition.subsystems.climbing.commands.DescendClimbingCommand;
-import competition.subsystems.collector.commands.EjectCollectorCommand;
-import competition.subsystems.collector.commands.IntakeCollectorCommand;
 import competition.subsystems.agitator.commands.SpinAgitatorBackwardsCommand;
 import competition.subsystems.agitator.commands.SpinAgitatorForwardsCommand;
 import competition.subsystems.agitator.commands.StopAgitatorCommand;
@@ -31,6 +35,17 @@ public class OperatorCommandMap {
     }
     */
     
+    @Inject
+    public void setupLauncherCommands(
+            OperatorInterface oi,
+            ShooterSubsystem shooterSubsystem,
+            XPropertyManager propertyManager
+            ) {
+        oi.leftButtons.getifAvailable(6).whenPressed(new StepShooterPowerCommand(shooterSubsystem.getLeftShooter()));
+        oi.leftButtons.getifAvailable(7).whenPressed(new StopShooterCommand(shooterSubsystem.getLeftShooter()));
+        oi.leftButtons.getifAvailable(8).whenPressed(new SetShooterSpeedCommand(shooterSubsystem.getLeftShooter(),propertyManager));
+    }
+
     @Inject
     public void setupCollectorCommands(
             OperatorInterface oi,

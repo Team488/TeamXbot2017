@@ -11,6 +11,10 @@ import competition.subsystems.collector.CollectorSubsystem;
 import competition.subsystems.collector.commands.StopCollectorCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
+import competition.subsystems.shooter.ShooterSubsystem;
+import competition.subsystems.shooter.SideShooterSubsystem;
+import competition.subsystems.shooter.commands.ContinueShooterActionCommand;
+import competition.subsystems.shooter.commands.StopShooterCommand;
 
 @Singleton
 public class SubsystemDefaultCommandMap {
@@ -22,6 +26,11 @@ public class SubsystemDefaultCommandMap {
     }
     
     @Inject
+
+    public void setupFuelLauncherSubsystem(ShooterSubsystem fuelLauncher, ContinueShooterActionCommand command) {
+        fuelLauncher.setDefaultCommand(command);
+    }
+    
     public void setupClimbingSubsystem(ClimbingSubsystem climbingSystem,StopClimbingCommand stop) {
         climbingSystem.setDefaultCommand(stop);
     }
