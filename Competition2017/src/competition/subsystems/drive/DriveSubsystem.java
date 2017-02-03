@@ -8,6 +8,7 @@ import com.google.inject.Singleton;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 import xbot.common.command.BaseSubsystem;
+import xbot.common.command.TelemetrySource;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.MathUtils;
@@ -15,7 +16,7 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
-public class DriveSubsystem extends BaseSubsystem {
+public class DriveSubsystem extends BaseSubsystem implements TelemetrySource {
     private static Logger log = Logger.getLogger(DriveSubsystem.class);
 
     public final XCANTalon leftDrive;
@@ -140,7 +141,7 @@ public class DriveSubsystem extends BaseSubsystem {
         leftDrive.set(convertPowerToVelocityTarget(leftPower));
         rightDrive.set(convertPowerToVelocityTarget(rightPower));
         
-        updateMotorTelemetry();
+        updateTelemetry();
     }
     
     /**
@@ -156,7 +157,7 @@ public class DriveSubsystem extends BaseSubsystem {
         leftDrive.set(leftPower);
         rightDrive.set(rightPower);
         
-        updateMotorTelemetry();
+        updateTelemetry();
     }
     
     /**
@@ -168,21 +169,6 @@ public class DriveSubsystem extends BaseSubsystem {
         motor.setI(iVelprop.get());
         motor.setD(dVelProp.get());
         motor.setF(fVelProp.get());
-    }
-    
-    /**
-     * Get values from robot to output on the teleop interface
-     * IMPORTANT: When setting power to motors call this method
-     */
-    public void updateMotorTelemetry() {
-        leftDrive.updateTelemetryProperties();
-        leftDriveSlave.updateTelemetryProperties();
-        rightDrive.updateTelemetryProperties();
-        rightDriveSlave.updateTelemetryProperties();
-        
-        leftDriveEncoderTicksProp.set(leftDrive.getPosition());
-        rightDriveEncoderTicksProp.set(rightDrive.getPosition());
-        currentDisplacementInchProp.set(getDistance());
     }
     
     public double getDistance() {
@@ -200,5 +186,21 @@ public class DriveSubsystem extends BaseSubsystem {
     
     public double convertInchesToTicks(double inches) {
         return inches * ticksPerInch.get();
+    }
+
+    /**
+     * Get values from robot to output on the teleop interface
+     * IMPORTANT: When setting power to motors call this method
+     */
+    @Override
+    public void updateTelemetry() {
+        leftDrive.updateTelemetryProperties();
+        leftDriveSlave.updateTelemetryProperties();
+        rightDrive.updateTelemetryProperties();
+        rightDriveSlave.updateTelemetryProperties();
+        
+        leftDriveEncoderTicksProp.set(leftDrive.getPosition());
+        rightDriveEncoderTicksProp.set(rightDrive.getPosition());
+        currentDisplacementInchProp.set(getDistance());
     }
 }
