@@ -51,7 +51,7 @@ public class DriveSubsystem extends BaseSubsystem {
         leftDriveEncoderTicksProp = propManager.createEphemeralProperty("Left drive encoder ticks", 0);
         rightDriveEncoderTicksProp = propManager.createEphemeralProperty("Right drive encoder ticks", 0);
         
-        ticksPerInch = propManager.createPersistentProperty("Ticks per inch", 2.533);
+        ticksPerInch = propManager.createPersistentProperty("Ticks per inch", 25.33);
         
         startPositionTicks = propManager.createEphemeralProperty("Start position ticks", 0);
         currentDisplacementInchProp = propManager.createEphemeralProperty("Current position inches", 0);
@@ -69,7 +69,7 @@ public class DriveSubsystem extends BaseSubsystem {
         rightDrive.createTelemetryProperties("Right master", propManager);
         rightDriveSlave.createTelemetryProperties("Right slave", propManager);
 
-        resetDisplacement();
+        resetDistance();
     }
 
     private void configMotorTeam(XCANTalon master, XCANTalon slave) {
@@ -182,15 +182,15 @@ public class DriveSubsystem extends BaseSubsystem {
         
         leftDriveEncoderTicksProp.set(leftDrive.getPosition());
         rightDriveEncoderTicksProp.set(rightDrive.getPosition());
-        currentDisplacementInchProp.set(getDisplacement());
+        currentDisplacementInchProp.set(getDistance());
     }
     
-    public double getDisplacement() {
+    public double getDistance() {
         /* TODO add more values from other motors for accuracy */
         return convertTicksToInches(rightDrive.getPosition() - startPositionTicks.get());
     }
     
-    public void resetDisplacement() {
+    public void resetDistance() {
         startPositionTicks.set(rightDrive.getPosition());
     }
     

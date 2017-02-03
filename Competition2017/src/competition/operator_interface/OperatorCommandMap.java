@@ -11,8 +11,10 @@ import competition.subsystems.agitator.commands.SpinAgitatorForwardsCommand;
 import competition.subsystems.agitator.commands.StopAgitatorCommand;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
-import competition.subsystems.drive.commands.DriveToPositionCommand;
-import competition.subsystems.drive.commands.ResetDisplacementCommand;
+import competition.subsystems.drive.commands.DriveForDistanceCommand;
+import competition.subsystems.drive.commands.ResetDistanceCommand;
+import xbot.common.properties.DoubleProperty;
+import xbot.common.properties.XPropertyManager;
 
 @Singleton
 public class OperatorCommandMap {
@@ -62,11 +64,13 @@ public class OperatorCommandMap {
     
     @Inject
     public void setupDriveCommand(
-            DriveToPositionCommand driveToPosition, 
-            ResetDisplacementCommand resetDisplacement)
+            DriveForDistanceCommand driveForDistance, 
+            ResetDistanceCommand resetDisplacement,
+            XPropertyManager propManager)
     {
+        DoubleProperty deltaDistance = propManager.createPersistentProperty("Drive for distance test distance", 20);
         resetDisplacement.includeOnSmartDashboard();
-        driveToPosition.setTargetPosition(24);
-        driveToPosition.includeOnSmartDashboard("Drive 24inches");
+        driveForDistance.setDeltaDistance(deltaDistance);
+        driveForDistance.includeOnSmartDashboard("Test drive for distance");
     }
 }

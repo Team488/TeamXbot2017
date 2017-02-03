@@ -6,12 +6,12 @@ import org.junit.Test;
 
 import competition.subsystems.drive.DriveTestBase;
 
-public class DriveToPositionCommandTest extends DriveTestBase {
+public class DriveForDistanceTest extends DriveTestBase {
  
     @Test
     public void positiveDistanceTest() {
-        DriveToPositionCommand command = injector.getInstance(DriveToPositionCommand.class);
-        command.setTargetPosition(5);
+        DriveForDistanceCommand command = injector.getInstance(DriveForDistanceCommand.class);
+        command.setDeltaDistance(5);
         
         command.initialize();
         command.execute();
@@ -21,8 +21,8 @@ public class DriveToPositionCommandTest extends DriveTestBase {
     
     @Test
     public void negativeDistanceTest() {
-        DriveToPositionCommand command = injector.getInstance(DriveToPositionCommand.class);
-        command.setTargetPosition(-5);
+        DriveForDistanceCommand command = injector.getInstance(DriveForDistanceCommand.class);
+        command.setDeltaDistance(-5);
         
         command.initialize();
         command.execute();
@@ -32,10 +32,10 @@ public class DriveToPositionCommandTest extends DriveTestBase {
  
     @Test
     public void toleranceTest() {
-        DriveToPositionCommand command = injector.getInstance(DriveToPositionCommand.class);
+        DriveForDistanceCommand command = injector.getInstance(DriveForDistanceCommand.class);
 
         command.initialize();
-        command.setTargetPosition(1.0);
+        command.setDeltaDistance(1.0);
         
         drive.rightDrive.setPosition(drive.convertInchesToTicks(-1));
 
