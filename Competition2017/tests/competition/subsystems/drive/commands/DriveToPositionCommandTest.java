@@ -1,6 +1,6 @@
 package competition.subsystems.drive.commands;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -47,8 +47,9 @@ public class DriveToPositionCommandTest extends DriveTestBase {
         for (int i = 0; i < 100; i++) {
             command.execute();
             
-            if (command.isFinished())
+            if (command.isFinished()) {
                 break;
+            }
         }
         assertTrue(command.isFinished());
     }
