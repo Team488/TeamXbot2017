@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
+import competition.subsystems.RobotSide;
 import edu.wpi.first.wpilibj.Timer;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANTalon;
@@ -20,12 +21,8 @@ public class SideShooterSubsystem extends BaseSubsystem {
     private static Logger log = Logger.getLogger(ShooterSubsystem.class);
     
     private final XCANTalon masterMotor;
-    public enum ShooterSide {
-        Left, 
-        Right
-    }
     
-    private final ShooterSide side;
+    private final RobotSide side;
     
     // output telemetry properties
     private final DoubleProperty shooterTestingPowerStep ;
@@ -44,7 +41,7 @@ public class SideShooterSubsystem extends BaseSubsystem {
     private final DoubleProperty shooterSpeedThresh;
     
    
-    public SideShooterSubsystem(int motor, ShooterSide side, WPIFactory factory, XPropertyManager propManager){
+    public SideShooterSubsystem(int motor, RobotSide side, WPIFactory factory, XPropertyManager propManager){
         log.info("Creating " + side + " Shooter");
         this.side = side;
         
@@ -176,7 +173,7 @@ public class SideShooterSubsystem extends BaseSubsystem {
     public double getPowerStep(){
         return shooterTestingPowerStep.get();
     }
-    public ShooterSide getSide(){
+    public RobotSide getSide(){
         return side;
     }
 }

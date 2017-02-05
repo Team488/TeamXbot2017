@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import competition.subsystems.shooter.SideShooterSubsystem.ShooterSide;
+import competition.subsystems.RobotSide;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.properties.DoubleProperty;
@@ -22,9 +22,8 @@ public class ShooterSubsystem extends BaseSubsystem {
     @Inject
     public ShooterSubsystem(WPIFactory factory, XPropertyManager propManager){
         log.info("Creating ShooterSubsystem");
-        SideShooterSubsystem leftShooter = new SideShooterSubsystem(2, ShooterSide.Left, factory, propManager);
-        SideShooterSubsystem rightShooter = new SideShooterSubsystem(3, ShooterSide.Right, factory, propManager);
-        
+        SideShooterSubsystem leftShooter = new SideShooterSubsystem(2, RobotSide.Left, factory, propManager);
+        SideShooterSubsystem rightShooter = new SideShooterSubsystem(3, RobotSide.Right, factory, propManager);
     }
     public SideShooterSubsystem getLeftShooter(){
         return leftShooter;
