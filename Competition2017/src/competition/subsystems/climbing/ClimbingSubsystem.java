@@ -12,7 +12,6 @@ import xbot.common.properties.XPropertyManager;
 
 @Singleton
 public class ClimbingSubsystem extends BaseSubsystem {
-
     private static Logger log = Logger.getLogger(ClimbingSubsystem.class);
 
     private final DoubleProperty ascendPowerProperty;
@@ -21,7 +20,6 @@ public class ClimbingSubsystem extends BaseSubsystem {
 
     @Inject
     public ClimbingSubsystem(WPIFactory factory, XPropertyManager propManager){
-
         log.info("Creating Climbing Subsystem");
 
         climbingMotor = factory.getCANTalonSpeedController(5);
@@ -33,18 +31,15 @@ public class ClimbingSubsystem extends BaseSubsystem {
         ascendPowerProperty = propManager.createPersistentProperty("Climber ascend power", 0.5);
     }
 
-    public void stop(){
-
+    public void stop() {
         climbingMotor.set(0);
     }
 
-    public void ascend(){
-
+    public void ascend() {
         climbingMotor.set(ascendPowerProperty.get());
     }
 
-    public void descend(){
-
+    public void descend() {
         climbingMotor.set(descendPowerProperty.get());
     }
 }

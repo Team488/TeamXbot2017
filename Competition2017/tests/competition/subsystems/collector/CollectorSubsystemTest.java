@@ -2,7 +2,6 @@ package competition.subsystems.collector;
 
 import org.junit.Test;
 
-
 public class CollectorSubsystemTest extends CollectorTestBase {
     
    
