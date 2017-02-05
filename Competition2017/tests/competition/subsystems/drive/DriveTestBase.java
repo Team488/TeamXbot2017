@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import xbot.common.controls.actuators.MockCANTalon;
+import xbot.common.controls.sensors.MockGyro;
 import xbot.common.injection.BaseWPITest;
 
 public abstract class DriveTestBase extends BaseWPITest {
@@ -29,6 +30,10 @@ public abstract class DriveTestBase extends BaseWPITest {
         assertEquals(right, ((MockCANTalon)drive.rightDrive).getSetpoint(), 0.001);
     }
     
+    public void setRobotHeading(double heading) {
+        mockRobotIO.setGyroHeading(heading);
+    }
+        
     public void verifyDrivePositive() {
         assertTrue(((MockCANTalon)drive.leftDrive).getSetpoint() > 0);
         assertTrue(((MockCANTalon)drive.rightDrive).getSetpoint() > 0);

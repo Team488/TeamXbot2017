@@ -10,6 +10,8 @@ import com.ctre.CANTalon.TalonControlMode;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.TelemetrySource;
 import xbot.common.controls.actuators.XCANTalon;
+import xbot.common.controls.sensors.NavImu.ImuType;
+import xbot.common.controls.sensors.XGyro;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.MathUtils;
 import xbot.common.properties.DoubleProperty;
@@ -18,6 +20,7 @@ import xbot.common.properties.XPropertyManager;
 @Singleton
 public class DriveSubsystem extends BaseSubsystem implements TelemetrySource {
     private static Logger log = Logger.getLogger(DriveSubsystem.class);
+    public final XGyro imu;
 
     public final XCANTalon leftDrive;
     public final XCANTalon leftDriveSlave;
@@ -39,6 +42,7 @@ public class DriveSubsystem extends BaseSubsystem implements TelemetrySource {
     @Inject
     public DriveSubsystem(WPIFactory factory, XPropertyManager propManager) {
         log.info("Creating DriveSubsystem");
+        imu = factory.getGyro(ImuType.navX);
 
         // TODO: Update these defaults. The current values are blind guesses.
         encoderCodesProperty = propManager.createPersistentProperty("Drive encoder codes per rev", 512);
