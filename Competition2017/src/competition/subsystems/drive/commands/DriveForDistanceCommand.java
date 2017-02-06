@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 
 import xbot.common.command.BaseCommand;
+import xbot.common.math.ContiguousHeading;
 import xbot.common.math.PIDManager;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
@@ -26,6 +27,10 @@ public class DriveForDistanceCommand extends BaseCommand {
 
     private double previousPositionInches;
     
+    private final PIDManager headingDrivePid;
+    private ContiguousHeading targetHeading;
+    public final double defaultPValue = 1/80d;
+
     private int onTargetCount = 0;
     
     @Inject
@@ -33,8 +38,10 @@ public class DriveForDistanceCommand extends BaseCommand {
         this.driveSubsystem = driveSubsystem;
         this.requires(driveSubsystem);
         this.travelManager = new PIDManager("Drive to position", propManager, 0.1, 0, 0, 0.5, -0.5);
-        
-        onTargetCountThresholdProp = propManager.createPersistentProperty("DrvToPos min stabilization time", 3);
+
+        headingDrivePid = new PIDManager("Heading module", propManager, defaultPValue, 0, 0);
+        targetHeading = new ContiguousHeading();
+        onTargetCountThresholdProp = propManager.createPersistentProperty("DrvToPos min stabilization loop count", 3);
         distanceToleranceInches = propManager.createPersistentProperty("Distance tolerance inches", 1.0);
     }
     
@@ -59,6 +66,8 @@ public class DriveForDistanceCommand extends BaseCommand {
         onTargetCount = 0;
         previousPositionInches = driveSubsystem.getDistance();
         
+        targetHeading = driveSubsystem.imu.getYaw();
+        
         if (deltaDistanceProp != null) {
             this.targetDistance = driveSubsystem.getDistance() + deltaDistanceProp.get();
         } else {
@@ -71,7 +80,19 @@ public class DriveForDistanceCommand extends BaseCommand {
     public void execute() {
         double power = travelManager.calculate(targetDistance, driveSubsystem.getDistance());
         
-        driveSubsystem.tankDrivePowerMode(power, power);
+        double leftPower = power - calculateHeadingPower();
+        double rightPower = power + calculateHeadingPower();
+        
+        driveSubsystem.tankDrivePowerMode(leftPower, rightPower);
+    }
+    
+    public double calculateHeadingPower() {
+
+        double errorInDegrees = targetHeading.difference(driveSubsystem.imu.getYaw());
+        double normalizedError = errorInDegrees / 180;
+        double rotationalPower = headingDrivePid.calculate(0, normalizedError);
+
+        return rotationalPower;
     }
     
     @Override
