@@ -7,6 +7,7 @@ import com.google.inject.Singleton;
 import competition.subsystems.RobotSide;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.injection.wpi_factories.WPIFactory;
+import xbot.common.logging.RobotAssertionManager;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
@@ -21,14 +22,14 @@ public class FeederSubsystem extends BaseSubsystem {
         protected int rightMotorIndex = 44;
 
         @Inject
-        public FeederSubsystem(WPIFactory factory, XPropertyManager propManager){
+        public FeederSubsystem(WPIFactory factory, XPropertyManager propManager, RobotAssertionManager assertionManager){
             log.info("Creating FeederSubsystem");
-            createLeftAndRightFeeders(factory, propManager);
+            createLeftAndRightFeeders(factory, propManager, assertionManager);
         }
         
-        protected void createLeftAndRightFeeders(WPIFactory factory, XPropertyManager propManager) {
-            leftFeeder = new SideFeederSubsystem(leftMotorIndex, RobotSide.Left, factory, propManager);
-            rightFeeder = new SideFeederSubsystem(rightMotorIndex, RobotSide.Right, factory, propManager);
+        protected void createLeftAndRightFeeders(WPIFactory factory, XPropertyManager propManager, RobotAssertionManager assertionManager) {
+            leftFeeder = new SideFeederSubsystem(leftMotorIndex, RobotSide.Left, factory, propManager, assertionManager);
+            rightFeeder = new SideFeederSubsystem(rightMotorIndex, RobotSide.Right, factory, propManager, assertionManager);
         }
 
         public SideFeederSubsystem getLeftFeeder(){

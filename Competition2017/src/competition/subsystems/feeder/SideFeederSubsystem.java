@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Timer;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.WPIFactory;
+import xbot.common.logging.RobotAssertionManager;
 import xbot.common.math.PIDPropertyManager;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
@@ -36,12 +37,12 @@ public class SideFeederSubsystem extends BaseSubsystem {
     
     private final PIDPropertyManager pidProperties;
 
-    public SideFeederSubsystem(int motor, RobotSide side, WPIFactory factory, XPropertyManager propManager){
+    public SideFeederSubsystem(int motor, RobotSide side, WPIFactory factory, XPropertyManager propManager, RobotAssertionManager assertionManager){
         log.info("Creating " + side + " Feeder");
 
         this.side = side;
         
-        this.pidProperties = new PIDPropertyManager("SideFeeder", propManager, 0, 0, 0, 0);
+        this.pidProperties = new PIDPropertyManager("SideFeeder", propManager, assertionManager, 0, 0, 0, 0);
         
         feederSpeedThresh = propManager.createPersistentProperty(side + "Feeder nominal speed thresh (TPC)", motor);
         feederCurrentSpeed = propManager.createEphemeralProperty(side + "Feeder current speed (TPC)", 0);

@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 import xbot.common.command.BaseCommand;
+import xbot.common.logging.RobotAssertionManager;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.PIDManager;
 import xbot.common.properties.XPropertyManager;
@@ -22,15 +23,18 @@ public class RotateToHeadingCommand extends BaseCommand{
     private static Logger log = Logger.getLogger(RotateToHeadingCommand.class);
     
     @Inject
-    public RotateToHeadingCommand(DriveSubsystem driveSubsystem, XPropertyManager propMan) {
+    public RotateToHeadingCommand(DriveSubsystem driveSubsystem, XPropertyManager propMan, RobotAssertionManager assertionManager) {
 
         this.drive = driveSubsystem;
-        headingDrivePid = new PIDManager("Rotate to heading", propMan, defaultPValue, 0, 0);
+        headingDrivePid = new PIDManager("Rotate to heading", propMan, assertionManager, defaultPValue, 0, 0);
         
         // Default values - under the hood they are properties, so they can be changed
         // on the SmartDashboard at runtime.
         headingDrivePid.setErrorThreshold(3); // error in degrees, since degrees are used for the calculate call in execute()
         headingDrivePid.setDerivativeThreshold(3.0 / 20); // 3 degrees per second, divided by 20, since derivative is calculated 20 times a second
+        
+        headingDrivePid.setEnableErrorThreshold(true);
+        headingDrivePid.setEnableDerivativeThreshold(true);
     }
 
     public void setTargetHeading(double heading) {

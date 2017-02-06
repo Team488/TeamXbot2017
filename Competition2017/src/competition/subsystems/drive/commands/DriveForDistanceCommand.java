@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 
 import xbot.common.command.BaseCommand;
+import xbot.common.logging.RobotAssertionManager;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.PIDManager;
 import xbot.common.properties.DoubleProperty;
@@ -34,12 +35,12 @@ public class DriveForDistanceCommand extends BaseCommand {
     private int onTargetCount = 0;
     
     @Inject
-    public DriveForDistanceCommand(DriveSubsystem driveSubsystem, XPropertyManager propManager) {
+    public DriveForDistanceCommand(DriveSubsystem driveSubsystem, XPropertyManager propManager, RobotAssertionManager assertionManager) {
         this.driveSubsystem = driveSubsystem;
         this.requires(driveSubsystem);
-        this.travelManager = new PIDManager("Drive to position", propManager, 0.1, 0, 0, 0.5, -0.5);
+        this.travelManager = new PIDManager("Drive to position", propManager, assertionManager, 0.1, 0, 0, 0.5, -0.5);
 
-        headingDrivePid = new PIDManager("Heading module", propManager, defaultPValue, 0, 0);
+        headingDrivePid = new PIDManager("Heading module", propManager, assertionManager, defaultPValue, 0, 0);
         targetHeading = new ContiguousHeading();
         onTargetCountThresholdProp = propManager.createPersistentProperty("DrvToPos min stabilization loop count", 3);
         distanceToleranceInches = propManager.createPersistentProperty("Distance tolerance inches", 1.0);

@@ -8,7 +8,7 @@ import com.google.inject.Singleton;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 import xbot.common.command.BaseSubsystem;
-import xbot.common.command.TelemetrySource;
+import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.controls.sensors.NavImu.ImuType;
 import xbot.common.controls.sensors.XGyro;
@@ -18,7 +18,7 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
-public class DriveSubsystem extends BaseSubsystem implements TelemetrySource {
+public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource {
     private static Logger log = Logger.getLogger(DriveSubsystem.class);
     public final XGyro imu;
 
@@ -144,8 +144,8 @@ public class DriveSubsystem extends BaseSubsystem implements TelemetrySource {
 
         leftDrive.set(convertPowerToVelocityTarget(leftPower));
         rightDrive.set(convertPowerToVelocityTarget(rightPower));
-        
-        updateTelemetry();
+
+        updatePeriodicData();
     }
     
     /**
@@ -161,7 +161,7 @@ public class DriveSubsystem extends BaseSubsystem implements TelemetrySource {
         leftDrive.set(leftPower);
         rightDrive.set(rightPower);
         
-        updateTelemetry();
+        updatePeriodicData();
     }
     
     /**
@@ -197,7 +197,7 @@ public class DriveSubsystem extends BaseSubsystem implements TelemetrySource {
      * IMPORTANT: When setting power to motors call this method
      */
     @Override
-    public void updateTelemetry() {
+    public void updatePeriodicData() {
         leftDrive.updateTelemetryProperties();
         leftDriveSlave.updateTelemetryProperties();
         rightDrive.updateTelemetryProperties();
