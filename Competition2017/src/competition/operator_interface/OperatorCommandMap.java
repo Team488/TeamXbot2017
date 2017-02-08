@@ -10,13 +10,13 @@ import competition.subsystems.shooter.commands.StopShooterCommand;
 import xbot.common.properties.XPropertyManager;
 import competition.subsystems.climbing.commands.AscendCommand;
 import competition.subsystems.climbing.commands.DescendClimbingCommand;
-import competition.subsystems.agitator.commands.SpinAgitatorBackwardsCommand;
-import competition.subsystems.agitator.commands.SpinAgitatorForwardsCommand;
-import competition.subsystems.agitator.commands.StopAgitatorCommand;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.ResetDistanceCommand;
+import competition.subsystems.eggbeater.commands.SpinEggbeaterBackwardsCommand;
+import competition.subsystems.eggbeater.commands.SpinEggbeaterForwardsCommand;
+import competition.subsystems.eggbeater.commands.StopEggbeaterCommand;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
@@ -66,11 +66,11 @@ public class OperatorCommandMap {
         oi.leftButtons.getifAvailable(7).whileHeld(ascend);
     }
 
-    public void setupAgitatorCommands(
+    public void setupEggbeaterCommands(
             OperatorInterface oi,
-            SpinAgitatorForwardsCommand forwards,
-            SpinAgitatorBackwardsCommand backwards,
-            StopAgitatorCommand stop)
+            SpinEggbeaterForwardsCommand forwards,
+            SpinEggbeaterBackwardsCommand backwards,
+            StopEggbeaterCommand stop)
     {
         oi.leftButtons.getifAvailable(3).whenPressed(forwards);
         oi.leftButtons.getifAvailable(4).whenPressed(backwards);

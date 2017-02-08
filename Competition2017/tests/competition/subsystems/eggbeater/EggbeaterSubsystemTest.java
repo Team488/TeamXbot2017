@@ -1,25 +1,25 @@
-package competition.subsystems.agitator;
+package competition.subsystems.eggbeater;
 
 import org.junit.Test;
 
-public class AgitatorSubsystemTest extends AgitatorTestBase{
+public class EggbeaterSubsystemTest extends EggbeaterTestBase{
         
     @Test
     public void stopTest(){
         agitator.stop();
-        verifyAgitatorSetpoints(0);
+        verifyEggbeaterSetpoints(0);
     }
     
     @Test
     public void spinForwardsTest(){
         agitator.spinForwards();
-        verifyAgitatorSetpoints(agitator.motorPowerProperty.get());
+        verifyEggbeaterSetpoints(agitator.motorPowerProperty.get());
     }
     
     @Test
     public void spinBackwardsTest(){
         agitator.spinBackwards();
-        verifyAgitatorSetpoints(agitator.motorPowerProperty.get() * -1);
+        verifyEggbeaterSetpoints(agitator.motorPowerProperty.get() * -1);
     }
     
     @Test
