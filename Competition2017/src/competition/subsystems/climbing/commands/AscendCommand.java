@@ -13,18 +13,15 @@ public class AscendCommand extends BaseCommand {
 
     @Inject
     public AscendCommand(ClimbingSubsystem climbingSystem){
-
         this.climbingSystem = climbingSystem;  
         this.requires(climbingSystem);
     }
 
     public void initialize() {
-
         log.info("Initializing AscendCommand");
     }
 
     public void execute(){
-
         climbingSystem.ascend();
     }
 }

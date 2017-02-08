@@ -3,8 +3,10 @@ package competition.operator_interface;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import edu.wpi.first.wpilibj.XboxController;
 import xbot.common.controls.sensors.JoystickButtonManager;
 import xbot.common.controls.sensors.XJoystick;
+import xbot.common.controls.sensors.XXboxController;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.logging.RobotAssertionManager;
 
@@ -16,6 +18,8 @@ import xbot.common.logging.RobotAssertionManager;
 public class OperatorInterface {
     public XJoystick leftJoystick;
     public XJoystick rightJoystick;
+    
+    public XXboxController controller; 
 
     public JoystickButtonManager leftButtons;
     public JoystickButtonManager rightButtons;
@@ -24,6 +28,7 @@ public class OperatorInterface {
     public OperatorInterface(WPIFactory factory, RobotAssertionManager assertionManager) {
         leftJoystick = factory.getJoystick(1);
         rightJoystick = factory.getJoystick(2);
+        controller = factory.getGamepad(0);
 
         leftJoystick.setYInversion(true);
         rightJoystick.setYInversion(true);

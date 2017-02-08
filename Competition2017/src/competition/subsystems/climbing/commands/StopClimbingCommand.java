@@ -19,12 +19,10 @@ public class StopClimbingCommand extends BaseCommand {
     }
 
     public void initialize() {
-
         log.info("Initializing StopClimbingCommand");
     }
 
     public void execute(){
-
         climbingSystem.stop();
     }
 }
