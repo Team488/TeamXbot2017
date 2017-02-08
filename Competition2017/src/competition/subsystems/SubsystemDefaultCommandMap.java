@@ -26,7 +26,6 @@ public class SubsystemDefaultCommandMap {
     }
     
     @Inject
-
     public void setupFuelLauncherSubsystem(ShooterSubsystem fuelLauncher, ContinueShooterActionCommand command) {
         fuelLauncher.setDefaultCommand(command);
     }
@@ -36,7 +35,7 @@ public class SubsystemDefaultCommandMap {
     }
     
     @Inject
-        public void setupCollectorSubsystem(CollectorSubsystem collectorSystem,StopCollectorCommand stop) {
+    public void setupCollectorSubsystem(CollectorSubsystem collectorSystem,StopCollectorCommand stop) {
         collectorSystem.setDefaultCommand(stop);
     }
     
