@@ -10,14 +10,14 @@ import competition.subsystems.shooter.commands.StopShooterCommand;
 import xbot.common.properties.XPropertyManager;
 import competition.subsystems.climbing.commands.AscendCommand;
 import competition.subsystems.climbing.commands.DescendClimbingCommand;
+import competition.subsystems.agitator.commands.SpinAgitatorBackwardsCommand;
+import competition.subsystems.agitator.commands.SpinAgitatorForwardsCommand;
+import competition.subsystems.agitator.commands.StopAgitatorCommand;
 import competition.subsystems.climbing.commands.RopeAlignerCommand;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.ResetDistanceCommand;
-import competition.subsystems.eggbeater.commands.SpinEggbeaterBackwardsCommand;
-import competition.subsystems.eggbeater.commands.SpinEggbeaterForwardsCommand;
-import competition.subsystems.eggbeater.commands.StopEggbeaterCommand;
 import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
@@ -89,13 +89,13 @@ public class OperatorCommandMap {
         oi.controller.getXboxButton(XboxButtons.LeftBumper).whileHeld(eject);
         oi.controller.getXboxButton(XboxButtons.RightBumper).whileHeld(intake);
     }
-    
+
     @Inject
-    public void setupEggbeaterCommands(
+    public void setupAgitatorCommands(
             OperatorInterface oi,
-            SpinEggbeaterForwardsCommand forwards,
-            SpinEggbeaterBackwardsCommand backwards,
-            StopEggbeaterCommand stop)
+            SpinAgitatorForwardsCommand forwards,
+            SpinAgitatorBackwardsCommand backwards,
+            StopAgitatorCommand stop)
     {
         oi.controller.getXboxButton(XboxButtons.Y).whenPressed(forwards);
         oi.controller.getXboxButton(XboxButtons.A).whenPressed(backwards);

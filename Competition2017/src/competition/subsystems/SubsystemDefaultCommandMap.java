@@ -5,12 +5,12 @@ import com.google.inject.Singleton;
 
 import competition.subsystems.climbing.ClimbingSubsystem;
 import competition.subsystems.climbing.commands.StopClimbingCommand;
+import competition.subsystems.agitator.AgitatorSubsystem;
+import competition.subsystems.agitator.commands.StopAgitatorCommand;
 import competition.subsystems.collector.CollectorSubsystem;
 import competition.subsystems.collector.commands.StopCollectorCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
-import competition.subsystems.eggbeater.EggbeaterSubsystem;
-import competition.subsystems.eggbeater.commands.StopEggbeaterCommand;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter.SideShooterSubsystem;
 import competition.subsystems.shooter.commands.ContinueShooterActionCommand;
@@ -40,7 +40,7 @@ public class SubsystemDefaultCommandMap {
     }
     
     @Inject
-    public void setupEggbeaterSubsystem(EggbeaterSubsystem eggbeaterSubsystem, StopEggbeaterCommand stop) {
-        eggbeaterSubsystem.setDefaultCommand(stop);
+    public void setupAgitatorSubsystem(AgitatorSubsystem agitatorSubsystem, StopAgitatorCommand stop) {
+        agitatorSubsystem.setDefaultCommand(stop);
     }
 }
