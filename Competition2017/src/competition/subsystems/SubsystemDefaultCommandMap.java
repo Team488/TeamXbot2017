@@ -13,7 +13,7 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter.SideShooterSubsystem;
-import competition.subsystems.shooter.commands.ContinueShooterActionCommand;
+import competition.subsystems.shooter.commands.ContinueShooterCommand;
 import competition.subsystems.shooter.commands.StopShooterCommand;
 
 @Singleton
@@ -26,7 +26,7 @@ public class SubsystemDefaultCommandMap {
     }
     
     @Inject
-    public void setupFuelLauncherSubsystem(ShooterSubsystem fuelLauncher, ContinueShooterActionCommand command) {
+    public void setupFuelLauncherSubsystem(ShooterSubsystem fuelLauncher, ContinueShooterCommand command) {
         fuelLauncher.setDefaultCommand(command);
     }
     

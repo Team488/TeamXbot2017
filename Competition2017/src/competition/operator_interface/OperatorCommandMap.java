@@ -23,7 +23,6 @@ import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import xbot.common.controls.sensors.XboxControllerWpiAdapter.XboxButtons;
 import xbot.common.properties.DoubleProperty;
-import xbot.common.properties.XPropertyManager;
 
 @Singleton
 public class OperatorCommandMap {
@@ -58,12 +57,18 @@ public class OperatorCommandMap {
     public void setupLauncherCommands(
             OperatorInterface oi,
             ShooterSubsystem shooterSubsystem,
-            XPropertyManager propertyManager) 
-    {
-        oi.leftButtons.getifAvailable(4).whenPressed(new StepShooterPowerCommand(shooterSubsystem.getLeftShooter()));
-        oi.leftButtons.getifAvailable(3).whenPressed(new StopShooterCommand(shooterSubsystem.getLeftShooter()));
-        oi.leftButtons.getifAvailable(5).whenPressed(new SetShooterSpeedCommand(shooterSubsystem.getLeftShooter(), propertyManager));
-  
+            XPropertyManager propertyManager,
+            StepShooterPowerCommand stepPower,
+            StopShooterCommand stop,
+            SetShooterSpeedCommand setShooter
+            ) {
+        stepPower.setSide(shooterSubsystem.getLeftShooter());
+        stop.setSide(shooterSubsystem.getLeftShooter());
+        setShooter.setSide(shooterSubsystem.getLeftShooter());
+ 
+        oi.leftButtons.getifAvailable(6).whenPressed(stepPower);
+        oi.leftButtons.getifAvailable(7).whenPressed(stop);
+        oi.leftButtons.getifAvailable(8).whenPressed(setShooter);
     }
     
    @Inject

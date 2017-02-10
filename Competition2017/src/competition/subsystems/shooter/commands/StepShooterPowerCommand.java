@@ -2,16 +2,21 @@ package competition.subsystems.shooter.commands;
 
 import org.apache.log4j.Logger;
 
+import com.google.inject.Inject;
+
 import competition.subsystems.shooter.SideShooterSubsystem;
 import xbot.common.command.BaseCommand;
 
 public class StepShooterPowerCommand extends BaseCommand {
 
-    final SideShooterSubsystem sideShooter;
+    SideShooterSubsystem sideShooter;
     
     private static Logger log = Logger.getLogger(StepShooterPowerCommand.class);
     
-    public StepShooterPowerCommand(SideShooterSubsystem sideShooter) {
+    @Inject
+    public StepShooterPowerCommand(){}
+    
+    public void setSide(SideShooterSubsystem sideShooter){
         this.sideShooter = sideShooter;
         this.requires(this.sideShooter);
     }

@@ -10,8 +10,6 @@ import edu.wpi.first.wpilibj.Timer;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.WPIFactory;
-import xbot.common.math.PID;
-import xbot.common.math.PIDManager;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
@@ -20,14 +18,15 @@ public class SideShooterSubsystem extends BaseSubsystem {
     
     private static Logger log = Logger.getLogger(ShooterSubsystem.class);
     
-    private final XCANTalon masterMotor;
-    
+
+    protected final XCANTalon masterMotor;
+   
     private final RobotSide side;
     
     // output telemetry properties
-    private final DoubleProperty shooterTestingPowerStep ;
-    private final DoubleProperty shooterCurrentSpeed;
-    private final DoubleProperty shooterTargetSpeed;
+    protected final DoubleProperty shooterTestingPowerStep ;
+    protected final DoubleProperty shooterCurrentSpeed;
+    protected final DoubleProperty shooterTargetSpeed;
     private final DoubleProperty shooterOutputPower;
     private final DoubleProperty shooterTalonError;
     private final BooleanProperty atSpeedProp;
@@ -63,7 +62,7 @@ public class SideShooterSubsystem extends BaseSubsystem {
         shooterTalonError = propManager.createEphemeralProperty(side + "Shooter speed error", 0);
         enableShooterLogging = propManager.createEphemeralProperty("Is " + side + "Shooter logging info?", false);
         
-        this.masterMotor = factory.getCANTalonSpeedController(1);
+        this.masterMotor = factory.getCANTalonSpeedController(motor);
         setUpMotorTeam(masterMotor);
         masterMotor.createTelemetryProperties(side + "Shooter master", propManager);
     }

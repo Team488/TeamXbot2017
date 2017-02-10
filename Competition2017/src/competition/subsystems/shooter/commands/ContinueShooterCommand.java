@@ -2,28 +2,31 @@ package competition.subsystems.shooter.commands;
 
 import com.google.inject.Inject;
 
+import competition.subsystems.shooter.ShooterSubsystem;
 import competition.subsystems.shooter.SideShooterSubsystem;
 import xbot.common.command.BaseCommand;
 
-public class StopShooterCommand extends BaseCommand {
-    
-    SideShooterSubsystem sideShooter;
-    
-    @Inject
-    public StopShooterCommand() {}
+public class ContinueShooterCommand extends BaseCommand {
 
-    public void setSide(SideShooterSubsystem sideShooter){
-        this.sideShooter = sideShooter;
-        this.requires(this.sideShooter);
+    SideShooterSubsystem sideShooter;
+
+    @Inject
+    public ContinueShooterCommand() {
     }
+    
+    public void setSide(SideShooterSubsystem sideshooter) {
+        this.sideShooter = sideshooter;
+        this.requires(sideshooter);
+    }
+
     @Override
     public void initialize() {
-
+    
     }
     
     @Override
     public void execute() {
-        sideShooter.setLauncherPower(0);
+        sideShooter.updateTelemetry();
     }
     
 }
