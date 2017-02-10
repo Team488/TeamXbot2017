@@ -1,15 +1,15 @@
-package competition.subsystems.shooter.commands;
+package competition.subsystems.shooter_wheel.commands;
 
 import com.google.inject.Inject;
 
-import competition.subsystems.shooter.SideShooterSubsystem;
+import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
 import xbot.common.command.BaseCommand;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 public class SetShooterSpeedCommand extends BaseCommand {
     
-    SideShooterSubsystem sideShooter;
+    ShooterWheelSubsystem shooterWheel;
     DoubleProperty commandedLauncherSpeed;
 
     @Inject
@@ -17,9 +17,9 @@ public class SetShooterSpeedCommand extends BaseCommand {
         commandedLauncherSpeed = propertyManager.createEphemeralProperty("Commanded launcher speed", 3100.0);
     }
     
-    public void setSide(SideShooterSubsystem sideShooter){
-        this.sideShooter = sideShooter;
-        this.requires(this.sideShooter);
+    public void setSide(ShooterWheelSubsystem shooterWheel){
+        this.shooterWheel = shooterWheel;
+        this.requires(this.shooterWheel);
     }
 
     @Override
@@ -28,8 +28,8 @@ public class SetShooterSpeedCommand extends BaseCommand {
     
     @Override
     public void execute() {
-        sideShooter.setLauncherTargetSpeed(commandedLauncherSpeed.get());
-        sideShooter.updateTelemetry();
+        shooterWheel.setLauncherTargetSpeed(commandedLauncherSpeed.get());
+        shooterWheel.updateTelemetry();
     }
     
 }

@@ -11,10 +11,10 @@ import competition.subsystems.collector.CollectorSubsystem;
 import competition.subsystems.collector.commands.StopCollectorCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
-import competition.subsystems.shooter.ShooterSubsystem;
-import competition.subsystems.shooter.SideShooterSubsystem;
-import competition.subsystems.shooter.commands.ContinueShooterCommand;
-import competition.subsystems.shooter.commands.StopShooterCommand;
+import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
+import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
+import competition.subsystems.shooter_wheel.commands.ContinueShooterCommand;
+import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
 
 @Singleton
 public class SubsystemDefaultCommandMap {
@@ -26,7 +26,7 @@ public class SubsystemDefaultCommandMap {
     }
     
     @Inject
-    public void setupFuelLauncherSubsystem(ShooterSubsystem fuelLauncher, ContinueShooterCommand command) {
+    public void setupFuelLauncherSubsystem(ShooterWheelsManagerSubsystem fuelLauncher, ContinueShooterCommand command) {
         fuelLauncher.setDefaultCommand(command);
     }
     

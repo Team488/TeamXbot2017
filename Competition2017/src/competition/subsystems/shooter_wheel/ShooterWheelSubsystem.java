@@ -1,4 +1,4 @@
-package competition.subsystems.shooter;
+package competition.subsystems.shooter_wheel;
 
 import org.apache.log4j.Logger;
 
@@ -14,9 +14,9 @@ import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
-public class SideShooterSubsystem extends BaseSubsystem {
+public class ShooterWheelSubsystem extends BaseSubsystem {
     
-    private static Logger log = Logger.getLogger(ShooterSubsystem.class);
+    private static Logger log = Logger.getLogger(ShooterWheelSubsystem.class);
     
 
     protected final XCANTalon masterMotor;
@@ -40,7 +40,7 @@ public class SideShooterSubsystem extends BaseSubsystem {
     private final DoubleProperty shooterSpeedThresh;
     
    
-    public SideShooterSubsystem(int motor, RobotSide side, WPIFactory factory, XPropertyManager propManager){
+    public ShooterWheelSubsystem(int motor, RobotSide side, WPIFactory factory, XPropertyManager propManager){
         log.info("Creating " + side + " Shooter");
         this.side = side;
         

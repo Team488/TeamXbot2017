@@ -3,10 +3,6 @@ package competition.operator_interface;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import competition.subsystems.shooter.ShooterSubsystem;
-import competition.subsystems.shooter.commands.StepShooterPowerCommand;
-import competition.subsystems.shooter.commands.SetShooterSpeedCommand;
-import competition.subsystems.shooter.commands.StopShooterCommand;
 import xbot.common.properties.XPropertyManager;
 import competition.subsystems.climbing.commands.AscendCommand;
 import competition.subsystems.climbing.commands.DescendClimbingCommand;
@@ -21,6 +17,10 @@ import competition.subsystems.drive.commands.ResetDistanceCommand;
 import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
+import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
+import competition.subsystems.shooter_wheel.commands.SetShooterSpeedCommand;
+import competition.subsystems.shooter_wheel.commands.StepShooterPowerCommand;
+import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
 import xbot.common.controls.sensors.XboxControllerWpiAdapter.XboxButtons;
 import xbot.common.properties.DoubleProperty;
 
@@ -56,7 +56,7 @@ public class OperatorCommandMap {
     @Inject
     public void setupLauncherCommands(
             OperatorInterface oi,
-            ShooterSubsystem shooterSubsystem,
+            ShooterWheelsManagerSubsystem shooterSubsystem,
             XPropertyManager propertyManager,
             StepShooterPowerCommand stepPower,
             StopShooterCommand stop,

@@ -1,17 +1,18 @@
-package competition.subsystems.shooter;
+package competition.subsystems.shooter_wheel;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
-public class TestShooterSubsystem extends ShooterSubsystem {
+public class TestShooterWheelsManagerSubsystem extends ShooterWheelsManagerSubsystem {
 
     @Inject
-    public TestShooterSubsystem(WPIFactory factory, XPropertyManager propManager) {
+    public TestShooterWheelsManagerSubsystem(WPIFactory factory, XPropertyManager propManager) {
         super(factory, propManager);
     } 
     public Double getLeftShooterTargetSpeed(){
@@ -21,8 +22,4 @@ public class TestShooterSubsystem extends ShooterSubsystem {
     public Double getRightShooterTargetSpeed(){
         return getLeftShooter().shooterTargetSpeed.get();
     }
- 
-  
-    
-
 }

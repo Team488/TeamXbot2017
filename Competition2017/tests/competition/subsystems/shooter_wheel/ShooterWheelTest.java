@@ -1,17 +1,18 @@
-package competition.subsystems.shooter;
+package competition.subsystems.shooter_wheel;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import competition.subsystems.shooter.commands.ContinueShooterCommand;
-import competition.subsystems.shooter.commands.SetShooterSpeedCommand;
-import competition.subsystems.shooter.commands.StepShooterPowerCommand;
-import competition.subsystems.shooter.commands.StopShooterCommand;
+import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
+import competition.subsystems.shooter_wheel.commands.ContinueShooterCommand;
+import competition.subsystems.shooter_wheel.commands.SetShooterSpeedCommand;
+import competition.subsystems.shooter_wheel.commands.StepShooterPowerCommand;
+import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
 
-public class SideShooterTest extends ShooterTestBase {
+public class ShooterWheelTest extends ShooterWheelTestBase {
     
-     SideShooterSubsystem leftShooter;
-     SideShooterSubsystem rightShooter;
+     ShooterWheelSubsystem leftShooter;
+     ShooterWheelSubsystem rightShooter;
     
     @Before
     @Override
