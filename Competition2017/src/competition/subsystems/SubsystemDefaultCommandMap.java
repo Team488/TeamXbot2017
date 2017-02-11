@@ -4,11 +4,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.subsystems.collector.CollectorSubsystem;
-import competition.subsystems.collector.commands.EjectCollectorCommand;
-import competition.subsystems.collector.commands.IntakeCollectorCommand;
 import competition.subsystems.collector.commands.StopCollectorCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
+import competition.subsystems.vision.VisionSubsystem;
 
 @Singleton
 public class SubsystemDefaultCommandMap {
