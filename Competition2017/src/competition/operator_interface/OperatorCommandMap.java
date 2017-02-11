@@ -78,9 +78,9 @@ public class OperatorCommandMap {
            ShiftGearCommand shiftHigh)
    {
        shiftLow.setGear(Gear.LOW_GEAR);
-       oi.leftButtons.getifAvailable(1).whenPressed(shiftLow);
+       //oi.leftButtons.getifAvailable(1).whenPressed(shiftLow);
        shiftHigh.setGear(Gear.HIGH_GEAR);
-       oi.rightButtons.getifAvailable(1).whenPressed(shiftHigh);
+       //oi.rightButtons.getifAvailable(1).whenPressed(shiftHigh);
    }
     
     // CONTROLLER
@@ -91,8 +91,12 @@ public class OperatorCommandMap {
             EjectCollectorCommand eject,
             IntakeCollectorCommand intake)
     {
+        oi.leftButtons.getifAvailable(1).whileHeld(eject);
+        oi.rightButtons.getifAvailable(1).whileHeld(intake);
+        /*
         oi.controller.getXboxButton(XboxButtons.LeftBumper).whileHeld(eject);
         oi.controller.getXboxButton(XboxButtons.RightBumper).whileHeld(intake);
+        */
     }
 
     @Inject
