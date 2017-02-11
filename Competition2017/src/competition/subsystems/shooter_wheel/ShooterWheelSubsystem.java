@@ -8,18 +8,19 @@ import com.ctre.CANTalon.TalonControlMode;
 import competition.subsystems.RobotSide;
 import edu.wpi.first.wpilibj.Timer;
 import xbot.common.command.BaseSubsystem;
+import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
-public class ShooterWheelSubsystem extends BaseSubsystem {
+public class ShooterWheelSubsystem extends BaseSubsystem implements PeriodicDataSource {
     
     private static Logger log = Logger.getLogger(ShooterWheelSubsystem.class);
-    
 
     protected final XCANTalon masterMotor;
+    protected final XCANTalon followerMotor;
    
     private final RobotSide side;
     
@@ -40,7 +41,7 @@ public class ShooterWheelSubsystem extends BaseSubsystem {
     private final DoubleProperty shooterSpeedThresh;
     
    
-    public ShooterWheelSubsystem(int motor, RobotSide side, WPIFactory factory, XPropertyManager propManager){
+    public ShooterWheelSubsystem(int masterChannel, int followerChannel, RobotSide side, WPIFactory factory, XPropertyManager propManager){
         log.info("Creating " + side + " Shooter");
         this.side = side;
         
@@ -62,12 +63,15 @@ public class ShooterWheelSubsystem extends BaseSubsystem {
         shooterTalonError = propManager.createEphemeralProperty(side + "Shooter speed error", 0);
         enableShooterLogging = propManager.createEphemeralProperty("Is " + side + "Shooter logging info?", false);
         
-        this.masterMotor = factory.getCANTalonSpeedController(motor);
-        setUpMotorTeam(masterMotor);
-        masterMotor.createTelemetryProperties(side + "Shooter master", propManager);
+        this.masterMotor = factory.getCANTalonSpeedController(masterChannel);
+        this.followerMotor = factory.getCANTalonSpeedController(followerChannel);
+        
+        setUpMotorTeam(masterMotor, followerMotor);
+        masterMotor.createTelemetryProperties(side + " shooter wheel master", propManager);
+        followerMotor.createTelemetryProperties(side + " shooter wheel follower", propManager);
     }
     
-    private void setUpMotorTeam(XCANTalon master) {
+    private void setUpMotorTeam(XCANTalon master, XCANTalon follower) {
         // TODO: Check faults and voltage/temp/current
         log.info("Configuring " + side + "motor");
         // Master config
@@ -82,11 +86,16 @@ public class ShooterWheelSubsystem extends BaseSubsystem {
         master.configPeakOutputVoltage(12, -6);
 
         master.setProfile(0);
-        master.setF(.099);
         updateMotorPidValues(master);
         master.setControlMode(TalonControlMode.Speed);
-
         master.set(0);
+        
+        follower.setProfile(0);
+        follower.setControlMode(TalonControlMode.Follower);
+        follower.configNominalOutputVoltage(0,  -0);
+        follower.configPeakOutputVoltage(12, -6);
+        follower.setInverted(true);
+        follower.set(master.getDeviceID());
     }
     
     private void updateMotorPidValues(XCANTalon motor) {
@@ -143,10 +152,15 @@ public class ShooterWheelSubsystem extends BaseSubsystem {
         return shooterTargetSpeed.get();
     }
     
-    /**
-     * Updates driver station telemetry about the ShooterSubsystem. Try to call this once per scheduler pass-through.
-     */
-    public void updateTelemetry() {
+    public double getPowerStep(){
+        return shooterTestingPowerStep.get();
+    }
+    public RobotSide getSide(){
+        return side;
+    }
+
+    @Override
+    public void updatePeriodicData() {
         masterMotor.updateTelemetryProperties();        
         atSpeedProp.set(isAtSpeed());
         shooterCurrentSpeed.set(getSpeed());
@@ -168,12 +182,6 @@ public class ShooterWheelSubsystem extends BaseSubsystem {
                  + shooterTalonError.get() + ","
                  + shooterCurrentSpeed.get());
         }
-    }
-    public double getPowerStep(){
-        return shooterTestingPowerStep.get();
-    }
-    public RobotSide getSide(){
-        return side;
     }
 }
 

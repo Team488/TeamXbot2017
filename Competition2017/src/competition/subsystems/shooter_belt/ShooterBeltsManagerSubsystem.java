@@ -18,8 +18,8 @@ public class ShooterBeltsManagerSubsystem extends BaseSubsystem {
         protected ShooterBeltSubsystem leftBelt;
         protected ShooterBeltSubsystem rightBelt;
         
-        protected int leftMotorIndex = 32;
-        protected int rightMotorIndex = 36;
+        protected int leftMotorIndex = 31;
+        protected int rightMotorIndex = 24;
 
         @Inject
         public ShooterBeltsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, RobotAssertionManager assertionManager){

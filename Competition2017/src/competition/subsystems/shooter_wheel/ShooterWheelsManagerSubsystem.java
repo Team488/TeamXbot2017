@@ -12,30 +12,31 @@ import xbot.common.properties.XPropertyManager;
 
 @Singleton
 public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
-    
     private static Logger log = Logger.getLogger(ShooterWheelsManagerSubsystem.class);
     
     protected ShooterWheelSubsystem leftShooter;
     protected ShooterWheelSubsystem rightShooter;
     
-    protected int leftMotorIndex = 33;
-    protected int rightMotorIndex = 23;
+    protected int leftMotorMasterIndex = 32;
+    protected int leftMotorFollowerIndex = 33;
+    protected int rightMotorMasterIndex = 23;
+    protected int rightMotorFollowerIndex = 22;
     
     @Inject
-    public ShooterWheelsManagerSubsystem(WPIFactory factory, XPropertyManager propManager){
+    public ShooterWheelsManagerSubsystem(WPIFactory factory, XPropertyManager propManager) {
         log.info("Creating ShooterSubsystem");
         createLeftAndRightShooter(factory, propManager);
     }
     
     protected void createLeftAndRightShooter(WPIFactory factory, XPropertyManager propManager) {
-        leftShooter = new ShooterWheelSubsystem(leftMotorIndex, RobotSide.Left, factory, propManager);
-        rightShooter = new ShooterWheelSubsystem(rightMotorIndex, RobotSide.Right, factory, propManager);
+        leftShooter = new ShooterWheelSubsystem(leftMotorMasterIndex, leftMotorFollowerIndex, RobotSide.Left, factory, propManager);
+        rightShooter = new ShooterWheelSubsystem(rightMotorMasterIndex, rightMotorFollowerIndex, RobotSide.Right, factory, propManager);
     }
     
-    public ShooterWheelSubsystem getLeftShooter(){
+    public ShooterWheelSubsystem getLeftShooter() {
         return leftShooter;
     }
-    public ShooterWheelSubsystem getRightShooter(){
+    public ShooterWheelSubsystem getRightShooter() {
         return rightShooter;
     }
 }

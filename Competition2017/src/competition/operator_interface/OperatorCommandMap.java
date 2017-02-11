@@ -57,31 +57,30 @@ public class OperatorCommandMap {
         oi.rightButtons.getifAvailable(5).whileHeld(aligner);
     }
     
-    @Inject
+     @Inject
     public void setupLauncherCommands(
             OperatorInterface oi,
             ShooterWheelsManagerSubsystem shooterSubsystem,
+            XPropertyManager propertyManager,
             StepShooterPowerCommand stepPower,
-            RunShooterCommand run
-            ) {
+            StopShooterCommand stop) 
+    {
         stepPower.setSide(shooterSubsystem.getLeftShooter());
-        run.setSide(shooterSubsystem.getLeftShooter());
+        stop.setSide(shooterSubsystem.getLeftShooter());
  
         oi.leftButtons.getifAvailable(6).whenPressed(stepPower);
-        oi.leftButtons.getifAvailable(8).whileHeld(run);
+        oi.leftButtons.getifAvailable(7).whenPressed(stop);
     }
     
     @Inject
     public void setupShooterBeltCommands(
             OperatorInterface oi,
             ShooterBeltsManagerSubsystem shooterBeltsSubsystem,
-            RunBeltCommand run
-            )
-            {
+            RunBeltCommand run)
+    {
         run.setShooterBeltSubsystem(shooterBeltsSubsystem.getLeftBelt());
-            
-        oi.leftButtons.getifAvailable(7).whileHeld(run);
-            }
+        oi.rightButtons.getifAvailable(7).whileHeld(run);
+    }
     
    @Inject
    public void setupShiftCommand(

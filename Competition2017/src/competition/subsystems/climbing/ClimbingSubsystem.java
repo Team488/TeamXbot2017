@@ -27,7 +27,7 @@ public class ClimbingSubsystem extends BaseSubsystem {
 
         log.info("Creating Climbing Subsystem");
 
-        climbingMotor = factory.getCANTalonSpeedController(22);
+        climbingMotor = factory.getCANTalonSpeedController(25);
         climbingMotor.setProfile(0);
         climbingMotor.setBrakeEnableDuringNeutral(true);
         climbingMotor.setControlMode(TalonControlMode.PercentVbus);
