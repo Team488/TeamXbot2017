@@ -20,8 +20,8 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
     @Inject
     public ShooterWheelsManagerSubsystem(WPIFactory factory, XPropertyManager propManager){
         log.info("Creating ShooterSubsystem");
-         this.leftShooter = new ShooterWheelSubsystem(2, RobotSide.Left, factory, propManager);
-         this.rightShooter = new ShooterWheelSubsystem(3, RobotSide.Right, factory, propManager);
+         this.leftShooter = new ShooterWheelSubsystem(20, RobotSide.Left, factory, propManager);
+         this.rightShooter = new ShooterWheelSubsystem(30, RobotSide.Right, factory, propManager);
     }
     public ShooterWheelSubsystem getLeftShooter(){
         return leftShooter;

@@ -25,11 +25,6 @@ public class SubsystemDefaultCommandMap {
         driveSubsystem.setDefaultCommand(command);
     }
     
-    @Inject
-    public void setupFuelLauncherSubsystem(ShooterWheelsManagerSubsystem fuelLauncher, ContinueShooterCommand command) {
-        fuelLauncher.setDefaultCommand(command);
-    }
-    
     public void setupClimbingSubsystem(ClimbingSubsystem climbingSystem,StopClimbingCommand stop) {
         climbingSystem.setDefaultCommand(stop);
     }

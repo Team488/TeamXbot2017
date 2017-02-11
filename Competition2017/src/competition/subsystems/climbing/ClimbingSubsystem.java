@@ -25,7 +25,7 @@ public class ClimbingSubsystem extends BaseSubsystem {
     public ClimbingSubsystem(WPIFactory factory, XPropertyManager propManager){
         log.info("Creating Climbing Subsystem");
 
-        climbingMotor = factory.getCANTalonSpeedController(5);
+        climbingMotor = factory.getCANTalonSpeedController(50);
         climbingMotor.setProfile(0);
         climbingMotor.setBrakeEnableDuringNeutral(true);
         climbingMotor.setControlMode(TalonControlMode.PercentVbus);

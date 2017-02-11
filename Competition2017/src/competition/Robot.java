@@ -15,6 +15,6 @@ public class Robot extends BaseRobot {
         this.injector.getInstance(OperatorCommandMap.class);
         
         // register telemetry sources to be updated even when disabled
-        this.registerTelemetrySource(this.injector.getInstance(DriveSubsystem.class));
+        this.registerPeriodicDataSource(this.injector.getInstance(DriveSubsystem.class));
     }
 }
