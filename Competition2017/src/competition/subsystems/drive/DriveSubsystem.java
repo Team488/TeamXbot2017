@@ -59,12 +59,12 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         
         this.leftDrive = factory.getCANTalonSpeedController(34);
         this.leftDriveSlave = factory.getCANTalonSpeedController(35);
+        this.leftDrive.setInverted(true);
         configMotorTeam(leftDrive, leftDriveSlave);
         leftDrive.createTelemetryProperties("Left master", propManager);
         leftDriveSlave.createTelemetryProperties("Left slave", propManager);
         
         this.rightDrive = factory.getCANTalonSpeedController(21);
-        this.rightDrive.setInverted(true);
         this.rightDriveSlave = factory.getCANTalonSpeedController(20);
         configMotorTeam(rightDrive, rightDriveSlave);
         rightDrive.createTelemetryProperties("Right master", propManager);
@@ -83,7 +83,7 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         master.enableLimitSwitches(false, false);
         
         master.configNominalOutputVoltage(0,  -0);
-        master.configPeakOutputVoltage(12, -12);
+        master.configPeakOutputVoltage(1, -1);
 
         master.setProfile(0);
         master.setF(0);
@@ -93,7 +93,7 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         
         // Slave config
         slave.configNominalOutputVoltage(0,  -0);
-        slave.configPeakOutputVoltage(12, -12);
+        slave.configPeakOutputVoltage(4, -4);
         slave.enableLimitSwitches(false, false);
         slave.setControlMode(TalonControlMode.Follower);
         slave.set(master.getDeviceID());

@@ -47,7 +47,7 @@ public class DriveForDistanceCommand extends BaseCommand {
         this.driveSubsystem = driveSubsystem;
         this.poseSubsystem = pose;
         this.requires(driveSubsystem);
-        this.travelManager = pidManagerFactory.create("Drive to position", 0.1, 0, 0, 0.5, -0.5);
+        this.travelManager = pidManagerFactory.create("Drive to position", 0.1, 0, 0, 0.3, -0.3);
 
         headingDrivePid = pidManagerFactory.create("Heading module", defaultPValue, 0, 0);
         targetHeading = new ContiguousHeading();

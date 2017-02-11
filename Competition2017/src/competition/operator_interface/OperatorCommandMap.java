@@ -12,6 +12,7 @@ import competition.subsystems.agitator.commands.StopAgitatorCommand;
 import competition.subsystems.climbing.commands.RopeAlignerCommand;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
+import competition.subsystems.collector.commands.StopCollectorCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.ResetDistanceCommand;
 import competition.subsystems.shift.ShiftSubsystem;
@@ -104,6 +105,8 @@ public class OperatorCommandMap {
     {
         oi.controller.getXboxButton(XboxButtons.LeftBumper).whileHeld(eject);
         oi.controller.getXboxButton(XboxButtons.RightBumper).whileHeld(intake);
+        eject.includeOnSmartDashboard();
+        intake.includeOnSmartDashboard();
     }
 
     @Inject
