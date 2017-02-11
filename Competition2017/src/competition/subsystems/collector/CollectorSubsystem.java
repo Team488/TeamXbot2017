@@ -21,7 +21,7 @@ public class CollectorSubsystem extends BaseSubsystem {
     @Inject
     public CollectorSubsystem(WPIFactory factory, XPropertyManager propManager){
         log.info("Creating Collector Subsystem");
-        collectorMotor = factory.getCANTalonSpeedController(5);
+        collectorMotor = factory.getCANTalonSpeedController(30);
         
         collectorMotor.setBrakeEnableDuringNeutral(false);
         

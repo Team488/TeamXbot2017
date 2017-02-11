@@ -40,7 +40,4 @@ public class AgitatorSubsystem extends BaseSubsystem{
     public void spinBackwards(){
         agitatorMotor.set(motorPowerProperty.get() * - 1);
     }
-    
-    
-
 }
