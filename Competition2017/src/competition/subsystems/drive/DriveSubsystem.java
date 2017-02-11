@@ -10,8 +10,6 @@ import com.ctre.CANTalon.TalonControlMode;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
-import xbot.common.controls.sensors.NavImu.ImuType;
-import xbot.common.controls.sensors.XGyro;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.MathUtils;
 import xbot.common.properties.DoubleProperty;
@@ -91,14 +89,12 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         master.setF(0);
         updateMotorConfig(master);
         master.setControlMode(TalonControlMode.Speed);
-        
         master.set(0);
         
         // Slave config
         slave.configNominalOutputVoltage(0,  -0);
         slave.configPeakOutputVoltage(12, -12);
         slave.enableLimitSwitches(false, false);
-        
         slave.setControlMode(TalonControlMode.Follower);
         slave.set(master.getDeviceID());
     }
@@ -174,12 +170,11 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     }
     
     public double getDistance() {
-        /* TODO add more values from other motors for accuracy */
-        return convertTicksToInches(rightDrive.getPosition() - startPositionTicks.get());
+        return convertTicksToInches(getPositionAverageTicks() - startPositionTicks.get());
     }
     
     public void resetDistance() {
-        startPositionTicks.set(rightDrive.getPosition());
+        startPositionTicks.set(getPositionAverageTicks());
     }
     
     public double convertTicksToInches(double ticks) {
@@ -188,6 +183,10 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     
     public double convertInchesToTicks(double inches) {
         return inches * ticksPerInch.get();
+    }
+    
+    public double getPositionAverageTicks() {
+        return (rightDrive.getPosition() + leftDrive.getPosition()) / 2.0;
     }
 
     /**

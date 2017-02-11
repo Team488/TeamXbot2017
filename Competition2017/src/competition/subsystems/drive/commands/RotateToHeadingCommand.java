@@ -29,7 +29,8 @@ public class RotateToHeadingCommand extends BaseCommand{
             DriveSubsystem driveSubsystem, 
             XPropertyManager propMan,
             PoseSubsystem pose,
-            RobotAssertionManager assertionManager) {
+            RobotAssertionManager assertionManager)
+    {
         this.driveSubsystem = driveSubsystem;
         this.poseSubsystem = pose;
         headingDrivePid = new PIDManager("Rotate to heading", propMan, assertionManager, defaultPValue, 0, 0);
@@ -61,7 +62,6 @@ public class RotateToHeadingCommand extends BaseCommand{
 
     @Override
     public void execute() {
-        
         double errorInDegrees =  poseSubsystem.getCurrentHeading().difference(targetHeading);
         double rotationalPower = headingDrivePid.calculate(0, errorInDegrees);
 
