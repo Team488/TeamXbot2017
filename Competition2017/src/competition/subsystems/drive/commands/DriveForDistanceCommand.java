@@ -12,12 +12,14 @@ import xbot.common.math.PIDManagerFactory;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.pose.PoseSubsystem;
 
 public class DriveForDistanceCommand extends BaseCommand {
     private static Logger log = Logger.getLogger(DriveForDistanceCommand.class);
     
     private final DriveSubsystem driveSubsystem;
     private final PIDManager travelManager;
+    private final PoseSubsystem poseSubsystem;
     
     private final DoubleProperty onTargetCountThresholdProp;
     private final DoubleProperty distanceToleranceInches;
@@ -36,8 +38,14 @@ public class DriveForDistanceCommand extends BaseCommand {
     private int onTargetCount = 0;
     
     @Inject
-    public DriveForDistanceCommand(DriveSubsystem driveSubsystem, XPropertyManager propManager, PIDManagerFactory pidManagerFactory) {
+    public DriveForDistanceCommand(
+            DriveSubsystem driveSubsystem,
+            XPropertyManager propManager,
+            RobotAssertionManager assertionManager,
+            PIDManagerFactory pidManagerFactory,
+            PoseSubsystem pose) {
         this.driveSubsystem = driveSubsystem;
+        this.poseSubsystem = pose;
         this.requires(driveSubsystem);
         this.travelManager = pidManagerFactory.create("Drive to position", 0.1, 0, 0, 0.5, -0.5);
 
@@ -68,7 +76,7 @@ public class DriveForDistanceCommand extends BaseCommand {
         onTargetCount = 0;
         previousPositionInches = driveSubsystem.getDistance();
         
-        targetHeading = driveSubsystem.imu.getYaw();
+        targetHeading = poseSubsystem.getCurrentHeading();
         
         if (deltaDistanceProp != null) {
             this.targetDistance = driveSubsystem.getDistance() + deltaDistanceProp.get();
@@ -90,7 +98,7 @@ public class DriveForDistanceCommand extends BaseCommand {
     
     public double calculateHeadingPower() {
 
-        double errorInDegrees = targetHeading.difference(driveSubsystem.imu.getYaw());
+        double errorInDegrees = targetHeading.difference(poseSubsystem.getCurrentHeading());
         double normalizedError = errorInDegrees / 180;
         double rotationalPower = headingDrivePid.calculate(0, normalizedError);
 

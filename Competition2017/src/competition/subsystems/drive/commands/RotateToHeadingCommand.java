@@ -9,10 +9,12 @@ import xbot.common.math.ContiguousHeading;
 import xbot.common.math.PIDManager;
 import xbot.common.properties.XPropertyManager;
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.pose.PoseSubsystem;
 
 public class RotateToHeadingCommand extends BaseCommand{
 
-    final DriveSubsystem drive;
+    private final DriveSubsystem driveSubsystem;
+    private final PoseSubsystem poseSubsystem;
     ContiguousHeading targetHeading;
     ContiguousHeading currentHeading;
     
@@ -23,9 +25,13 @@ public class RotateToHeadingCommand extends BaseCommand{
     private static Logger log = Logger.getLogger(RotateToHeadingCommand.class);
     
     @Inject
-    public RotateToHeadingCommand(DriveSubsystem driveSubsystem, XPropertyManager propMan, RobotAssertionManager assertionManager) {
-
-        this.drive = driveSubsystem;
+    public RotateToHeadingCommand(
+            DriveSubsystem driveSubsystem, 
+            XPropertyManager propMan,
+            PoseSubsystem pose,
+            RobotAssertionManager assertionManager) {
+        this.driveSubsystem = driveSubsystem;
+        this.poseSubsystem = pose;
         headingDrivePid = new PIDManager("Rotate to heading", propMan, assertionManager, defaultPValue, 0, 0);
         
         // Default values - under the hood they are properties, so they can be changed
@@ -56,10 +62,10 @@ public class RotateToHeadingCommand extends BaseCommand{
     @Override
     public void execute() {
         
-        double errorInDegrees = drive.imu.getYaw().difference(targetHeading);
+        double errorInDegrees =  poseSubsystem.getCurrentHeading().difference(targetHeading);
         double rotationalPower = headingDrivePid.calculate(0, errorInDegrees);
 
-        drive.tankDrivePowerMode(rotationalPower, -rotationalPower);
+        driveSubsystem.tankDrivePowerMode(rotationalPower, -rotationalPower);
     }
     
     @Override
