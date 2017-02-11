@@ -13,16 +13,18 @@ import xbot.common.properties.XPropertyManager;
 
 @Singleton
 public class ClimbingSubsystem extends BaseSubsystem {
+
     private static Logger log = Logger.getLogger(ClimbingSubsystem.class);
 
-    private final DoubleProperty ascendPowerProperty;
-    private final DoubleProperty descendPowerProperty;
-    private final XCANTalon climbingMotor;
-    
+    protected final DoubleProperty ascendPowerProperty;
+    protected final DoubleProperty descendPowerProperty;
+    protected final XCANTalon climbingMotor;
+
     public final XSolenoid brakeSolenoid;
 
     @Inject
     public ClimbingSubsystem(WPIFactory factory, XPropertyManager propManager){
+
         log.info("Creating Climbing Subsystem");
 
         climbingMotor = factory.getCANTalonSpeedController(50);

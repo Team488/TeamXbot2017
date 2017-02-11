@@ -12,9 +12,10 @@ public class AscendCommand extends BaseCommand {
     private static Logger log = Logger.getLogger(AscendCommand.class);   
 
     @Inject
-    public AscendCommand(ClimbingSubsystem climbingSystem){
-        this.climbingSystem = climbingSystem;  
-        this.requires(climbingSystem);
+    public AscendCommand(ClimbingSubsystem ascendingSystem){
+
+        this.climbingSystem = ascendingSystem;  
+        this.requires(ascendingSystem);
     }
 
     public void initialize() {
