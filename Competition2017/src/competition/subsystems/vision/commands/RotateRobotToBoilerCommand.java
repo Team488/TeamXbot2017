@@ -10,6 +10,7 @@ import competition.subsystems.vision.DetectedLiftPeg;
 import competition.subsystems.vision.VisionSubsystem;
 import xbot.common.command.BaseCommand;
 import xbot.common.math.PIDManager;
+import xbot.common.math.PIDManagerFactory;
 import xbot.common.properties.XPropertyManager;
 
 public class RotateRobotToBoilerCommand extends BaseCommand {
@@ -20,11 +21,15 @@ public class RotateRobotToBoilerCommand extends BaseCommand {
     final PIDManager rotationPid;
 
     @Inject
-    public RotateRobotToBoilerCommand(XPropertyManager propMan, VisionSubsystem visionSubsystem, DriveSubsystem driveSubsystem) {
+    public RotateRobotToBoilerCommand(
+            VisionSubsystem visionSubsystem,
+            DriveSubsystem driveSubsystem,
+            PIDManagerFactory pidManagerFactory)
+    {
         this.visionSubsystem = visionSubsystem;
         this.driveSubsystem = driveSubsystem;
         
-        rotationPid = new PIDManager("Robot vision rotation", propMan, 0.6, 0, 0);
+        rotationPid = pidManagerFactory.create("Robot vision rotation", 0.6, 0, 0);
         
         this.requires(this.driveSubsystem);
     }
@@ -36,7 +41,7 @@ public class RotateRobotToBoilerCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        DetectedBoiler target = visionSubsystem.getTrackedBoiler()();
+        DetectedBoiler target = visionSubsystem.getTrackedBoiler();
         
         rotationPid.setIMask(target == null);
         double power = rotationPid.calculate(0, target == null ? 0 : target.offsetX * 0.6);
