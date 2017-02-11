@@ -17,8 +17,12 @@ import competition.subsystems.drive.commands.ResetDistanceCommand;
 import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
+import competition.subsystems.shooter_belt.ShooterBeltSubsystem;
+import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
+import competition.subsystems.shooter_belt.commands.RunBeltCommand;
+import competition.subsystems.shooter_belt.commands.StopBeltCommand;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
-import competition.subsystems.shooter_wheel.commands.SetShooterSpeedCommand;
+import competition.subsystems.shooter_wheel.commands.RunShooterCommand;
 import competition.subsystems.shooter_wheel.commands.StepShooterPowerCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
 import xbot.common.controls.sensors.XboxControllerWpiAdapter.XboxButtons;
@@ -57,19 +61,27 @@ public class OperatorCommandMap {
     public void setupLauncherCommands(
             OperatorInterface oi,
             ShooterWheelsManagerSubsystem shooterSubsystem,
-            XPropertyManager propertyManager,
             StepShooterPowerCommand stepPower,
-            StopShooterCommand stop,
-            SetShooterSpeedCommand setShooter
+            RunShooterCommand run
             ) {
         stepPower.setSide(shooterSubsystem.getLeftShooter());
-        stop.setSide(shooterSubsystem.getLeftShooter());
-        setShooter.setSide(shooterSubsystem.getLeftShooter());
+        run.setSide(shooterSubsystem.getLeftShooter());
  
         oi.leftButtons.getifAvailable(6).whenPressed(stepPower);
-        oi.leftButtons.getifAvailable(7).whenPressed(stop);
-        oi.leftButtons.getifAvailable(8).whenPressed(setShooter);
+        oi.leftButtons.getifAvailable(8).whileHeld(run);
     }
+    
+    @Inject
+    public void setupShooterBeltCommands(
+            OperatorInterface oi,
+            ShooterBeltsManagerSubsystem shooterBeltsSubsystem,
+            RunBeltCommand run
+            )
+            {
+        run.setShooterBeltSubsystem(shooterBeltsSubsystem.getLeftBelt());
+            
+        oi.leftButtons.getifAvailable(7).whileHeld(run);
+            }
     
    @Inject
    public void setupShiftCommand(

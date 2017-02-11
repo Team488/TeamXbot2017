@@ -4,8 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
-import competition.subsystems.shooter_wheel.commands.ContinueShooterCommand;
-import competition.subsystems.shooter_wheel.commands.SetShooterSpeedCommand;
+import competition.subsystems.shooter_wheel.commands.RunShooterCommand;
 import competition.subsystems.shooter_wheel.commands.StepShooterPowerCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
 
@@ -24,19 +23,19 @@ public class ShooterWheelTest extends ShooterWheelTestBase {
     }
     
     @Test
-    public void testContinueShooterCommand(){
-        ContinueShooterCommand cmdLeft = injector.getInstance(ContinueShooterCommand.class);
-        ContinueShooterCommand cmdRight = injector.getInstance(ContinueShooterCommand.class);
+    public void testRunShooterCommand(){
+        RunShooterCommand rscLeft = injector.getInstance(RunShooterCommand.class);
+        RunShooterCommand rscRight = injector.getInstance(RunShooterCommand.class);
         
-        cmdLeft.setSide((leftShooter));
-        cmdLeft.initialize();
-        cmdLeft.execute();
-        cmdLeft.isFinished();
+        rscLeft.setSide((leftShooter));
+        rscLeft.initialize();
+        rscLeft.execute();
+        rscLeft.isFinished();
         
-        cmdRight.setSide(rightShooter);
-        cmdRight.initialize();
-        cmdRight.execute();
-        cmdRight.isFinished();
+        rscRight.setSide(rightShooter);
+        rscRight.initialize();
+        rscRight.execute();
+        rscRight.isFinished();
         
          verifyShooterPowers(shooter.getLeftShooter().getLauncherPower(), shooter.getRightShooter().getLauncherPower());;
     }
@@ -74,28 +73,4 @@ public class ShooterWheelTest extends ShooterWheelTestBase {
         verifyShooterPowers(0,0);
         
     }
-    
-    @Test
-    public void testSetShooterSpeedCommand(){
-        SetShooterSpeedCommand ssscLeft = injector.getInstance(SetShooterSpeedCommand.class);
-        SetShooterSpeedCommand ssscRight = injector.getInstance(SetShooterSpeedCommand.class);
-        ssscLeft.setSide(leftShooter);
-        
-        ssscLeft.initialize();
-        ssscLeft.execute();
-        ssscLeft.isFinished();
-        
-        ssscRight.setSide(rightShooter);
-        
-        ssscRight.initialize();
-        ssscRight.execute();
-        ssscRight.isFinished();
-       
-        verifyShooterSetSpeed(leftShooter.shooterTargetSpeed.get(), rightShooter.shooterTargetSpeed.get());
-    }
-    
-    
-   
-    
-
 }

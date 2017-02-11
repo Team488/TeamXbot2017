@@ -148,4 +148,7 @@ public class ShooterBeltSubsystem extends BaseSubsystem {
     public void stop(){
         beltMotor.set(0);
     }
+    public double getTargetBeltSpeed(){
+        return beltTargetSpeed.get();
+    }
 }

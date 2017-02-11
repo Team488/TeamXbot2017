@@ -11,9 +11,10 @@ import competition.subsystems.collector.CollectorSubsystem;
 import competition.subsystems.collector.commands.StopCollectorCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
+import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
+import competition.subsystems.shooter_belt.commands.StopBeltCommand;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
-import competition.subsystems.shooter_wheel.commands.ContinueShooterCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
 
 @Singleton
@@ -24,7 +25,20 @@ public class SubsystemDefaultCommandMap {
     public void setupDriveSubsystem(DriveSubsystem driveSubsystem, TankDriveWithJoysticksCommand command) {
         driveSubsystem.setDefaultCommand(command);
     }
-    
+
+    @Inject
+    public void setupFuelLauncherSubsystem(ShooterWheelsManagerSubsystem shooterWheelManager, StopShooterCommand stop) {
+        stop.setSide(shooterWheelManager.getLeftShooter());
+        shooterWheelManager.getLeftShooter().setDefaultCommand(stop);
+    }
+
+    @Inject
+    public void setupShooterBeltSubsystem(ShooterBeltsManagerSubsystem shooterBeltManager, StopBeltCommand stop){
+        stop.setShooterBeltSubsystem(shooterBeltManager.getLeftBelt());
+        shooterBeltManager.getLeftBelt().setDefaultCommand(stop);
+    }
+
+    @Inject
     public void setupClimbingSubsystem(ClimbingSubsystem climbingSystem,StopClimbingCommand stop) {
         climbingSystem.setDefaultCommand(stop);
     }
