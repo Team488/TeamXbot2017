@@ -6,9 +6,7 @@ import com.google.inject.Singleton;
 
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
-import competition.subsystems.collector.commands.StopCollectorCommand;
-import competition.subsystems.vision.commands.RotateRobotToVisionTargetCommand;
-import competition.subsystems.vision.commands.RotateTurretToVisionTargetCommand;
+import competition.subsystems.vision.commands.RotateRobotToBoilerCommand;
 
 @Singleton
 public class OperatorCommandMap {
@@ -38,7 +36,7 @@ public class OperatorCommandMap {
     @Inject
     public void setupVisionCommands(
             OperatorInterface oi,
-            RotateRobotToVisionTargetCommand rotateCommand
+            RotateRobotToBoilerCommand rotateCommand
     )   {
         oi.leftButtons.getifAvailable(3).whileHeld(rotateCommand);
     }
