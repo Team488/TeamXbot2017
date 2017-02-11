@@ -78,7 +78,7 @@ public class ShooterWheelSubsystem extends BaseSubsystem implements PeriodicData
         master.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 
         master.reverseSensor(true);
-        master.setInverted(true);
+        master.setInverted(false);
         log.info("Configuring voltages");
         master.configNominalOutputVoltage(0,  -0);
         //PEAK OUTPUT VOLTAGE IS -6 because we do not want the the robot to be able

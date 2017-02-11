@@ -19,6 +19,7 @@ import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shooter_belt.ShooterBeltSubsystem;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
+import competition.subsystems.shooter_belt.commands.IntakeBeltCommand;
 import competition.subsystems.shooter_belt.commands.RunBeltCommand;
 import competition.subsystems.shooter_belt.commands.StopBeltCommand;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
@@ -63,23 +64,34 @@ public class OperatorCommandMap {
             ShooterWheelsManagerSubsystem shooterSubsystem,
             XPropertyManager propertyManager,
             StepShooterPowerCommand stepPower,
+            RunShooterCommand fire,
             StopShooterCommand stop) 
     {
         stepPower.setSide(shooterSubsystem.getLeftShooter());
         stop.setSide(shooterSubsystem.getLeftShooter());
+        fire.setSide(shooterSubsystem.getLeftShooter());
  
         oi.leftButtons.getifAvailable(6).whenPressed(stepPower);
         oi.leftButtons.getifAvailable(7).whenPressed(stop);
+        oi.leftButtons.getifAvailable(8).whenPressed(fire);
     }
     
     @Inject
     public void setupShooterBeltCommands(
             OperatorInterface oi,
             ShooterBeltsManagerSubsystem shooterBeltsSubsystem,
-            RunBeltCommand run)
+            RunBeltCommand run,
+            StopBeltCommand stop,
+            IntakeBeltCommand intake)
     {
         run.setShooterBeltSubsystem(shooterBeltsSubsystem.getLeftBelt());
-        oi.rightButtons.getifAvailable(7).whileHeld(run);
+        intake.setShooterBeltSubsystem(shooterBeltsSubsystem.getLeftBelt());
+        stop.setShooterBeltSubsystem(shooterBeltsSubsystem.getLeftBelt());
+        
+        oi.rightButtons.getifAvailable(6).whenPressed(run);
+        oi.rightButtons.getifAvailable(7).whenPressed(intake);
+        oi.rightButtons.getifAvailable(8).whenPressed(stop);
+        
     }
     
    @Inject
