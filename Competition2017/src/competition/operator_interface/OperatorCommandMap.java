@@ -93,10 +93,8 @@ public class OperatorCommandMap {
     {
         oi.leftButtons.getifAvailable(1).whileHeld(eject);
         oi.rightButtons.getifAvailable(1).whileHeld(intake);
-        /*
-        oi.controller.getXboxButton(XboxButtons.LeftBumper).whileHeld(eject);
-        oi.controller.getXboxButton(XboxButtons.RightBumper).whileHeld(intake);
-        */
+        //oi.controller.getXboxButton(XboxButtons.LeftBumper).whileHeld(eject);
+        //oi.controller.getXboxButton(XboxButtons.RightBumper).whileHeld(intake);
     }
 
     @Inject
