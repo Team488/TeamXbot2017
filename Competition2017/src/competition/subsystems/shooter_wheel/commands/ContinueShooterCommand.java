@@ -2,23 +2,14 @@ package competition.subsystems.shooter_wheel.commands;
 
 import org.apache.log4j.Logger;
 
-import com.google.inject.Inject;
-
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
-import xbot.common.command.BaseCommand;
 
-public class ContinueShooterCommand extends BaseCommand {
+public class ContinueShooterCommand extends BaseShooterWheelCommand {  
+    
     private static Logger log = Logger.getLogger(ContinueShooterCommand.class);
 
-    ShooterWheelSubsystem shooterWheel;
-
-    @Inject
-    public ContinueShooterCommand() {
-    }
-
-    public void setSide(ShooterWheelSubsystem shooterWheel) {
-        this.shooterWheel = shooterWheel;
-        this.requires(shooterWheel);
+    public ContinueShooterCommand(ShooterWheelSubsystem shooterWheelSubsystem) {
+        super(shooterWheelSubsystem);
     }
 
     @Override
@@ -28,7 +19,6 @@ public class ContinueShooterCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        shooterWheel.updatePeriodicData();
+        shooterWheelSubsystem.updatePeriodicData();
     }
-
 }

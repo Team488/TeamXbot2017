@@ -1,21 +1,18 @@
 package competition.subsystems.climbing.commands;
 
 import org.apache.log4j.Logger;
+
 import com.google.inject.Inject;
+
 import competition.subsystems.climbing.ClimbingSubsystem;
-import xbot.common.command.BaseCommand;
 
-public class StopClimbingCommand extends BaseCommand {
+public class StopClimbingCommand extends BaseClimbingCommand {
 
-    final ClimbingSubsystem climbingSystem;
-   
     private static Logger log = Logger.getLogger(StopClimbingCommand.class);
-
+    
     @Inject
-    public StopClimbingCommand(ClimbingSubsystem climbingSystem){
-
-        this.climbingSystem = climbingSystem;   
-        this.requires(climbingSystem);
+    public StopClimbingCommand(ClimbingSubsystem climbingSubsystem) {
+        super(climbingSubsystem);
     }
 
     public void initialize() {
@@ -23,6 +20,6 @@ public class StopClimbingCommand extends BaseCommand {
     }
 
     public void execute(){
-        climbingSystem.stop();
+        climbingSubsystem.stop();
     }
 }

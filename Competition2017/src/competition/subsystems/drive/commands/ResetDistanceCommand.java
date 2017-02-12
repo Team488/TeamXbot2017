@@ -3,17 +3,14 @@ package competition.subsystems.drive.commands;
 import com.google.inject.Inject;
 
 import competition.subsystems.drive.DriveSubsystem;
-import xbot.common.command.BaseCommand;
 
-public class ResetDistanceCommand extends BaseCommand {
+public class ResetDistanceCommand extends BaseDriveCommand {
 
-    private DriveSubsystem driveSubsystem;
-    
     @Inject
     public ResetDistanceCommand(DriveSubsystem driveSubsystem) {
-        this.driveSubsystem = driveSubsystem;
+        super(driveSubsystem);
     }
-    
+
     @Override
     public void initialize() {
         driveSubsystem.resetDistance();

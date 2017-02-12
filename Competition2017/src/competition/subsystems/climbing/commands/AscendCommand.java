@@ -5,17 +5,13 @@ import com.google.inject.Inject;
 import competition.subsystems.climbing.ClimbingSubsystem;
 import xbot.common.command.BaseCommand;
 
-public class AscendCommand extends BaseCommand {
-    
-    final ClimbingSubsystem climbingSystem;
+public class AscendCommand extends BaseClimbingCommand {
     
     private static Logger log = Logger.getLogger(AscendCommand.class);   
 
     @Inject
-    public AscendCommand(ClimbingSubsystem ascendingSystem){
-
-        this.climbingSystem = ascendingSystem;  
-        this.requires(ascendingSystem);
+    public AscendCommand(ClimbingSubsystem climbingSubsystem){
+        super(climbingSubsystem);
     }
 
     public void initialize() {
@@ -23,6 +19,6 @@ public class AscendCommand extends BaseCommand {
     }
 
     public void execute(){
-        climbingSystem.ascend();
+        climbingSubsystem.ascend();
     }
 }

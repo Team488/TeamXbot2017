@@ -1,10 +1,7 @@
 package competition.subsystems.drive.commands;
 
 import org.apache.log4j.Logger;
-
 import com.google.inject.Inject;
-
-import xbot.common.command.BaseCommand;
 import xbot.common.logging.RobotAssertionManager;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.PIDManager;
@@ -14,10 +11,9 @@ import xbot.common.properties.XPropertyManager;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 
-public class DriveForDistanceCommand extends BaseCommand {
+public class DriveForDistanceCommand extends BaseDriveCommand {
     private static Logger log = Logger.getLogger(DriveForDistanceCommand.class);
     
-    private final DriveSubsystem driveSubsystem;
     private final PIDManager travelManager;
     private final PoseSubsystem poseSubsystem;
     
@@ -44,7 +40,8 @@ public class DriveForDistanceCommand extends BaseCommand {
             RobotAssertionManager assertionManager,
             PIDFactory pidFactory,
             PoseSubsystem pose) {
-        this.driveSubsystem = driveSubsystem;
+        super(driveSubsystem);
+        
         this.poseSubsystem = pose;
         this.requires(driveSubsystem);
         this.travelManager = pidFactory.createPIDManager("Drive to position", 0.1, 0, 0, 0.5, -0.5);

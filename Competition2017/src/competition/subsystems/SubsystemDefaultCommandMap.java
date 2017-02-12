@@ -26,24 +26,30 @@ public class SubsystemDefaultCommandMap {
     }
 
     @Inject
-    public void setupFuelLauncherSubsystem(ShooterWheelsManagerSubsystem shooterWheelManager, StopShooterCommand stop) {
-        stop.setSide(shooterWheelManager.getLeftShooter());
-        shooterWheelManager.getLeftShooter().setDefaultCommand(stop);
+    public void setupFuelLauncherSubsystem(ShooterWheelsManagerSubsystem shooterWheelManager) {
+        StopShooterCommand stopLeft = new StopShooterCommand(shooterWheelManager.getLeftShooter());
+        shooterWheelManager.getLeftShooter().setDefaultCommand(stopLeft);
+        
+        StopShooterCommand stopRight = new StopShooterCommand(shooterWheelManager.getRightShooter());
+        shooterWheelManager.getRightShooter().setDefaultCommand(stopRight);
     }
 
     @Inject
-    public void setupShooterBeltSubsystem(ShooterBeltsManagerSubsystem shooterBeltManager, StopBeltCommand stop){
-        stop.setShooterBeltSubsystem(shooterBeltManager.getLeftBelt());
-        shooterBeltManager.getLeftBelt().setDefaultCommand(stop);
+    public void setupShooterBeltSubsystem(ShooterBeltsManagerSubsystem shooterBeltManager){
+        StopBeltCommand stopRight = new StopBeltCommand(shooterBeltManager.getRightBelt());
+        shooterBeltManager.getRightBelt().setDefaultCommand(stopRight);
+        
+        StopBeltCommand stopLeft = new StopBeltCommand(shooterBeltManager.getLeftBelt());
+        shooterBeltManager.getLeftBelt().setDefaultCommand(stopLeft);
     }
 
     @Inject
-    public void setupClimbingSubsystem(ClimbingSubsystem climbingSystem,StopClimbingCommand stop) {
+    public void setupClimbingSubsystem(ClimbingSubsystem climbingSystem, StopClimbingCommand stop) {
         climbingSystem.setDefaultCommand(stop);
     }
     
     @Inject
-    public void setupCollectorSubsystem(CollectorSubsystem collectorSystem,StopCollectorCommand stop) {
+    public void setupCollectorSubsystem(CollectorSubsystem collectorSystem, StopCollectorCommand stop) {
         collectorSystem.setDefaultCommand(stop);
     }
     

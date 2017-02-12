@@ -11,9 +11,8 @@ import xbot.common.properties.XPropertyManager;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 
-public class RotateToHeadingCommand extends BaseCommand{
-
-    private final DriveSubsystem driveSubsystem;
+public class RotateToHeadingCommand extends BaseDriveCommand{
+    
     private final PoseSubsystem poseSubsystem;
     ContiguousHeading targetHeading;
     ContiguousHeading currentHeading;
@@ -31,7 +30,7 @@ public class RotateToHeadingCommand extends BaseCommand{
             PoseSubsystem pose,
             RobotAssertionManager assertionManager)
     {
-        this.driveSubsystem = driveSubsystem;
+        super(driveSubsystem);
         this.poseSubsystem = pose;
         headingDrivePid = new PIDManager("Rotate to heading", propMan, assertionManager, defaultPValue, 0, 0);
         

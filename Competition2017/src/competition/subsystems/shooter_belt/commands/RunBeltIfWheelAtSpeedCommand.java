@@ -4,20 +4,18 @@ import org.apache.log4j.Logger;
 
 import competition.subsystems.shooter_belt.ShooterBeltSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
-import xbot.common.command.BaseCommand;
-
-public class RunBeltIfWheelAtSpeedCommand extends BaseCommand {
+    
+public class RunBeltIfWheelAtSpeedCommand extends BaseShooterBeltCommand {
 
     private static Logger log = Logger.getLogger(RunBeltIfWheelAtSpeedCommand.class);
     
-    final ShooterBeltSubsystem beltSubsystem;
-    public ShooterWheelSubsystem shooterWheelSubsystem;
-    final double targetBeltSpeed;
-    
-    public RunBeltIfWheelAtSpeedCommand(ShooterBeltSubsystem beltSubsystem){
-        this.beltSubsystem = beltSubsystem;
-        this.requires(beltSubsystem);
-        targetBeltSpeed = beltSubsystem.getTargetSpeed();
+    protected final ShooterWheelSubsystem shooterWheelSubsystem;
+    private double targetBeltSpeed;
+
+    public RunBeltIfWheelAtSpeedCommand(ShooterBeltSubsystem shooterBeltSubsystem, ShooterWheelSubsystem shooterWheelSubsystem) {
+        super(shooterBeltSubsystem);
+        this.shooterWheelSubsystem = shooterWheelSubsystem;
+        targetBeltSpeed = shooterBeltSubsystem.getTargetSpeed();
     }
     
     @Override
@@ -28,9 +26,9 @@ public class RunBeltIfWheelAtSpeedCommand extends BaseCommand {
     @Override
     public void execute() {
         if(shooterWheelSubsystem.isAtSpeed() == true){
-            beltSubsystem.setTargetSpeed(targetBeltSpeed);
+            shooterBeltSubsystem.setTargetSpeed(targetBeltSpeed);
         }else{
-            beltSubsystem.setPower(0);
+            shooterBeltSubsystem.setPower(0);
         }
     }  
 }

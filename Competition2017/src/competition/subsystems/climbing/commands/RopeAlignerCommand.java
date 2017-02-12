@@ -4,20 +4,21 @@ import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 
+import competition.subsystems.climbing.ClimbingSubsystem;
 import competition.subsystems.climbing.RopeAlignerSubsystem;
-import xbot.common.command.BaseCommand;
 
-public class RopeAlignerCommand extends BaseCommand {
+public class RopeAlignerCommand extends BaseClimbingCommand {
+    
     private static Logger log = Logger.getLogger(RopeAlignerCommand.class);
     
     private final RopeAlignerSubsystem ropeAlignerSubsystem;
     
     @Inject
-    public RopeAlignerCommand(RopeAlignerSubsystem ropeAlignerSubsystem) {
+    public RopeAlignerCommand(RopeAlignerSubsystem ropeAlignerSubsystem, ClimbingSubsystem climbingSubsystem) {
+        super(climbingSubsystem);
         this.ropeAlignerSubsystem = ropeAlignerSubsystem;
-        this.requires(ropeAlignerSubsystem);
     }
-    
+
     @Override
     public void initialize() {
         log.info("Initializing RopeAlignerCommand");

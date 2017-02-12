@@ -6,13 +6,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
-import competition.subsystems.shooter_wheel.commands.RunShooterCommand;
+import competition.subsystems.shooter_wheel.commands.RunShooterWheelCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
+import xbot.common.properties.XPropertyManager;
 
 public class ShooterWheelTest extends ShooterWheelTestBase {
     
      ShooterWheelSubsystem leftShooter;
      ShooterWheelSubsystem rightShooter;
+     XPropertyManager propertyManager;
     
     @Before
     @Override
@@ -20,20 +22,19 @@ public class ShooterWheelTest extends ShooterWheelTestBase {
         super.setup();
         leftShooter = shooter.getLeftShooter();
         rightShooter = shooter.getRightShooter();
+        propertyManager = injector.getInstance(XPropertyManager.class);
         
     }
     
     @Test
     public void testRunShooterCommand(){
-        RunShooterCommand rscLeft = injector.getInstance(RunShooterCommand.class);
-        RunShooterCommand rscRight = injector.getInstance(RunShooterCommand.class);
+        RunShooterWheelCommand rscLeft = new RunShooterWheelCommand(leftShooter, propertyManager);
+        RunShooterWheelCommand rscRight = new RunShooterWheelCommand(rightShooter, propertyManager);
         
-        rscLeft.setSide(leftShooter);
         rscLeft.initialize();
         rscLeft.execute();
         rscLeft.isFinished();
         
-        rscRight.setSide(rightShooter);
         rscRight.initialize();
         rscRight.execute();
         rscRight.isFinished();
@@ -47,10 +48,8 @@ public class ShooterWheelTest extends ShooterWheelTestBase {
     
     @Test 
     public void testStopShooterCommand(){
-        StopShooterCommand stop = injector.getInstance(StopShooterCommand.class);
-        
-        stop.setSide(leftShooter);
-        
+        StopShooterCommand stop = new StopShooterCommand(this.leftShooter);
+                
         leftShooter.setPower(1);
         
         stop.initialize();

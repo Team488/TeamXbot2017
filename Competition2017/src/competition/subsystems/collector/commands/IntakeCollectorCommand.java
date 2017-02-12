@@ -5,19 +5,16 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 
 import competition.subsystems.collector.CollectorSubsystem;
-import xbot.common.command.BaseCommand;
 
-
-public class IntakeCollectorCommand extends BaseCommand {
-    final CollectorSubsystem collectorSystem;
+public class IntakeCollectorCommand extends BaseCollectorCommand {
+    
     private static Logger log = Logger.getLogger(IntakeCollectorCommand.class);
     
     @Inject
-    public IntakeCollectorCommand(CollectorSubsystem collectorSystem){
-        this.collectorSystem = collectorSystem;  
-        this.requires(collectorSystem);
+    public IntakeCollectorCommand(CollectorSubsystem collectorSubsystem) {
+        super(collectorSubsystem);
     }
-    
+
     @Override
     public void initialize() {
         log.info("Initializing IntakeCollectorCommand");
@@ -25,6 +22,6 @@ public class IntakeCollectorCommand extends BaseCommand {
     
     @Override
     public void execute(){
-        collectorSystem.intake();
+        collectorSubsystem.intake();
     }
 }

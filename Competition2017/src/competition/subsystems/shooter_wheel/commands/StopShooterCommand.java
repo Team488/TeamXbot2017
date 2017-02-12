@@ -1,20 +1,11 @@
 package competition.subsystems.shooter_wheel.commands;
 
-import com.google.inject.Inject;
-
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
-import xbot.common.command.BaseCommand;
 
-public class StopShooterCommand extends BaseCommand {
-    
-    ShooterWheelSubsystem shooterWheel;
-    
-    @Inject
-    public StopShooterCommand() {}
-
-    public void setSide(ShooterWheelSubsystem shooterWheel){
-        this.shooterWheel = shooterWheel;
-        this.requires(this.shooterWheel);
+public class StopShooterCommand extends BaseShooterWheelCommand {
+        
+    public StopShooterCommand(ShooterWheelSubsystem shooterWheelSubsystem) {
+        super(shooterWheelSubsystem);
     }
     
     @Override
@@ -24,7 +15,6 @@ public class StopShooterCommand extends BaseCommand {
     
     @Override
     public void execute() {
-        shooterWheel.setPower(0);
+        shooterWheelSubsystem.setPower(0);
     }
-    
 }

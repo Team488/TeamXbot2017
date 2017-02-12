@@ -6,7 +6,6 @@ import com.google.inject.Singleton;
 import xbot.common.properties.XPropertyManager;
 import competition.subsystems.climbing.commands.AscendCommand;
 import competition.subsystems.climbing.commands.DescendClimbingCommand;
-import competition.subsystems.agitator.AgitatorSubsystem;
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.EjectAgitatorCommand;
 import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
@@ -21,12 +20,10 @@ import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
 
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
-import competition.subsystems.shooter_belt.ShooterBeltSubsystem;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
-import competition.subsystems.shooter_belt.commands.RunBeltCommand;
-import competition.subsystems.shooter_belt.commands.StopBeltCommand;
+import competition.subsystems.shooter_belt.commands.RunShooterBeltCommand;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
-import competition.subsystems.shooter_wheel.commands.RunShooterCommand;
+import competition.subsystems.shooter_wheel.commands.RunShooterWheelCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
 import xbot.common.controls.sensors.XboxControllerWpiAdapter.XboxButtons;
 import xbot.common.properties.DoubleProperty;
@@ -61,25 +58,25 @@ public class OperatorCommandMap {
     }
     
      @Inject
-    public void setupLauncherCommands(
+    public void setupShooterWheelCommands(
             OperatorInterface oi,
-            ShooterWheelsManagerSubsystem shooterSubsystem,
-            XPropertyManager propertyManager,
-            StopShooterCommand stop) 
+            ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem,
+            XPropertyManager propertyManager) 
     {
-        stop.setSide(shooterSubsystem.getLeftShooter());
- 
-        oi.leftButtons.getifAvailable(7).whenPressed(stop);
+        StopShooterCommand stopLeft = new StopShooterCommand(shooterWheelsManagerSubsystem.getLeftShooter());
+        RunShooterWheelCommand shootLeft = new RunShooterWheelCommand(shooterWheelsManagerSubsystem.getLeftShooter(), propertyManager);
+        
+        oi.leftButtons.getifAvailable(6).whenPressed(shootLeft);
+        oi.leftButtons.getifAvailable(7).whenPressed(stopLeft);
     }
     
     @Inject
     public void setupShooterBeltCommands(
             OperatorInterface oi,
-            ShooterBeltsManagerSubsystem shooterBeltsSubsystem,
-            RunBeltCommand run)
+            ShooterBeltsManagerSubsystem shooterBeltsSubsystem)
     {
-        run.setShooterBeltSubsystem(shooterBeltsSubsystem.getLeftBelt());
-        oi.rightButtons.getifAvailable(7).whileHeld(run);
+        RunShooterBeltCommand runBeltLeft = new RunShooterBeltCommand(shooterBeltsSubsystem.getLeftBelt());
+        oi.rightButtons.getifAvailable(7).whileHeld(runBeltLeft);
     }
     
    @Inject
