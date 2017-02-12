@@ -2,11 +2,8 @@ package competition.subsystems.agitator.commands;
 
 import org.apache.log4j.Logger;
 
-import com.google.inject.Inject;
-
 import competition.subsystems.agitator.AgitatorSubsystem;
 import competition.subsystems.agitator.commands.EjectAgitatorCommand;
-import xbot.common.command.BaseCommand;
 
 public class EjectAgitatorCommand extends BaseAgitatorCommand {
     

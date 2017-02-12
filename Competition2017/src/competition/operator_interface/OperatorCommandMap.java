@@ -18,7 +18,6 @@ import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.ResetDistanceCommand;
 
 import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
-import competition.subsystems.shift.ShiftSubsystem;
 
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;

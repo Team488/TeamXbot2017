@@ -6,8 +6,6 @@ import com.google.inject.Inject;
 
 import competition.subsystems.shooter_belt.ShooterBeltSubsystem;
 import xbot.common.command.BaseCommand;
-import xbot.common.properties.DoubleProperty;
-import xbot.common.properties.XPropertyManager;
 
 public class RunBeltCommand extends BaseCommand {
 

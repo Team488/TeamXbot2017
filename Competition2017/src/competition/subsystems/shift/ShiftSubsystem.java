@@ -16,8 +16,6 @@ public class ShiftSubsystem extends BaseSubsystem {
     public final XSolenoid solenoidLeft;
     public final XSolenoid solenoidRight;
     
-    private Gear currentGear;
-    
     public enum Gear {
         LOW_GEAR, HIGH_GEAR
     }
@@ -35,7 +33,6 @@ public class ShiftSubsystem extends BaseSubsystem {
      * @param gear a low gear or high gear that determines which gear to trigger
      */
     public void setGear(Gear gear) {
-        currentGear = gear;
         if (gear == Gear.LOW_GEAR) {
             solenoidLeft.set(false);
             solenoidRight.set(false);

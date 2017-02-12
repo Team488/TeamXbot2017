@@ -2,7 +2,6 @@ package competition.subsystems.agitator;
 
 import com.google.inject.Inject;
 
-import competition.subsystems.RobotSide;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.logging.RobotAssertionManager;
 import xbot.common.properties.XPropertyManager;

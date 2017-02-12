@@ -5,7 +5,6 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
-import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import xbot.common.command.BaseCommand;
 
 public class ContinueShooterCommand extends BaseCommand {

@@ -5,9 +5,7 @@ import com.google.inject.Singleton;
 
 import competition.subsystems.climbing.ClimbingSubsystem;
 import competition.subsystems.climbing.commands.StopClimbingCommand;
-import competition.subsystems.agitator.AgitatorSubsystem;
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;
-import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
 import competition.subsystems.agitator.commands.StopAgitatorCommand;
 import competition.subsystems.collector.CollectorSubsystem;
 import competition.subsystems.collector.commands.StopCollectorCommand;
@@ -15,7 +13,6 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
 import competition.subsystems.shooter_belt.commands.StopBeltCommand;
-import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
 

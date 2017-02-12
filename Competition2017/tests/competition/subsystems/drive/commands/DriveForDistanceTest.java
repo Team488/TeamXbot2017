@@ -3,12 +3,9 @@ package competition.subsystems.drive.commands;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-
-import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.DriveTestBase;
 import xbot.common.controls.MockRobotIO;
 import xbot.common.controls.actuators.MockCANTalon;
-import xbot.common.controls.sensors.MockGyro;
 
 public class DriveForDistanceTest extends DriveTestBase {
  

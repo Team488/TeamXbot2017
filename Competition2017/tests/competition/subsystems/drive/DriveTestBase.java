@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import competition.subsystems.pose.PoseSubsystem;
 import xbot.common.controls.actuators.MockCANTalon;
-import xbot.common.controls.sensors.MockGyro;
 import xbot.common.injection.BaseWPITest;
 
 public abstract class DriveTestBase extends BaseWPITest {
