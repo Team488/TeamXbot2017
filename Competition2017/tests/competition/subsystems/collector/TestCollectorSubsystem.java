@@ -21,5 +21,4 @@ public class TestCollectorSubsystem extends CollectorSubsystem {
     public DoubleProperty getEjectProp(){
         return ejectPowerProperty;
     }
-
 }

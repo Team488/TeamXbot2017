@@ -6,15 +6,16 @@ import com.google.inject.Singleton;
 import xbot.common.properties.XPropertyManager;
 import competition.subsystems.climbing.commands.AscendCommand;
 import competition.subsystems.climbing.commands.DescendClimbingCommand;
-import competition.subsystems.agitator.commands.SpinAgitatorBackwardsCommand;
-import competition.subsystems.agitator.commands.SpinAgitatorForwardsCommand;
+import competition.subsystems.agitator.AgitatorSubsystem;
+import competition.subsystems.agitator.AgitatorsManagerSubsystem;
+import competition.subsystems.agitator.commands.EjectAgitatorCommand;
+import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
 import competition.subsystems.agitator.commands.StopAgitatorCommand;
 import competition.subsystems.climbing.commands.RopeAlignerCommand;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.ResetDistanceCommand;
-import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shooter_belt.ShooterBeltSubsystem;
@@ -109,13 +110,12 @@ public class OperatorCommandMap {
     @Inject
     public void setupAgitatorCommands(
             OperatorInterface oi,
-            SpinAgitatorForwardsCommand forwards,
-            SpinAgitatorBackwardsCommand backwards,
-            StopAgitatorCommand stop)
+            AgitatorsManagerSubsystem agitatorManagerSubsystem)
     {
-        oi.controller.getXboxButton(XboxButtons.Y).whenPressed(forwards);
-        oi.controller.getXboxButton(XboxButtons.A).whenPressed(backwards);
-        oi.controller.getXboxButton(XboxButtons.X).whenPressed(stop);
+        
+        oi.controller.getXboxButton(XboxButtons.Y).whenPressed(new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
+        oi.controller.getXboxButton(XboxButtons.A).whenPressed(new EjectAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
+        oi.controller.getXboxButton(XboxButtons.X).whenPressed(new StopAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
     }
     
     // OTHER

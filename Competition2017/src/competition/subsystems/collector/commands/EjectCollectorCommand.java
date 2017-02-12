@@ -27,5 +27,4 @@ public class EjectCollectorCommand extends BaseCommand {
     public void execute(){
         collectorSystem.eject();
     }
-
 }

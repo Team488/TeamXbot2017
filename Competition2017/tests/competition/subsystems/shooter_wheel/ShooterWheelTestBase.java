@@ -25,7 +25,4 @@ public abstract class ShooterWheelTestBase extends BaseWPITest {
         assertEquals(leftTarget,shooter.getLeftShooterTargetSpeed(),0.001);
         assertEquals(rightTarget,shooter.getRightShooterTargetSpeed(),0.001);
     }
-   
-    
-    
 }

@@ -3,7 +3,7 @@ package competition.subsystems.agitator;
 import org.junit.Test;
 
 public class AgitatorSubsystemTest extends AgitatorTestBase{
-        
+    
     @Test
     public void stopTest(){
         agitator.stop();
@@ -11,21 +11,21 @@ public class AgitatorSubsystemTest extends AgitatorTestBase{
     }
     
     @Test
-    public void spinForwardsTest(){
-        agitator.spinForwards();
-        verifyAgitatorSetpoints(agitator.motorPowerProperty.get());
+    public void agitatorIntakeTest(){
+        agitator.intake();
+        verifyAgitatorSetpoints(agitator.intakePowerProperty.get());
     }
     
     @Test
-    public void spinBackwardsTest(){
-        agitator.spinBackwards();
-        verifyAgitatorSetpoints(agitator.motorPowerProperty.get() * -1);
+    public void agitatorEjectTest(){
+        agitator.eject();
+        verifyAgitatorSetpoints(agitator.ejectPowerProperty.get());
     }
     
     @Test
-    public void spinForwardsThenStopTest(){
-        spinForwardsTest();
-        stopTest();
+    public void agitatorStopTest(){
+        agitator.stop();
+        verifyAgitatorSetpoints(0);
     }
 
 }

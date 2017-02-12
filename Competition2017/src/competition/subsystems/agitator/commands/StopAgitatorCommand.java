@@ -7,14 +7,12 @@ import com.google.inject.Inject;
 import competition.subsystems.agitator.AgitatorSubsystem;
 import xbot.common.command.BaseCommand;
 
-public class StopAgitatorCommand extends BaseCommand{
-    final AgitatorSubsystem agitatorSubsystem;
+public class StopAgitatorCommand extends BaseAgitatorCommand {
+
     private static Logger log = Logger.getLogger(StopAgitatorCommand.class);
     
-    @Inject
-    public StopAgitatorCommand(AgitatorSubsystem agitatorSubsystem){
-        this.agitatorSubsystem = agitatorSubsystem;   
-        this.requires(agitatorSubsystem);
+    public StopAgitatorCommand(AgitatorSubsystem agitatorSubsystem) {
+        super(agitatorSubsystem);
     }
 
     @Override
@@ -24,6 +22,6 @@ public class StopAgitatorCommand extends BaseCommand{
 
     @Override
     public void execute() {
-        agitatorSubsystem.stop();        
+        agitatorSubsystem.stop();
     }
 }

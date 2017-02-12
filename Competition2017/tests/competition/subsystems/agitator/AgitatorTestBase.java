@@ -1,20 +1,21 @@
 package competition.subsystems.agitator;
 
 import static org.junit.Assert.assertEquals;
-
+import org.junit.Before;
 import xbot.common.injection.BaseWPITest;
 
 public class AgitatorTestBase extends BaseWPITest{
+
     protected AgitatorSubsystem agitator;
     
-    public void setUp() {        
+    @Before
+    public void setup() {
         super.setUp();
         
-        agitator = injector.getInstance(AgitatorSubsystem.class);
+        agitator = injector.getInstance(TestAgitatorManagerSubsystem.class).getLeftAgitator();
     }
     
-    public void verifyAgitatorSetpoints(double power){
-        assertEquals(power, agitator.agitatorMotor.get(), 0.001);
+    public void verifyAgitatorSetpoints(double leftPower) {
+        assertEquals(leftPower, agitator.agitatorMotor.get(), 0.001);
     }
-
 }

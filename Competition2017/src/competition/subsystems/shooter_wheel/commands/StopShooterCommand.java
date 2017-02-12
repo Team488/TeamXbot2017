@@ -16,6 +16,7 @@ public class StopShooterCommand extends BaseCommand {
         this.shooterWheel = shooterWheel;
         this.requires(this.shooterWheel);
     }
+    
     @Override
     public void initialize() {
 

@@ -6,6 +6,8 @@ import com.google.inject.Singleton;
 import competition.subsystems.climbing.ClimbingSubsystem;
 import competition.subsystems.climbing.commands.StopClimbingCommand;
 import competition.subsystems.agitator.AgitatorSubsystem;
+import competition.subsystems.agitator.AgitatorsManagerSubsystem;
+import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
 import competition.subsystems.agitator.commands.StopAgitatorCommand;
 import competition.subsystems.collector.CollectorSubsystem;
 import competition.subsystems.collector.commands.StopCollectorCommand;
@@ -49,7 +51,8 @@ public class SubsystemDefaultCommandMap {
     }
     
     @Inject
-    public void setupAgitatorSubsystem(AgitatorSubsystem agitatorSubsystem, StopAgitatorCommand stop) {
-        agitatorSubsystem.setDefaultCommand(stop);
+    public void setupAgitatorSubsystem(AgitatorsManagerSubsystem agitatorsManagerSubsystem) {
+        agitatorsManagerSubsystem.getLeftAgitator().setDefaultCommand(new StopAgitatorCommand(agitatorsManagerSubsystem.getLeftAgitator()));
+        agitatorsManagerSubsystem.getRightAgitator().setDefaultCommand(new StopAgitatorCommand(agitatorsManagerSubsystem.getRightAgitator()));
     }
 }

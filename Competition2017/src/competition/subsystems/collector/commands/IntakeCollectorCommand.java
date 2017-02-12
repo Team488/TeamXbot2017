@@ -27,5 +27,4 @@ public class IntakeCollectorCommand extends BaseCommand {
     public void execute(){
         collectorSystem.intake();
     }
-
 }
