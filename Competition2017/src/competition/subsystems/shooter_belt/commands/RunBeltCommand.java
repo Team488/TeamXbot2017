@@ -28,7 +28,7 @@ public class RunBeltCommand extends BaseCommand {
     
     @Override
     public void initialize() {
-        log.info("Initializing RunBeltCommand");
+        log.info("Initializing " +  this.getName());
     }
 
     @Override

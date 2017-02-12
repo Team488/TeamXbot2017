@@ -1,5 +1,7 @@
 package competition.subsystems.shooter_belt.commands;
 
+import org.apache.log4j.Logger;
+
 import com.google.inject.Inject;
 
 import competition.subsystems.shooter_belt.ShooterBeltSubsystem;
@@ -7,6 +9,7 @@ import xbot.common.command.BaseCommand;
 
 public class StopBeltCommand extends BaseCommand {
 
+    private static Logger log = Logger.getLogger(StopBeltCommand.class);
     ShooterBeltSubsystem beltSubsystem;
 
     @Inject
@@ -20,6 +23,7 @@ public class StopBeltCommand extends BaseCommand {
     
     @Override
     public void initialize() {
+        log.info("Initializing " + this.getName());
     }
 
     @Override
