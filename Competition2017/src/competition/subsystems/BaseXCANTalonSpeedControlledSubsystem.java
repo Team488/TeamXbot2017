@@ -30,8 +30,6 @@ import xbot.common.properties.XPropertyManager;
  */
 public abstract class BaseXCANTalonSpeedControlledSubsystem extends BaseSubsystem implements PeriodicDataSource {
     
-    private static Logger log = Logger.getLogger(BaseXCANTalonSpeedControlledSubsystem.class);
-
     protected final XCANTalon masterMotor;
     protected XCANTalon followerMotor;
        
@@ -45,33 +43,8 @@ public abstract class BaseXCANTalonSpeedControlledSubsystem extends BaseSubsyste
     
     private final DoubleProperty systemSpeedThresh;
     protected final PIDPropertyManager pidPropertyManager;
-    protected final double masterChannel;
-    
-    /**
-     * 
-     * @param systemName What the system is called. This will apply to various Properties.
-     * @param masterChannel The CAN index of the master motor (or the only motor, for a simple system)
-     * @param followChannel The CAN index of the follow motor (-1 if no follow motor)
-     * @param factory The WPIFactory
-     * @param pidPropertyManager The default PIDF values the system should use
-     * @param propManager The XPropertyManager
-     */
-    public BaseXCANTalonSpeedControlledSubsystem(
-            String name,
-            int masterChannel,
-            int followChannel,
-            boolean invertMaster,
-            boolean invertMasterSensor,
-            boolean invertFollower,
-            WPIFactory factory, 
-            PIDPropertyManager pidPropertyManager,
-            XPropertyManager propManager){
-        this(name, masterChannel, invertMaster, invertMasterSensor, factory, pidPropertyManager, propManager);
+    protected final int masterChannel;
         
-        followerMotor = factory.getCANTalonSpeedController(followChannel);
-        initializeFollowerMotorConfiguration(invertFollower);
-    }
-    
     /**
      * 
      * @param name What the system is called. This will apply to various Properties.
@@ -98,9 +71,9 @@ public abstract class BaseXCANTalonSpeedControlledSubsystem extends BaseSubsyste
         // support human units. It might be easier to just keep everything in native units per 100ms,
         // which is what the Talon uses for all its calculations.
         // I call this Ticks per Deciseconds, or TPD
-        systemSpeedThresh = propManager.createPersistentProperty(name + " nominal speed thresh (TPC)", 1);
-        systemCurrentSpeed = propManager.createEphemeralProperty(name + " current speed (TPC)", 0);
-        systemTargetSpeed = propManager.createEphemeralProperty(name + " goal speed (TPC)", 0);
+        systemSpeedThresh = propManager.createPersistentProperty(name + " nominal speed thresh (TPD)", 1);
+        systemCurrentSpeed = propManager.createEphemeralProperty(name + " current speed (TPD)", 0);
+        systemTargetSpeed = propManager.createEphemeralProperty(name + " goal speed (TPD)", 0);
         systemOutputPower = propManager.createEphemeralProperty(name + " voltage", 0);
         atSpeedProp = propManager.createEphemeralProperty("Is" + name + " at speed?", false);
         systemTalonError = propManager.createEphemeralProperty(name + " speed error", 0);
@@ -117,16 +90,6 @@ public abstract class BaseXCANTalonSpeedControlledSubsystem extends BaseSubsyste
         masterMotor.reverseSensor(motorSensorInverted);
         masterMotor.setControlMode(TalonControlMode.Speed);
         masterMotor.setProfile(0);
-    }
-    
-    protected void initializeFollowerMotorConfiguration(boolean motorInverted) {
-        if (followerMotor == null) {
-            log.warn("initializeFollowerMotorConfiguration was called, but no followerIndex was given during creation!");
-            return;
-        }
-        followerMotor.setControlMode(TalonControlMode.Follower);
-        followerMotor.setInverted(motorInverted);
-        followerMotor.set(masterChannel);
     }
         
     private void updateMotorPidValues() {
@@ -146,13 +109,13 @@ public abstract class BaseXCANTalonSpeedControlledSubsystem extends BaseSubsyste
     }
     
     /**
-     * Returns the last set motor power. Only works if the motor is currently in PercentVbus mode - otherwise, returns 0.
+     * Returns the current "robot power" (e.g. -1 == full reverse, 1 == full forward)
      * @return Last Motor power
      */
     public double getPower() {
-        masterMotor.getOutputVoltage();
+        double robotPower = masterMotor.getOutputVoltage() / masterMotor.getBusVoltage();
         double inversionFactor = masterMotor.getInverted() ? -1 : 1;
-        return masterMotor.get() * inversionFactor;
+        return robotPower * inversionFactor;
     }
 
     /**

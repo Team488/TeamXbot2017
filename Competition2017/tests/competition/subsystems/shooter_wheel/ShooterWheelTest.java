@@ -1,5 +1,7 @@
 package competition.subsystems.shooter_wheel;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,7 +28,7 @@ public class ShooterWheelTest extends ShooterWheelTestBase {
         RunShooterCommand rscLeft = injector.getInstance(RunShooterCommand.class);
         RunShooterCommand rscRight = injector.getInstance(RunShooterCommand.class);
         
-        rscLeft.setSide((leftShooter));
+        rscLeft.setSide(leftShooter);
         rscLeft.initialize();
         rscLeft.execute();
         rscLeft.isFinished();
@@ -35,8 +37,12 @@ public class ShooterWheelTest extends ShooterWheelTestBase {
         rscRight.initialize();
         rscRight.execute();
         rscRight.isFinished();
+                
+        assertTrue(leftShooter.getTargetSpeed() > 0);
+        assertTrue(rightShooter.getTargetSpeed() > 0);
         
-         verifyShooterPowers(shooter.getLeftShooter().getPower(), shooter.getRightShooter().getPower());;
+        assertTrue(shooter.getLeftShooter().getPower() > 0);
+        assertTrue(shooter.getRightShooter().getPower() > 0);
     }
     
     @Test 

@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
+import competition.subsystems.BaseXCANTalonPairSpeedControlledSubsystem;
 import competition.subsystems.BaseXCANTalonSpeedControlledSubsystem;
 import competition.subsystems.RobotSide;
 import edu.wpi.first.wpilibj.Timer;
@@ -17,9 +18,8 @@ import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
-public class ShooterWheelSubsystem extends BaseXCANTalonSpeedControlledSubsystem {
+public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsystem {
     
-    private static Logger log = Logger.getLogger(ShooterWheelSubsystem.class);
     private final RobotSide side;
    
     public ShooterWheelSubsystem(
@@ -42,9 +42,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonSpeedControlledSubsystem
                 factory,
                 pidPropertyManager,
                 propManager);
-        
         this.side = side;
-        
     }
     public RobotSide getSide(){
         return side;

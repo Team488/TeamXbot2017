@@ -19,21 +19,21 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
     protected ShooterWheelSubsystem leftShooter;
     protected ShooterWheelSubsystem rightShooter;
     
-    protected int leftMotorMasterIndex = 32;
-    protected int leftMotorFollowerIndex = 33;
-    protected int rightMotorMasterIndex = 23;
-    protected int rightMotorFollowerIndex = 22;
+    protected final int leftMotorMasterIndex = 32;
+    protected final int leftMotorFollowerIndex = 33;
+    protected final int rightMotorMasterIndex = 23;
+    protected final int rightMotorFollowerIndex = 22;
     
-    PIDPropertyManager leftPIDValues;
-    PIDPropertyManager rightPIDValues;
+    protected final PIDPropertyManager leftPIDValues;
+    protected final PIDPropertyManager rightPIDValues;
     
-    boolean leftMasterInverted = false;
-    boolean leftMasterEncoderInverted = false;
-    boolean leftFollowerInverted = true;
+    protected final boolean leftMasterInverted = false;
+    protected final boolean leftMasterEncoderInverted = false;
+    protected final boolean leftFollowerInverted = true;
     
-    boolean rightMasterInverted = true;
-    boolean rightMasterEncoderInverted = true;
-    boolean rightFollowerInverted = true; 
+    protected final boolean rightMasterInverted = true;
+    protected final boolean rightMasterEncoderInverted = true;
+    protected final boolean rightFollowerInverted = true; 
     
     @Inject
     public ShooterWheelsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory) {

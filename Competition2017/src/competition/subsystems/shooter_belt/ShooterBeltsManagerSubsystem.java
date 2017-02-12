@@ -13,29 +13,24 @@ import xbot.common.math.PIDPropertyManager;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
-public class ShooterBeltsManagerSubsystem extends BaseSubsystem {
-
-        private static Logger log = Logger.getLogger(ShooterBeltsManagerSubsystem.class);
-        
+public class ShooterBeltsManagerSubsystem extends BaseSubsystem {        
         protected ShooterBeltSubsystem leftBelt;
         protected ShooterBeltSubsystem rightBelt;
         
-        protected PIDPropertyManager leftPIDValues;
-        protected PIDPropertyManager rightPIDValues;
+        protected final PIDPropertyManager leftPIDValues;
+        protected final PIDPropertyManager rightPIDValues;
         
-        boolean invertLeft = false;
-        boolean invertLeftSensor = false;
+        protected final boolean invertLeft = false;
+        protected final boolean invertLeftSensor = false;
         
-        boolean invertRight = true;
-        boolean invertRightSensor = true;
+        protected final boolean invertRight = true;
+        protected final boolean invertRightSensor = true;
         
-        protected int leftMotorIndex = 31;
-        protected int rightMotorIndex = 24;
+        protected final int leftMotorIndex = 31;
+        protected final int rightMotorIndex = 24;
 
         @Inject
-        public ShooterBeltsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory){
-            log.info("Creating ShooterBeltSubsystem");
-            
+        public ShooterBeltsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory){            
             leftPIDValues = pidFactory.createPIDPropertyManager("LeftBelt", 0, 0, 0, 0);
             rightPIDValues = pidFactory.createPIDPropertyManager("RightBelt", 0, 0, 0, 0);
             
