@@ -9,6 +9,7 @@ import xbot.common.controls.sensors.XJoystick;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.logging.RobotAssertionManager;
+import xbot.common.math.XYPair;
 
 /**
  * This class is the glue that binds the controls on the physical operator interface to the commands and command groups
@@ -19,17 +20,18 @@ public class OperatorInterface {
     public XJoystick leftJoystick;
     public XJoystick rightJoystick;
     
-    public XXboxController controller; 
-
+    public XXboxController controller;
+  
     public JoystickButtonManager leftButtons;
     public JoystickButtonManager rightButtons;
 
     @Inject
     public OperatorInterface(WPIFactory factory, RobotAssertionManager assertionManager) {
+        controller = factory.getGamepad(0);
+        
         leftJoystick = factory.getJoystick(1);
         rightJoystick = factory.getJoystick(2);
-        controller = factory.getGamepad(0);
-
+     
         leftJoystick.setYInversion(true);
         rightJoystick.setYInversion(true);
         leftButtons = new JoystickButtonManager(8, factory, assertionManager, leftJoystick);

@@ -16,6 +16,10 @@ import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.ResetDistanceCommand;
+
+import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
+import competition.subsystems.shift.ShiftSubsystem;
+
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shooter_belt.ShooterBeltSubsystem;
@@ -124,11 +128,14 @@ public class OperatorCommandMap {
     public void setupDriveCommand(
             DriveForDistanceCommand driveForDistance, 
             ResetDistanceCommand resetDisplacement,
-            XPropertyManager propManager)
+            XPropertyManager propManager,
+            TankDriveWithGamePadCommand gamepad
+            )
     {
         DoubleProperty deltaDistance = propManager.createPersistentProperty("Drive for distance test distance", 20);
         resetDisplacement.includeOnSmartDashboard();
         driveForDistance.setDeltaDistance(deltaDistance);
         driveForDistance.includeOnSmartDashboard("Test drive for distance");
+        gamepad.includeOnSmartDashboard("Change to GamePad Controls");
     }
 }

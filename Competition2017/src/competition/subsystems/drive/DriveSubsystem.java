@@ -58,13 +58,13 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         currentDisplacementInchProp = propManager.createEphemeralProperty("Current position inches", 0);
         
         this.leftDrive = factory.getCANTalonSpeedController(34);
+        leftDrive.setInverted(true);
         this.leftDriveSlave = factory.getCANTalonSpeedController(35);
         configMotorTeam(leftDrive, leftDriveSlave);
         leftDrive.createTelemetryProperties("Left master", propManager);
         leftDriveSlave.createTelemetryProperties("Left slave", propManager);
         
         this.rightDrive = factory.getCANTalonSpeedController(21);
-        this.rightDrive.setInverted(true);
         this.rightDriveSlave = factory.getCANTalonSpeedController(20);
         configMotorTeam(rightDrive, rightDriveSlave);
         rightDrive.createTelemetryProperties("Right master", propManager);
