@@ -24,7 +24,7 @@ public class StopShooterCommand extends BaseCommand {
     
     @Override
     public void execute() {
-        shooterWheel.setLauncherPower(0);
+        shooterWheel.setPower(0);
     }
     
 }

@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
 import competition.subsystems.shooter_wheel.commands.RunShooterCommand;
-import competition.subsystems.shooter_wheel.commands.StepShooterPowerCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
 
 public class ShooterWheelTest extends ShooterWheelTestBase {
@@ -37,34 +36,16 @@ public class ShooterWheelTest extends ShooterWheelTestBase {
         rscRight.execute();
         rscRight.isFinished();
         
-         verifyShooterPowers(shooter.getLeftShooter().getLauncherPower(), shooter.getRightShooter().getLauncherPower());;
-    }
-    
-    @Test
-    public void testStepShooterPowerCommand(){
-        StepShooterPowerCommand sspc = injector.getInstance(StepShooterPowerCommand.class);
-        sspc.setSide(leftShooter);
-        
-        double leftTemp = shooter.getLeftShooter().getLauncherPower();
-        
-        sspc.initialize();
-        sspc.execute();
-        sspc.isFinished();
-        
-        verifyShooterPowers(leftTemp + leftShooter.getPowerStep(), 0);
+         verifyShooterPowers(shooter.getLeftShooter().getPower(), shooter.getRightShooter().getPower());;
     }
     
     @Test 
     public void testStopShooterCommand(){
         StopShooterCommand stop = injector.getInstance(StopShooterCommand.class);
-        StepShooterPowerCommand sspc = injector.getInstance(StepShooterPowerCommand.class);
         
-        sspc.setSide(leftShooter);
         stop.setSide(leftShooter);
         
-        sspc.initialize();
-        sspc.execute();
-        sspc.isFinished();
+        leftShooter.setPower(1);
         
         stop.initialize();
         stop.execute();

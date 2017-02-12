@@ -17,7 +17,7 @@ public class RunBeltIfWheelAtSpeedCommand extends BaseCommand {
     public RunBeltIfWheelAtSpeedCommand(ShooterBeltSubsystem beltSubsystem){
         this.beltSubsystem = beltSubsystem;
         this.requires(beltSubsystem);
-        targetBeltSpeed = beltSubsystem.getBeltTargetSpeed();
+        targetBeltSpeed = beltSubsystem.getTargetSpeed();
     }
     
     @Override
@@ -28,10 +28,9 @@ public class RunBeltIfWheelAtSpeedCommand extends BaseCommand {
     @Override
     public void execute() {
         if(shooterWheelSubsystem.isAtSpeed() == true){
-            beltSubsystem.setBeltTargetSpeed(targetBeltSpeed);
-            beltSubsystem.updateTelemetry();
+            beltSubsystem.setTargetSpeed(targetBeltSpeed);
         }else{
-            beltSubsystem.setBeltPower(0);
+            beltSubsystem.setPower(0);
         }
     }  
 }

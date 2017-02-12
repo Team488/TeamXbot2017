@@ -28,6 +28,6 @@ public class StopBeltCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        beltSubsystem.setBeltPower(0);
+        beltSubsystem.setPower(0);
     }
 }

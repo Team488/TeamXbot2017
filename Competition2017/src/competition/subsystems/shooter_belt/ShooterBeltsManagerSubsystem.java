@@ -8,6 +8,8 @@ import competition.subsystems.RobotSide;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.logging.RobotAssertionManager;
+import xbot.common.math.PIDFactory;
+import xbot.common.math.PIDPropertyManager;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
@@ -18,18 +20,46 @@ public class ShooterBeltsManagerSubsystem extends BaseSubsystem {
         protected ShooterBeltSubsystem leftBelt;
         protected ShooterBeltSubsystem rightBelt;
         
+        protected PIDPropertyManager leftPIDValues;
+        protected PIDPropertyManager rightPIDValues;
+        
+        boolean invertLeft = false;
+        boolean invertLeftSensor = false;
+        
+        boolean invertRight = true;
+        boolean invertRightSensor = true;
+        
         protected int leftMotorIndex = 31;
         protected int rightMotorIndex = 24;
 
         @Inject
-        public ShooterBeltsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, RobotAssertionManager assertionManager){
+        public ShooterBeltsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory){
             log.info("Creating ShooterBeltSubsystem");
-            createLeftAndRightBelts(factory, propManager, assertionManager);
+            
+            leftPIDValues = pidFactory.createPIDPropertyManager("LeftBelt", 0, 0, 0, 0);
+            rightPIDValues = pidFactory.createPIDPropertyManager("RightBelt", 0, 0, 0, 0);
+            
+            createLeftAndRightBelts(factory, propManager);
         }
         
-        protected void createLeftAndRightBelts(WPIFactory factory, XPropertyManager propManager, RobotAssertionManager assertionManager) {
-            leftBelt = new ShooterBeltSubsystem(leftMotorIndex, RobotSide.Left, factory, propManager, assertionManager);
-            rightBelt = new ShooterBeltSubsystem(rightMotorIndex, RobotSide.Right, factory, propManager, assertionManager);
+        protected void createLeftAndRightBelts(WPIFactory factory, XPropertyManager propManager) {
+            leftBelt = new ShooterBeltSubsystem(
+                    RobotSide.Left,
+                    leftMotorIndex,
+                    invertLeft,
+                    invertLeftSensor,
+                    factory, 
+                    leftPIDValues,
+                    propManager);
+            
+            rightBelt = new ShooterBeltSubsystem(
+                    RobotSide.Right,
+                    rightMotorIndex,
+                    invertRight,
+                    invertRightSensor,
+                    factory, 
+                    rightPIDValues,
+                    propManager);
         }
 
         public ShooterBeltSubsystem getLeftBelt(){

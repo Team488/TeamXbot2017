@@ -33,7 +33,7 @@ public class RunShooterCommand extends BaseCommand {
     
     @Override 
     public void execute(){
-        shooterWheel.setLauncherTargetSpeed(commandedLauncherSpeed.get());
+        shooterWheel.setTargetSpeed(commandedLauncherSpeed.get());
         shooterWheel.updatePeriodicData();
     }
     

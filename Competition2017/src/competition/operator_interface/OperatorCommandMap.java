@@ -28,7 +28,6 @@ import competition.subsystems.shooter_belt.commands.RunBeltCommand;
 import competition.subsystems.shooter_belt.commands.StopBeltCommand;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import competition.subsystems.shooter_wheel.commands.RunShooterCommand;
-import competition.subsystems.shooter_wheel.commands.StepShooterPowerCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
 import xbot.common.controls.sensors.XboxControllerWpiAdapter.XboxButtons;
 import xbot.common.properties.DoubleProperty;
@@ -67,13 +66,10 @@ public class OperatorCommandMap {
             OperatorInterface oi,
             ShooterWheelsManagerSubsystem shooterSubsystem,
             XPropertyManager propertyManager,
-            StepShooterPowerCommand stepPower,
             StopShooterCommand stop) 
     {
-        stepPower.setSide(shooterSubsystem.getLeftShooter());
         stop.setSide(shooterSubsystem.getLeftShooter());
  
-        oi.leftButtons.getifAvailable(6).whenPressed(stepPower);
         oi.leftButtons.getifAvailable(7).whenPressed(stop);
     }
     
