@@ -1,6 +1,5 @@
 package competition.subsystems.agitator;
 
-import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import competition.subsystems.RobotSide;
@@ -11,8 +10,7 @@ import xbot.common.properties.XPropertyManager;
 
 @Singleton
 public class AgitatorsManagerSubsystem extends BaseSubsystem {
-    
-        private static Logger log = Logger.getLogger(AgitatorsManagerSubsystem.class);
+ 
         protected AgitatorSubsystem leftAgitator;
         protected AgitatorSubsystem rightAgitator;
         protected int leftMotorIndex = 29;
@@ -20,7 +18,7 @@ public class AgitatorsManagerSubsystem extends BaseSubsystem {
 
         @Inject
         public AgitatorsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, RobotAssertionManager assertionManager){
-            log.info("Creating AgitatorSubsystem");
+            log.info("Creating");
             createLeftAndRightAgitators(factory, propManager, assertionManager);
         }
         

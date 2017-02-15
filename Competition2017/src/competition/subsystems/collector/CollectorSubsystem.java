@@ -1,18 +1,18 @@
 package competition.subsystems.collector;
 
-import org.apache.log4j.Logger;
 import com.ctre.CANTalon.TalonControlMode;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
+
 @Singleton
 public class CollectorSubsystem extends BaseSubsystem {
-    private static Logger log = Logger.getLogger(CollectorSubsystem.class);
-    
+
     protected final DoubleProperty intakePowerProperty;
     protected final DoubleProperty ejectPowerProperty;
     
@@ -20,7 +20,7 @@ public class CollectorSubsystem extends BaseSubsystem {
     
     @Inject
     public CollectorSubsystem(WPIFactory factory, XPropertyManager propManager){
-        log.info("Creating Collector Subsystem");
+        log.info("Creating");
         collectorMotor = factory.getCANTalonSpeedController(30);
         
         collectorMotor.setBrakeEnableDuringNeutral(false);

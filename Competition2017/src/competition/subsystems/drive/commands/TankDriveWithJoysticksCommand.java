@@ -17,7 +17,7 @@ public class TankDriveWithJoysticksCommand extends BaseDriveCommand {
 
     @Override
     public void initialize() {
-
+        log.info("Initializing");
     }
 
     @Override

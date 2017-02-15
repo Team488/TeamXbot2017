@@ -1,6 +1,5 @@
 package competition.subsystems.drive.commands;
 
-import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 import xbot.common.logging.RobotAssertionManager;
 import xbot.common.math.ContiguousHeading;
@@ -12,7 +11,6 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 
 public class DriveForDistanceCommand extends BaseDriveCommand {
-    private static Logger log = Logger.getLogger(DriveForDistanceCommand.class);
     
     private final PIDManager travelManager;
     private final PoseSubsystem poseSubsystem;
@@ -80,7 +78,7 @@ public class DriveForDistanceCommand extends BaseDriveCommand {
         } else {
             this.targetDistance = driveSubsystem.getDistance() + deltaDistance;
         }
-        log.info("Initializing DriveForDistanceCommand with distance " + targetDistance + " inches");
+        log.info("Initializing  with distance " + targetDistance + " inches");
     }
 
     @Override

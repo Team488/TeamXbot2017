@@ -1,8 +1,8 @@
 package competition.subsystems.shooter_wheel;
 
 import competition.subsystems.RobotSide;
+
 import xbot.common.controls.actuators.MockCANTalon;
-import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.PIDPropertyManager;
 import xbot.common.properties.XPropertyManager;

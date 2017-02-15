@@ -13,6 +13,7 @@ public class ResetDistanceCommand extends BaseDriveCommand {
 
     @Override
     public void initialize() {
+        log.info("Initializing");
         driveSubsystem.resetDistance();
     }
 

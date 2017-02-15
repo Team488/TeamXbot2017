@@ -1,7 +1,5 @@
 package competition.subsystems.drive;
 
-import org.apache.log4j.Logger;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -17,7 +15,6 @@ import xbot.common.properties.XPropertyManager;
 
 @Singleton
 public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource {
-    private static Logger log = Logger.getLogger(DriveSubsystem.class);
 
     public final XCANTalon leftDrive;
     public final XCANTalon leftDriveSlave;
@@ -38,7 +35,7 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     
     @Inject
     public DriveSubsystem(WPIFactory factory, XPropertyManager propManager) {
-        log.info("Creating DriveSubsystem");
+        log.info("Creating");
 
         // TODO: Update these defaults. The current values are blind guesses.
         encoderCodesProperty = propManager.createPersistentProperty("Drive encoder codes per rev", 512);

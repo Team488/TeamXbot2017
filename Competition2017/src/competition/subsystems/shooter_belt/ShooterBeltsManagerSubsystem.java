@@ -1,19 +1,18 @@
 package competition.subsystems.shooter_belt;
 
-import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.subsystems.RobotSide;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.injection.wpi_factories.WPIFactory;
-import xbot.common.logging.RobotAssertionManager;
 import xbot.common.math.PIDFactory;
 import xbot.common.math.PIDPropertyManager;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
 public class ShooterBeltsManagerSubsystem extends BaseSubsystem {        
+
         protected ShooterBeltSubsystem leftBelt;
         protected ShooterBeltSubsystem rightBelt;
         
@@ -30,7 +29,8 @@ public class ShooterBeltsManagerSubsystem extends BaseSubsystem {
         protected final int rightMotorIndex = 24;
 
         @Inject
-        public ShooterBeltsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory){            
+        public ShooterBeltsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory){
+            log.info("Creating");
             leftPIDValues = pidFactory.createPIDPropertyManager("LeftBelt", 0, 0, 0, 0);
             rightPIDValues = pidFactory.createPIDPropertyManager("RightBelt", 0, 0, 0, 0);
             
