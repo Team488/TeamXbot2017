@@ -5,17 +5,14 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 
 import competition.subsystems.collector.CollectorSubsystem;
-import xbot.common.command.BaseCommand;
 
+public class StopCollectorCommand extends BaseCollectorCommand {
 
-public class StopCollectorCommand extends BaseCommand {
-    final CollectorSubsystem collectorSystem;
     private static Logger log = Logger.getLogger(StopCollectorCommand.class);
     
     @Inject
-    public StopCollectorCommand(CollectorSubsystem collectorSystem){
-        this.collectorSystem = collectorSystem;   
-        this.requires(collectorSystem);
+    public StopCollectorCommand(CollectorSubsystem collectorSubsystem) {
+        super(collectorSubsystem);
     }
     
     @Override
@@ -26,7 +23,7 @@ public class StopCollectorCommand extends BaseCommand {
     
     @Override
     public void execute(){
-        collectorSystem.stop();
+        collectorSubsystem.stop();
     }
 
 }

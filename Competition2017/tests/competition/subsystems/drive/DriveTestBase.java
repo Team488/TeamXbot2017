@@ -1,21 +1,22 @@
 package competition.subsystems.drive;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
-import org.junit.Test;
-
+import competition.subsystems.pose.PoseSubsystem;
 import xbot.common.controls.actuators.MockCANTalon;
 import xbot.common.injection.BaseWPITest;
 
 public abstract class DriveTestBase extends BaseWPITest {
     
-    DriveSubsystem drive;
+    protected DriveSubsystem drive;
+    protected PoseSubsystem pose;
     
     public void setUp() {        
         super.setUp();
         
         drive = injector.getInstance(DriveSubsystem.class);
+        pose = injector.getInstance(PoseSubsystem.class);
     }
     
     /**
@@ -29,5 +30,23 @@ public abstract class DriveTestBase extends BaseWPITest {
     public void verifyDriveSetpoints(double left, double right) {
         assertEquals(left, ((MockCANTalon)drive.leftDrive).getSetpoint(), 0.001);
         assertEquals(right, ((MockCANTalon)drive.rightDrive).getSetpoint(), 0.001);
+    }
+    
+    /**
+     * This modifies the heading on the PoseSubsystem, not the raw gyro. However, unless you are testing
+     * the PoseSubsystem directly, this is the most appropriate call to make.
+     */
+    public void setRobotHeading(double heading) {
+        pose.setCurrentHeading(heading);
+    }
+        
+    public void verifyDrivePositive() {
+        assertTrue(((MockCANTalon)drive.leftDrive).getSetpoint() > 0);
+        assertTrue(((MockCANTalon)drive.rightDrive).getSetpoint() > 0);
+    }
+    
+    public void verifyDriveNegative() {
+        assertTrue(((MockCANTalon)drive.leftDrive).getSetpoint() < 0);
+        assertTrue(((MockCANTalon)drive.rightDrive).getSetpoint() < 0);
     }
 }
