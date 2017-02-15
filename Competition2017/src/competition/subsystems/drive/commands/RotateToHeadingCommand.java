@@ -1,9 +1,6 @@
 package competition.subsystems.drive.commands;
 
-import org.apache.log4j.Logger;
-
 import com.google.inject.Inject;
-import xbot.common.command.BaseCommand;
 import xbot.common.logging.RobotAssertionManager;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.PIDManager;
@@ -11,17 +8,15 @@ import xbot.common.properties.XPropertyManager;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 
-public class RotateToHeadingCommand extends BaseDriveCommand{
+public class RotateToHeadingCommand extends BaseDriveCommand {
     
     private final PoseSubsystem poseSubsystem;
     ContiguousHeading targetHeading;
     ContiguousHeading currentHeading;
     
-    public final double defaultPValue = 1/80d;
+    public final double defaultPValue = 1 / 80d;
     
     private final PIDManager headingDrivePid;
-    
-    private static Logger log = Logger.getLogger(RotateToHeadingCommand.class);
     
     @Inject
     public RotateToHeadingCommand(
@@ -55,7 +50,7 @@ public class RotateToHeadingCommand extends BaseDriveCommand{
     
     @Override
     public void initialize() {
-        log.info("Initializing RotateToHeadingCommand");
+        log.info("Initializing");
         reset();
     }
 

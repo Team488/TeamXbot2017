@@ -4,12 +4,13 @@ import com.google.inject.Inject;
 
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.DriveSubsystem;
+
 import xbot.common.command.BaseCommand;
 
 public class TankDriveWithGamePadCommand extends BaseCommand {
 
-        final DriveSubsystem driveSubsystem;
-        final OperatorInterface oi;
+        protected final DriveSubsystem driveSubsystem;
+        protected final OperatorInterface oi;
 
         @Inject
         public TankDriveWithGamePadCommand(OperatorInterface oi, DriveSubsystem driveSubsystem) {
@@ -20,7 +21,7 @@ public class TankDriveWithGamePadCommand extends BaseCommand {
 
         @Override
         public void initialize() {
-
+            log.info("Initializing");
         }
 
         @Override

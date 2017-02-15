@@ -1,8 +1,10 @@
 package competition.subsystems.agitator;
 
-import org.apache.log4j.Logger;
+import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
+
 import competition.subsystems.RobotSide;
+
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.WPIFactory;
@@ -11,15 +13,14 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 public class AgitatorSubsystem extends BaseSubsystem {
-    
-    private static Logger log = Logger.getLogger(AgitatorSubsystem.class);
+
     protected final XCANTalon agitatorMotor;
     private final RobotSide side;
     protected final DoubleProperty intakePowerProperty;
     protected final DoubleProperty ejectPowerProperty;    
 
     public AgitatorSubsystem(int motor, RobotSide side, WPIFactory factory, XPropertyManager propManager, RobotAssertionManager assertionManager){
-        log.info("Creating " + side + " Agitator");
+        super(side + " Agitator");
 
         this.side = side;
         intakePowerProperty = propManager.createPersistentProperty("Agitator intake power", 0.5);

@@ -10,7 +10,7 @@ public class StopShooterCommand extends BaseShooterWheelCommand {
     
     @Override
     public void initialize() {
-
+        log.info("Initializing");
     }
     
     @Override

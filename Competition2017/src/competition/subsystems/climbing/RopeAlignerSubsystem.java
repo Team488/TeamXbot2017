@@ -1,7 +1,5 @@
 package competition.subsystems.climbing;
 
-import org.apache.log4j.Logger;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -13,14 +11,13 @@ import xbot.common.properties.XPropertyManager;
 
 @Singleton
 public class RopeAlignerSubsystem extends BaseSubsystem {
-    private static Logger log = Logger.getLogger(RopeAlignerSubsystem.class);
-    
+
     public final XCANTalon intakeMotor;
     private final DoubleProperty powerToMotor;
     
     @Inject
     public RopeAlignerSubsystem(WPIFactory factory, XPropertyManager propManager) {
-        log.info("Creating Rope Aligner Subsystem");
+        log.info("Creating");
         this.intakeMotor = factory.getCANTalonSpeedController(63);
         this.powerToMotor = propManager.createPersistentProperty("Rope aligner motor power", 0.1);
     }

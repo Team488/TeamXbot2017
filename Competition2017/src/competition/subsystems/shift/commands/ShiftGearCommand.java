@@ -1,7 +1,5 @@
 package competition.subsystems.shift.commands;
 
-import org.apache.log4j.Logger;
-
 import com.google.inject.Inject;
 
 import competition.subsystems.shift.ShiftSubsystem;
@@ -9,7 +7,6 @@ import competition.subsystems.shift.ShiftSubsystem.Gear;
 import xbot.common.command.BaseCommand;
 
 public class ShiftGearCommand extends BaseCommand {
-    private static Logger log = Logger.getLogger(ShiftGearCommand.class);
     
     private ShiftSubsystem shiftSubsystem;
     private Gear gear;
@@ -27,6 +24,7 @@ public class ShiftGearCommand extends BaseCommand {
     
     @Override
     public void initialize() {
+        log.info("Initializing");
         if (gear == Gear.LOW_GEAR) {
             log.info("Shifting to low gear");
         } else if (gear == Gear.HIGH_GEAR){
