@@ -9,7 +9,7 @@ import competition.subsystems.vision.DetectedLiftPeg;
 import competition.subsystems.vision.VisionSubsystem;
 import xbot.common.command.BaseCommand;
 import xbot.common.math.PIDManager;
-import xbot.common.math.PIDManagerFactory;
+import xbot.common.math.PIDFactory;
 import xbot.common.properties.XPropertyManager;
 
 public class RotateRobotToBoilerCommand extends BaseCommand {
@@ -23,12 +23,12 @@ public class RotateRobotToBoilerCommand extends BaseCommand {
     public RotateRobotToBoilerCommand(
             VisionSubsystem visionSubsystem,
             DriveSubsystem driveSubsystem,
-            PIDManagerFactory pidManagerFactory)
+            PIDFactory pidFactory)
     {
         this.visionSubsystem = visionSubsystem;
         this.driveSubsystem = driveSubsystem;
         
-        rotationPid = pidManagerFactory.create("Robot vision rotation", 0.6, 0, 0);
+        rotationPid = pidFactory.createPIDManager("Robot vision rotation", 0.6, 0, 0);
         
         this.requires(this.driveSubsystem);
     }

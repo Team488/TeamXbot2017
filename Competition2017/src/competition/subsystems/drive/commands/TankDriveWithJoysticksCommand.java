@@ -4,18 +4,15 @@ import com.google.inject.Inject;
 
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.DriveSubsystem;
-import xbot.common.command.BaseCommand;
 
-public class TankDriveWithJoysticksCommand extends BaseCommand {
-
-    final DriveSubsystem driveSubsystem;
+public class TankDriveWithJoysticksCommand extends BaseDriveCommand {
+    
     final OperatorInterface oi;
-
+    
     @Inject
     public TankDriveWithJoysticksCommand(OperatorInterface oi, DriveSubsystem driveSubsystem) {
+        super(driveSubsystem);
         this.oi = oi;
-        this.driveSubsystem = driveSubsystem;
-        this.requires(this.driveSubsystem);
     }
 
     @Override
@@ -27,5 +24,4 @@ public class TankDriveWithJoysticksCommand extends BaseCommand {
     public void execute() {
         driveSubsystem.tankDrivePowerMode(oi.leftJoystick.getVector().y, oi.rightJoystick.getVector().y);
     }
-
 }
