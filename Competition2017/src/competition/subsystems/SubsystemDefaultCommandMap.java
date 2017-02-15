@@ -26,7 +26,7 @@ public class SubsystemDefaultCommandMap {
     }
 
     @Inject
-    public void setupFuelLauncherSubsystem(ShooterWheelsManagerSubsystem shooterWheelManager) {
+    public void setupShooterWheelSubsystem(ShooterWheelsManagerSubsystem shooterWheelManager) {
         StopShooterCommand stopLeft = new StopShooterCommand(shooterWheelManager.getLeftShooter());
         shooterWheelManager.getLeftShooter().setDefaultCommand(stopLeft);
         
@@ -55,7 +55,10 @@ public class SubsystemDefaultCommandMap {
     
     @Inject
     public void setupAgitatorSubsystem(AgitatorsManagerSubsystem agitatorsManagerSubsystem) {
-        agitatorsManagerSubsystem.getLeftAgitator().setDefaultCommand(new StopAgitatorCommand(agitatorsManagerSubsystem.getLeftAgitator()));
-        agitatorsManagerSubsystem.getRightAgitator().setDefaultCommand(new StopAgitatorCommand(agitatorsManagerSubsystem.getRightAgitator()));
+        StopAgitatorCommand stopLeft = new StopAgitatorCommand(agitatorsManagerSubsystem.getLeftAgitator());
+        agitatorsManagerSubsystem.getLeftAgitator().setDefaultCommand(stopLeft);
+        
+        StopAgitatorCommand stopRight = new StopAgitatorCommand(agitatorsManagerSubsystem.getRightAgitator());
+        agitatorsManagerSubsystem.getRightAgitator().setDefaultCommand(stopRight);
     }
 }
