@@ -13,11 +13,4 @@ public class TestAgitatorManagerSubsystem extends AgitatorsManagerSubsystem {
         super(factory, propManager, assertionManager);
     }
 
-    public Double getLeftAgitatorTargetSpeed(){
-        return getLeftAgitator().agitatorTargetSpeed.get();
-    }
-    
-    public Double getRightAgitatorTargetSpeed(){
-        return getRightAgitator().agitatorTargetSpeed.get();
-    }
 }
