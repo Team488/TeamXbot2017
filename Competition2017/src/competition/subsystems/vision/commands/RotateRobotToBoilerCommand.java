@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.turret_rotation.TurretRotationSubsystem;
 import competition.subsystems.vision.DetectedBoiler;
 import competition.subsystems.vision.DetectedLiftPeg;
 import competition.subsystems.vision.VisionSubsystem;
