@@ -6,12 +6,10 @@ import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
 public class RunBeltIfWheelAtSpeedCommand extends BaseShooterBeltCommand {
     
     protected final ShooterWheelSubsystem shooterWheelSubsystem;
-    private double targetBeltSpeed;
 
     public RunBeltIfWheelAtSpeedCommand(ShooterBeltSubsystem shooterBeltSubsystem, ShooterWheelSubsystem shooterWheelSubsystem) {
         super(shooterBeltSubsystem);
         this.shooterWheelSubsystem = shooterWheelSubsystem;
-        targetBeltSpeed = shooterBeltSubsystem.getTargetSpeed();
     }
     
     @Override
@@ -21,8 +19,8 @@ public class RunBeltIfWheelAtSpeedCommand extends BaseShooterBeltCommand {
 
     @Override
     public void execute() {
-        if (shooterWheelSubsystem.isAtSpeed()) {
-            shooterBeltSubsystem.setTargetSpeed(targetBeltSpeed);
+        if(shooterWheelSubsystem.isAtSpeed()){
+            shooterBeltSubsystem.intakeUsingSpeed();
         } else {
             shooterBeltSubsystem.setPower(0);
         }

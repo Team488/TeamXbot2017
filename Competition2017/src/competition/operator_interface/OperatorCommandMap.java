@@ -22,8 +22,9 @@ import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
 import competition.subsystems.shooter_belt.commands.RunShooterBeltCommand;
+import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
-import competition.subsystems.shooter_wheel.commands.RunShooterWheelCommand;
+import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
 import xbot.common.controls.sensors.XboxControllerWpiAdapter.XboxButtons;
 import xbot.common.properties.DoubleProperty;
@@ -64,7 +65,10 @@ public class OperatorCommandMap {
             XPropertyManager propertyManager) 
     {
         StopShooterCommand stopLeft = new StopShooterCommand(shooterWheelsManagerSubsystem.getLeftShooter());
-        RunShooterWheelCommand shootLeft = new RunShooterWheelCommand(shooterWheelsManagerSubsystem.getLeftShooter(), propertyManager);
+        RunShooterWheelsForRangeCommand shootLeft = 
+                new RunShooterWheelsForRangeCommand(
+                        TypicalShootingPosition.FlushToBoiler, 
+                        shooterWheelsManagerSubsystem.getLeftShooter());
         
         oi.leftButtons.getifAvailable(6).whenPressed(shootLeft);
         oi.leftButtons.getifAvailable(7).whenPressed(stopLeft);
