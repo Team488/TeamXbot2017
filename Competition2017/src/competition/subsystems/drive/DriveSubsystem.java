@@ -165,7 +165,7 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         motor.setD(dVelProp.get());
         motor.setF(fVelProp.get());
     }
-    
+
     public double getDistance() {
         return convertTicksToInches(getPositionAverageTicks() - startPositionTicks.get());
     }
