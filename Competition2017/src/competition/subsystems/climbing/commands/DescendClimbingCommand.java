@@ -1,14 +1,10 @@
 package competition.subsystems.climbing.commands;
 
-import org.apache.log4j.Logger;
-
 import com.google.inject.Inject;
 
 import competition.subsystems.climbing.ClimbingSubsystem;
 
 public class DescendClimbingCommand extends BaseClimbingCommand {
-
-    private static Logger log = Logger.getLogger(DescendClimbingCommand.class);
     
     @Inject
     public DescendClimbingCommand(ClimbingSubsystem climbingSubsystem) {
@@ -16,7 +12,7 @@ public class DescendClimbingCommand extends BaseClimbingCommand {
     }
 
     public void initialize() {
-        log.info("Initializing DescendClimbingComand");
+        log.info("Initializing");
     }
 
     public void execute(){

@@ -1,14 +1,10 @@
 package competition.subsystems.collector.commands;
 
-import org.apache.log4j.Logger;
-
 import com.google.inject.Inject;
 
 import competition.subsystems.collector.CollectorSubsystem;
 
 public class IntakeCollectorCommand extends BaseCollectorCommand {
-    
-    private static Logger log = Logger.getLogger(IntakeCollectorCommand.class);
     
     @Inject
     public IntakeCollectorCommand(CollectorSubsystem collectorSubsystem) {
@@ -17,7 +13,7 @@ public class IntakeCollectorCommand extends BaseCollectorCommand {
 
     @Override
     public void initialize() {
-        log.info("Initializing IntakeCollectorCommand");
+        log.info("Initializing");
     }
     
     @Override

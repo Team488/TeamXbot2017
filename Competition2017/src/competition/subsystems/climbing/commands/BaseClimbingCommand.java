@@ -5,7 +5,7 @@ import xbot.common.command.BaseCommand;
 
 public abstract class BaseClimbingCommand extends BaseCommand {
     
-    final ClimbingSubsystem climbingSubsystem;
+    protected final ClimbingSubsystem climbingSubsystem;
     
     public BaseClimbingCommand(ClimbingSubsystem climbingSubsystem) {
         this.climbingSubsystem = climbingSubsystem; 

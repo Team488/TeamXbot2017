@@ -1,7 +1,5 @@
 package competition.subsystems.shooter_wheel;
 
-import org.apache.log4j.Logger;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -14,7 +12,6 @@ import xbot.common.properties.XPropertyManager;
 
 @Singleton
 public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
-    private static Logger log = Logger.getLogger(ShooterWheelsManagerSubsystem.class);
     
     protected ShooterWheelSubsystem leftShooter;
     protected ShooterWheelSubsystem rightShooter;
@@ -37,7 +34,7 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
     
     @Inject
     public ShooterWheelsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory) {
-        log.info("Creating ShooterSubsystem");
+        log.info("Creating");
         
         leftPIDValues = pidFactory.createPIDPropertyManager(
                 "LeftShooter", .5, 0, 10, .099);

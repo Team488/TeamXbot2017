@@ -1,7 +1,5 @@
 package competition.subsystems;
 
-import org.apache.log4j.Logger;
-
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.Timer;
@@ -62,7 +60,7 @@ public abstract class BaseXCANTalonSpeedControlledSubsystem extends BaseSubsyste
             PIDPropertyManager pidPropertyManager,
             XPropertyManager propManager){
         super(name);
-        log.info("Creating " + name + " system");
+        log.info("Creating");
         
         this.pidPropertyManager = pidPropertyManager;
         this.masterChannel = masterChannel;

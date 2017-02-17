@@ -1,14 +1,10 @@
 package competition.subsystems.climbing.commands;
 
-import org.apache.log4j.Logger;
-
 import com.google.inject.Inject;
 
 import competition.subsystems.climbing.ClimbingSubsystem;
 
 public class StopClimbingCommand extends BaseClimbingCommand {
-
-    private static Logger log = Logger.getLogger(StopClimbingCommand.class);
     
     @Inject
     public StopClimbingCommand(ClimbingSubsystem climbingSubsystem) {
@@ -16,7 +12,7 @@ public class StopClimbingCommand extends BaseClimbingCommand {
     }
 
     public void initialize() {
-        log.info("Initializing StopClimbingCommand");
+        log.info("Initializing");
     }
 
     public void execute(){

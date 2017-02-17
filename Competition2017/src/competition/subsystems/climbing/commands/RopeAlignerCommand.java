@@ -1,15 +1,11 @@
 package competition.subsystems.climbing.commands;
 
-import org.apache.log4j.Logger;
-
 import com.google.inject.Inject;
 
 import competition.subsystems.climbing.ClimbingSubsystem;
 import competition.subsystems.climbing.RopeAlignerSubsystem;
 
 public class RopeAlignerCommand extends BaseClimbingCommand {
-    
-    private static Logger log = Logger.getLogger(RopeAlignerCommand.class);
     
     private final RopeAlignerSubsystem ropeAlignerSubsystem;
     
@@ -21,7 +17,7 @@ public class RopeAlignerCommand extends BaseClimbingCommand {
 
     @Override
     public void initialize() {
-        log.info("Initializing RopeAlignerCommand");
+        log.info("Initializing");
     }
 
     @Override

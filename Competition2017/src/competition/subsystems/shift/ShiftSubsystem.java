@@ -1,7 +1,5 @@
 package competition.subsystems.shift;
 
-import org.apache.log4j.Logger;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -11,8 +9,7 @@ import xbot.common.injection.wpi_factories.WPIFactory;
 
 @Singleton
 public class ShiftSubsystem extends BaseSubsystem {
-    private static Logger log = Logger.getLogger(ShiftSubsystem.class);
-    
+
     public final XSolenoid solenoidLeft;
     public final XSolenoid solenoidRight;
     
@@ -22,7 +19,7 @@ public class ShiftSubsystem extends BaseSubsystem {
     
     @Inject
     public ShiftSubsystem(WPIFactory factory) {
-        log.info("Creating ShiftSubsystem");
+        log.info("Creating");
         
         this.solenoidLeft = factory.getSolenoid(1);
         this.solenoidRight = factory.getSolenoid(2);

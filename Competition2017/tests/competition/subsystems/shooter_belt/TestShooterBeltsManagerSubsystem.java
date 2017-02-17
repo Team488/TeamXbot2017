@@ -4,10 +4,9 @@ import com.google.inject.Inject;
 
 import competition.subsystems.RobotSide;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
+
 import xbot.common.injection.wpi_factories.WPIFactory;
-import xbot.common.logging.RobotAssertionManager;
 import xbot.common.math.PIDFactory;
-import xbot.common.math.PIDPropertyManager;
 import xbot.common.properties.XPropertyManager;
 
 public class TestShooterBeltsManagerSubsystem extends ShooterBeltsManagerSubsystem {
