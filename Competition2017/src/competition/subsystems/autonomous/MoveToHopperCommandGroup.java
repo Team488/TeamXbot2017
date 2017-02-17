@@ -19,11 +19,14 @@ public class MoveToHopperCommandGroup extends CommandGroup{
             XPropertyManager propMan,
             Provider<RotateToHeadingCommand> rotateToHeadingProvider,
             Provider<DriveForDistanceCommand> driveForDistanceProvider,
-            Provider<RotateRobotToBoilerCommand> rotateToBoilerProvider){
+            Provider<RotateRobotToBoilerCommand> rotateRobotToBoilerProvider){
         angleToParallel = propMan.createPersistentProperty("Angle to line parallel to boiler", 3);
         distanceFromBoiler = propMan.createPersistentProperty("distance from robot to boiler", 6);
-        angleToBoiler = propMan.createPersistentProperty("angle to face boiler", 90);
+        angleToBoiler = propMan.createPersistentProperty("angle to face boiler", 70);
         distanceFromTurningPointToBoiler = propMan.createPersistentProperty("distance from turning point to boiler", 10);
+        
+        RotateRobotToBoilerCommand rotateRobotToBoiler1 = rotateRobotToBoilerProvider.get();
+        this.addSequential(rotateRobotToBoiler1);
 
         RotateToHeadingCommand rotateToParallelCommand = rotateToHeadingProvider.get();
         rotateToParallelCommand.setTargetHeadingProp(angleToParallel);
@@ -33,9 +36,13 @@ public class MoveToHopperCommandGroup extends CommandGroup{
         driveAlongParallel.setDeltaDistance(distanceFromBoiler.get() * Math.cos(angleToParallel.get()));
         this.addSequential(driveAlongParallel);
 
-        RotateToHeadingCommand rotateToBoilerCommand = rotateToHeadingProvider.get();
-        rotateToBoilerCommand.setTargetHeadingProp(angleToBoiler);
-        this.addSequential(rotateToBoilerCommand);
+        
+        RotateToHeadingCommand rotateToSeeBoilerCommand = rotateToHeadingProvider.get();
+        rotateToSeeBoilerCommand.setTargetHeadingProp(angleToBoiler);
+        this.addSequential(rotateToSeeBoilerCommand);
+        
+        RotateRobotToBoilerCommand rotateRobotToBoiler2 = rotateRobotToBoilerProvider.get();
+        this.addSequential(rotateRobotToBoiler2);
 
         DriveForDistanceCommand driveToBoilerCommand = driveForDistanceProvider.get();
         driveToBoilerCommand.setDeltaDistance(distanceFromTurningPointToBoiler);
