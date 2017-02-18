@@ -33,8 +33,6 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     private final DoubleProperty leftDriveEncoderTicksProp;
     private final DoubleProperty rightDriveEncoderTicksProp;
     private final DoubleProperty ticksPerInch;
-    private final DoubleProperty startPositionTicks;
-    private final DoubleProperty currentDisplacementInchProp;
     
     private InfluxDBWriter influxWriter;
     
@@ -56,9 +54,6 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         
         ticksPerInch = propManager.createPersistentProperty("Ticks per inch", 25.33);
         
-        startPositionTicks = propManager.createEphemeralProperty("Start position ticks", 0);
-        currentDisplacementInchProp = propManager.createEphemeralProperty("Current position inches", 0);
-        
         this.leftDrive = factory.getCANTalonSpeedController(34);
         leftDrive.setInverted(true);
         this.leftDriveSlave = factory.getCANTalonSpeedController(35);
@@ -74,8 +69,6 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         
         this.influxWriter = influxWriter;
         influxWriter.setMeasurementName("DriveSubsystem");
-        
-        resetDistance();
     }
 
     private void configMotorTeam(XCANTalon master, XCANTalon slave) {
@@ -172,7 +165,8 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         motor.setI(iVelprop.get());
         motor.setD(dVelProp.get());
         motor.setF(fVelProp.get());
-
+    }
+    
     public double convertTicksToInches(double ticks) {
         return ticks / ticksPerInch.get();
     }
@@ -208,8 +202,6 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         
         leftDriveEncoderTicksProp.set(leftDrive.getPosition());
         rightDriveEncoderTicksProp.set(rightDrive.getPosition());
-
-        currentDisplacementInchProp.set(getDistance());
         
         influxWriter.writeData("leftDrive", leftDrive.get());
         influxWriter.writeData("leftDriveSlave", leftDriveSlave.get());
