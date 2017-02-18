@@ -11,6 +11,8 @@ import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.EjectAgitatorCommand;
 import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
 import competition.subsystems.agitator.commands.StopAgitatorCommand;
+import competition.subsystems.autonomous.selection.DisableAutonomousCommand;
+import competition.subsystems.autonomous.selection.SetupDriveToHopperThenBoilerCommand;
 import competition.subsystems.climbing.commands.RopeAlignerCommand;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
@@ -110,7 +112,7 @@ public class OperatorCommandMap {
             OperatorInterface oi,
             AgitatorsManagerSubsystem agitatorManagerSubsystem)
     {
-        
+ 
         oi.controller.getXboxButton(XboxButtons.Y).whenPressed(new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
         oi.controller.getXboxButton(XboxButtons.A).whenPressed(new EjectAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
         oi.controller.getXboxButton(XboxButtons.X).whenPressed(new StopAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
@@ -131,5 +133,15 @@ public class OperatorCommandMap {
         driveForDistance.setDeltaDistance(deltaDistance);
         driveForDistance.includeOnSmartDashboard("Test drive for distance");
         gamepad.includeOnSmartDashboard("Change to GamePad Controls");
+    }
+    
+    @Inject
+    public void setupAutonomous(
+            OperatorInterface oi,
+            DisableAutonomousCommand disableCommand,
+            SetupDriveToHopperThenBoilerCommand driveToBoiler
+            ){
+        disableCommand.includeOnSmartDashboard("Disable Autonomous");
+        driveToBoiler.includeOnSmartDashboard("Run DriveToBoiler Autonomous Command");
     }
 }

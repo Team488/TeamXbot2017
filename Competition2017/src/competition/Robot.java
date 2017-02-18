@@ -3,6 +3,7 @@ package competition;
 
 import competition.operator_interface.OperatorCommandMap;
 import competition.subsystems.SubsystemDefaultCommandMap;
+import competition.subsystems.autonomous.selection.AutonomousCommandSelector;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
@@ -12,6 +13,9 @@ import xbot.common.injection.RobotModule;
 
 public class Robot extends BaseRobot {
     
+
+    AutonomousCommandSelector autonomousCommandSelector;
+
     @Override
     protected void setupInjectionModule() {
         this.injectionModule = new CompetitionModule();
@@ -31,4 +35,12 @@ public class Robot extends BaseRobot {
         this.registerPeriodicDataSource(this.injector.getInstance(ShooterBeltsManagerSubsystem.class).getRightBelt());
         this.registerPeriodicDataSource(this.injector.getInstance(PoseSubsystem.class));
     }
+    
+    @Override
+    public void autonomousInit() {
+        this.autonomousCommand = this.autonomousCommandSelector.getCurrentAutonomousCommand();
+        // Base implementation will run the command
+        super.autonomousInit();
+    }
+   
 }
