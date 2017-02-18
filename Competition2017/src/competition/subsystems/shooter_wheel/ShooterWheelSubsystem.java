@@ -5,6 +5,7 @@ import com.db.influxdb.DataWriter;
 
 import competition.subsystems.BaseXCANTalonPairSpeedControlledSubsystem;
 import competition.subsystems.RobotSide;
+
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.PIDPropertyManager;
 import xbot.common.properties.DoubleProperty;
@@ -46,7 +47,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         this.side = side;
         flushToBoilerTargetSpeed = 
                 propManager.createPersistentProperty(side + " flush to boiler target speed", 3500);
-        Configuration config = new Configuration("localhost", "8086", "", "", "test");
+        Configuration config = new Configuration("localhost", "8086", "", "", "XbotDBTest");
         try {
             this.writer = new DataWriter(config);
             writer.setMeasurement("ShooterWheelSubsystem");
