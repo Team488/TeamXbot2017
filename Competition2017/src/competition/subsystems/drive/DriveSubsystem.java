@@ -79,8 +79,6 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         try {
             this.writer = new DataWriter(config);
             writer.setMeasurement("DriveSubsystem");
-            writer.setMeasurement("FreeGucci");
-            writer.addField("Foo", 488);
             log.info("Created writer succesfully");
         } catch (Exception e) {
             log.error(e);
@@ -229,7 +227,7 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
             try {
                 writer.writeData();
             } catch (Exception e) {
-            
+                log.error(e);
             }
         }
     }
