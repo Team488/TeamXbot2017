@@ -26,7 +26,7 @@ import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootin
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
-import xbot.common.controls.sensors.XboxControllerWpiAdapter.XboxButtons;
+import xbot.common.controls.sensors.XboxControllerWpiAdapter.XboxButton;
 import xbot.common.properties.DoubleProperty;
 
 @Singleton
@@ -103,8 +103,8 @@ public class OperatorCommandMap {
             EjectCollectorCommand eject,
             IntakeCollectorCommand intake)
     {
-        oi.controller.getXboxButton(XboxButtons.LeftBumper).whileHeld(eject);
-        oi.controller.getXboxButton(XboxButtons.RightBumper).whileHeld(intake);
+        oi.controller.getXboxButton(XboxButton.LeftBumper).whileHeld(eject);
+        oi.controller.getXboxButton(XboxButton.RightBumper).whileHeld(intake);
     }
 
     @Inject
@@ -112,10 +112,10 @@ public class OperatorCommandMap {
             OperatorInterface oi,
             AgitatorsManagerSubsystem agitatorManagerSubsystem)
     {
- 
-        oi.controller.getXboxButton(XboxButtons.Y).whenPressed(new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
-        oi.controller.getXboxButton(XboxButtons.A).whenPressed(new EjectAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
-        oi.controller.getXboxButton(XboxButtons.X).whenPressed(new StopAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
+        
+        oi.controller.getXboxButton(XboxButton.Y).whenPressed(new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
+        oi.controller.getXboxButton(XboxButton.A).whenPressed(new EjectAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
+        oi.controller.getXboxButton(XboxButton.X).whenPressed(new StopAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
     }
     
     // OTHER
