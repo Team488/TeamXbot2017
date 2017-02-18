@@ -45,5 +45,4 @@ public class DriveToHopperCommandGroup extends CommandGroup{
         this.addSequential(waitForFuelCollectionCommand);
         
     }
-
 }
