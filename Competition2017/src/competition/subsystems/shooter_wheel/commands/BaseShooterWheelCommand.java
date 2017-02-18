@@ -11,4 +11,10 @@ public abstract class BaseShooterWheelCommand extends BaseCommand {
         this.shooterWheelSubsystem = shooterWheelSubsystem; 
         this.requires(shooterWheelSubsystem);
     }
+    
+    public BaseShooterWheelCommand(String name, ShooterWheelSubsystem shooterWheelSubsystem) {
+        super(name);
+        this.shooterWheelSubsystem = shooterWheelSubsystem; 
+        this.requires(shooterWheelSubsystem);
+    }
 }

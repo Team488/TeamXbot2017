@@ -8,8 +8,14 @@ import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
 import xbot.common.command.BaseRobot;
+import xbot.common.injection.RobotModule;
 
 public class Robot extends BaseRobot {
+    
+    @Override
+    protected void setupInjectionModule() {
+        this.injectionModule = new CompetitionModule();
+    }
 
     @Override
     protected void initializeSystems() {

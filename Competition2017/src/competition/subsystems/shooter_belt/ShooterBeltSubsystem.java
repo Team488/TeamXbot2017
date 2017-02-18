@@ -12,6 +12,7 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
     private final RobotSide side;
     protected final DoubleProperty intakePowerProperty;
     protected final DoubleProperty ejectPowerProperty;
+    protected final DoubleProperty beltIntakeTargetSpeed;
 
     public ShooterBeltSubsystem(
             RobotSide side,
@@ -33,18 +34,23 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
         
         intakePowerProperty = propManager.createPersistentProperty("ShooterBelt intake power", 0.5);
         ejectPowerProperty = propManager.createPersistentProperty("ShooterBelt eject power", -0.5);
+        beltIntakeTargetSpeed = propManager.createPersistentProperty("ShooterBelt intake speed", 100);
     }
 
-    public RobotSide getSide(){
+    public RobotSide getSide() {
         return side;
     }
     
-    public void eject(){
+    public void eject() {
         setPower(ejectPowerProperty.get());
     }
     
-    public void intake(){
+    public void intakeUsingPower() {
         setPower(intakePowerProperty.get());
+    }
+    
+    public void intakeUsingSpeed() {
+        setTargetSpeed(beltIntakeTargetSpeed.get());
     }
     
     public void stop(){
