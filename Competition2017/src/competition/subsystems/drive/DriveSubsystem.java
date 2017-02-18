@@ -66,8 +66,6 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         configMotorTeam(rightDrive, rightDriveSlave);
         rightDrive.createTelemetryProperties("Right master", propManager);
         rightDriveSlave.createTelemetryProperties("Right slave", propManager);
-
-        resetDistance();
     }
 
     private void configMotorTeam(XCANTalon master, XCANTalon slave) {
@@ -165,14 +163,6 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         motor.setD(dVelProp.get());
         motor.setF(fVelProp.get());
     }
-
-    public double getDistance() {
-        return convertTicksToInches(getPositionAverageTicks() - startPositionTicks.get());
-    }
-    
-    public void resetDistance() {
-        startPositionTicks.set(getPositionAverageTicks());
-    }
     
     public double convertTicksToInches(double ticks) {
         return ticks / ticksPerInch.get();
@@ -182,8 +172,18 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         return inches * ticksPerInch.get();
     }
     
-    public double getPositionAverageTicks() {
-        return (rightDrive.getPosition() + leftDrive.getPosition()) / 2.0;
+    /**
+     * Note - should normally only be called by the PoseSubsystem!
+     */
+    public double getLeftDistanceInInches() {
+        return convertTicksToInches(leftDrive.getPosition());
+    }
+    
+    /**
+     * Note - should normally only be called by the PoseSubsystem!
+     */
+    public double getRightDistanceInInches() {
+        return convertTicksToInches(rightDrive.getPosition());
     }
 
     /**
@@ -199,6 +199,5 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         
         leftDriveEncoderTicksProp.set(leftDrive.getPosition());
         rightDriveEncoderTicksProp.set(rightDrive.getPosition());
-        currentDisplacementInchProp.set(getDistance());
     }
 }

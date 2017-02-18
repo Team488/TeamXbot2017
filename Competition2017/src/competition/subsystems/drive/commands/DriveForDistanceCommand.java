@@ -69,21 +69,21 @@ public class DriveForDistanceCommand extends BaseDriveCommand {
     @Override
     public void initialize() {
         onTargetCount = 0;
-        previousPositionInches = driveSubsystem.getDistance();
+        previousPositionInches = getYDistance();
         
         targetHeading = poseSubsystem.getCurrentHeading();
         
         if (deltaDistanceProp != null) {
-            this.targetDistance = driveSubsystem.getDistance() + deltaDistanceProp.get();
+            this.targetDistance = getYDistance() + deltaDistanceProp.get();
         } else {
-            this.targetDistance = driveSubsystem.getDistance() + deltaDistance;
+            this.targetDistance = getYDistance() + deltaDistance;
         }
         log.info("Initializing  with distance " + targetDistance + " inches");
     }
 
     @Override
     public void execute() {
-        double power = travelManager.calculate(targetDistance, driveSubsystem.getDistance());
+        double power = travelManager.calculate(targetDistance, getYDistance());
         
         double leftPower = power - calculateHeadingPower();
         double rightPower = power + calculateHeadingPower();
@@ -100,10 +100,14 @@ public class DriveForDistanceCommand extends BaseDriveCommand {
         return rotationalPower;
     }
     
+    private double getYDistance() {
+        return poseSubsystem.getRobotOrientedTotalDistanceTraveled().y;
+    }
+    
     @Override
     public boolean isFinished() {
-        double velocity = driveSubsystem.getDistance() - previousPositionInches;
-        previousPositionInches = driveSubsystem.getDistance();
+        double velocity = getYDistance() - previousPositionInches;
+        previousPositionInches = getYDistance();
         boolean isOnTarget = travelManager.isOnTarget(distanceToleranceInches.get());
         boolean shouldFinish = velocity < 0.0001 && isOnTarget;
         if (shouldFinish) {

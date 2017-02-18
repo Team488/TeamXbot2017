@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import xbot.common.properties.XPropertyManager;
+import xbot.common.subsystems.pose.commands.ResetDistanceCommand;
 import competition.subsystems.climbing.commands.AscendCommand;
 import competition.subsystems.climbing.commands.DescendClimbingCommand;
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;
@@ -14,10 +15,7 @@ import competition.subsystems.climbing.commands.RopeAlignerCommand;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
-import competition.subsystems.drive.commands.ResetDistanceCommand;
-
 import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
-
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
