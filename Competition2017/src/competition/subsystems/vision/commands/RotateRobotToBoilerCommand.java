@@ -4,10 +4,12 @@ import com.google.inject.Inject;
 
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.turret_rotation.TurretRotationSubsystem;
 import competition.subsystems.vision.DetectedBoiler;
 import competition.subsystems.vision.DetectedLiftPeg;
 import competition.subsystems.vision.VisionSubsystem;
 import xbot.common.command.BaseCommand;
+import xbot.common.math.PIDFactory;
 import xbot.common.math.PIDManager;
 import xbot.common.math.PIDFactory;
 import xbot.common.properties.XPropertyManager;
@@ -28,7 +30,7 @@ public class RotateRobotToBoilerCommand extends BaseCommand {
         this.visionSubsystem = visionSubsystem;
         this.driveSubsystem = driveSubsystem;
         
-        rotationPid = pidFactory.createPIDManager("Robot vision rotation", 0.6, 0, 0, 0.5, 0.5);
+        rotationPid = pidFactory.createPIDManager("Robot vision rotation", 0.6, 0, 0);
         
         this.requires(this.driveSubsystem);
     }

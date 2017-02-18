@@ -30,7 +30,7 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
     
     protected final boolean rightMasterInverted = true;
     protected final boolean rightMasterEncoderInverted = true;
-    protected final boolean rightFollowerInverted = true; 
+    protected final boolean rightFollowerInverted = true;
     
     @Inject
     public ShooterWheelsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory) {
@@ -40,7 +40,7 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
                 "LeftShooter", .5, 0, 10, .099);
         rightPIDValues = pidFactory.createPIDPropertyManager(
                 "LeftShooter", .5, 0, 10, .099);
-        
+                
         createLeftAndRightShooter(factory, propManager, pidFactory);
     }
     

@@ -13,8 +13,8 @@ public class ShooterBeltSubsystemTest extends ShooterBeltTestBase {
 
     @Test
     public void intakeTest(){
-        beltsManager.getLeftBelt().intake();
-        beltsManager.getRightBelt().intake();
+        beltsManager.getLeftBelt().intakeUsingPower();
+        beltsManager.getRightBelt().intakeUsingPower();
         verifyBeltSetpoints(
                 leftBelt.getIntakeProp().get(),
                 rightBelt.getIntakeProp().get());

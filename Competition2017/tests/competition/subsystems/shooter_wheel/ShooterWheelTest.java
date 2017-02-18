@@ -6,7 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
-import competition.subsystems.shooter_wheel.commands.RunShooterWheelCommand;
+import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
+import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
 import xbot.common.properties.XPropertyManager;
 
@@ -28,8 +29,10 @@ public class ShooterWheelTest extends ShooterWheelTestBase {
     
     @Test
     public void testRunShooterCommand(){
-        RunShooterWheelCommand rscLeft = new RunShooterWheelCommand(leftShooter, propertyManager);
-        RunShooterWheelCommand rscRight = new RunShooterWheelCommand(rightShooter, propertyManager);
+        RunShooterWheelsForRangeCommand rscLeft = 
+                new RunShooterWheelsForRangeCommand(TypicalShootingPosition.FlushToBoiler, leftShooter);
+        RunShooterWheelsForRangeCommand rscRight = 
+                new RunShooterWheelsForRangeCommand(TypicalShootingPosition.FlushToBoiler, rightShooter);
         
         rscLeft.initialize();
         rscLeft.execute();
