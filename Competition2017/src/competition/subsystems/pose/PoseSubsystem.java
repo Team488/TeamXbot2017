@@ -8,7 +8,7 @@ import competition.subsystems.drive.DriveSubsystem;
 
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.properties.XPropertyManager;
-import xbot.common.subsystems.BasePoseSubsystem;
+import xbot.common.subsystems.pose.BasePoseSubsystem;
 
 @Singleton
 public class PoseSubsystem extends BasePoseSubsystem {
@@ -26,12 +26,12 @@ public class PoseSubsystem extends BasePoseSubsystem {
 
     @Override
     protected double getLeftDriveDistance() {
-        return drive.getDistance();
+        return drive.getLeftDistanceInInches();
     }
 
     @Override
     protected double getRightDriveDistance() {
-        return drive.getDistance();
+        return drive.getRightDistanceInInches();
     }
 
     @Override
