@@ -1,5 +1,6 @@
 package competition.subsystems.autonomous;
 
+import com.google.inject.Inject;
 import com.google.inject.Provider;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
@@ -12,6 +13,7 @@ public class DriveToHopperThenBoilerCommandGroup extends CommandGroup {
     private DoubleProperty headingToFaceBoiler;
     private DoubleProperty distanceBackFromHopperToTurningPoint;
 
+    @Inject
     public DriveToHopperThenBoilerCommandGroup(XPropertyManager propManager,
             Provider<DriveForDistanceCommand> driveForDistanceProvider,
             Provider<RotateToHeadingCommand> rotateToHeadingProvider,

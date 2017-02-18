@@ -11,6 +11,8 @@ import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.EjectAgitatorCommand;
 import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
 import competition.subsystems.agitator.commands.StopAgitatorCommand;
+import competition.subsystems.autonomous.selection.DisableAutonomousCommand;
+import competition.subsystems.autonomous.selection.SetupDriveToHopperThenBoilerCommand;
 import competition.subsystems.climbing.commands.RopeAlignerCommand;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
@@ -24,7 +26,7 @@ import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootin
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
-import xbot.common.controls.sensors.XboxControllerWpiAdapter.XboxButtons;
+import xbot.common.controls.sensors.XboxControllerWpiAdapter.XboxButton;
 import xbot.common.properties.DoubleProperty;
 
 @Singleton
@@ -101,8 +103,8 @@ public class OperatorCommandMap {
             EjectCollectorCommand eject,
             IntakeCollectorCommand intake)
     {
-        oi.controller.getXboxButton(XboxButtons.LeftBumper).whileHeld(eject);
-        oi.controller.getXboxButton(XboxButtons.RightBumper).whileHeld(intake);
+        oi.controller.getXboxButton(XboxButton.LeftBumper).whileHeld(eject);
+        oi.controller.getXboxButton(XboxButton.RightBumper).whileHeld(intake);
     }
 
     @Inject
@@ -111,9 +113,9 @@ public class OperatorCommandMap {
             AgitatorsManagerSubsystem agitatorManagerSubsystem)
     {
         
-        oi.controller.getXboxButton(XboxButtons.Y).whenPressed(new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
-        oi.controller.getXboxButton(XboxButtons.A).whenPressed(new EjectAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
-        oi.controller.getXboxButton(XboxButtons.X).whenPressed(new StopAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
+        oi.controller.getXboxButton(XboxButton.Y).whenPressed(new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
+        oi.controller.getXboxButton(XboxButton.A).whenPressed(new EjectAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
+        oi.controller.getXboxButton(XboxButton.X).whenPressed(new StopAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
     }
     
     // OTHER
@@ -131,5 +133,15 @@ public class OperatorCommandMap {
         driveForDistance.setDeltaDistance(deltaDistance);
         driveForDistance.includeOnSmartDashboard("Test drive for distance");
         gamepad.includeOnSmartDashboard("Change to GamePad Controls");
+    }
+    
+    @Inject
+    public void setupAutonomous(
+            OperatorInterface oi,
+            DisableAutonomousCommand disableCommand,
+            SetupDriveToHopperThenBoilerCommand driveToBoiler
+            ){
+        disableCommand.includeOnSmartDashboard("Disable Autonomous");
+        driveToBoiler.includeOnSmartDashboard("Run DriveToBoiler Autonomous Command");
     }
 }
