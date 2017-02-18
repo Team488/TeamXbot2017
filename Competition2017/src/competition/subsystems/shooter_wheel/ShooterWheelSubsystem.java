@@ -1,8 +1,5 @@
 package competition.subsystems.shooter_wheel;
 
-import com.db.influxdb.Configuration;
-import com.db.influxdb.DataWriter;
-
 import competition.subsystems.BaseXCANTalonPairSpeedControlledSubsystem;
 import competition.subsystems.RobotSide;
 
@@ -16,8 +13,6 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
     private final RobotSide side;
     
     protected final DoubleProperty flushToBoilerTargetSpeed;
-    
-    protected DataWriter writer;
     
     public enum TypicalShootingPosition {
         FlushToBoiler
@@ -47,14 +42,6 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         this.side = side;
         flushToBoilerTargetSpeed = 
                 propManager.createPersistentProperty(side + " flush to boiler target speed", 3500);
-        Configuration config = new Configuration("localhost", "8086", "", "", "XbotDBTest");
-        try {
-            this.writer = new DataWriter(config);
-            writer.setMeasurement("ShooterWheelSubsystem");
-            writer.addTag("Side", side.toString());
-        } catch (Exception e) {
-            this.writer = null;
-        }
     }
     
     public RobotSide getSide(){
@@ -84,16 +71,6 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
     @Override
     public void updatePeriodicData() {
         super.updatePeriodicData();
-        if (writer != null) {
-            writer.addField("OutputPower", systemOutputPower.get());
-            writer.addField("TalonError", systemTalonError.get());
-            writer.addField("CurrentSpeed", systemCurrentSpeed.get());
-            try {
-                writer.writeData();
-            } catch (Exception e) {
-            
-            }
-        }
     }
 }
 

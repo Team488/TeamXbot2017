@@ -92,7 +92,6 @@ public class DriveForDistanceCommand extends BaseDriveCommand {
     }
     
     public double calculateHeadingPower() {
-
         double errorInDegrees = targetHeading.difference(poseSubsystem.getCurrentHeading());
         double normalizedError = errorInDegrees / 180;
         double rotationalPower = headingDrivePid.calculate(0, normalizedError);

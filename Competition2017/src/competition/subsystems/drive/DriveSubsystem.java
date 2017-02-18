@@ -3,10 +3,10 @@ package competition.subsystems.drive;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.InfluxDBWriter;
+
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
-import com.db.influxdb.Configuration;
-import com.db.influxdb.DataWriter;
 
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.PeriodicDataSource;
@@ -36,13 +36,10 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     private final DoubleProperty startPositionTicks;
     private final DoubleProperty currentDisplacementInchProp;
     
-    private double leftPower = 0;
-    private double rightPower = 0;
-    
-    protected DataWriter writer;
+    private InfluxDBWriter influxWriter;
     
     @Inject
-    public DriveSubsystem(WPIFactory factory, XPropertyManager propManager) {
+    public DriveSubsystem(WPIFactory factory, XPropertyManager propManager, InfluxDBWriter influxWriter) {
         log.info("Creating");
 
         // TODO: Update these defaults. The current values are blind guesses.
@@ -74,16 +71,9 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         configMotorTeam(rightDrive, rightDriveSlave);
         rightDrive.createTelemetryProperties("Right master", propManager);
         rightDriveSlave.createTelemetryProperties("Right slave", propManager);
-
-        Configuration config = new Configuration("localhost", "8086", "", "", "XbotDBTest");
-        try {
-            this.writer = new DataWriter(config);
-            writer.setMeasurement("DriveSubsystem");
-            log.info("Created writer succesfully");
-        } catch (Exception e) {
-            log.error(e);
-            this.writer = null;
-        }
+        
+        this.influxWriter = influxWriter;
+        influxWriter.setMeasurementName("DriveSubsystem");
         
         resetDistance();
     }
@@ -164,11 +154,11 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         ensurePowerModeForDrive();
         
         // Coerce powers into appropriate limits
-        this.leftPower = MathUtils.constrainDoubleToRobotScale(leftPower);
-        this.rightPower = MathUtils.constrainDoubleToRobotScale(rightPower);
+        leftPower = MathUtils.constrainDoubleToRobotScale(leftPower);
+        rightPower = MathUtils.constrainDoubleToRobotScale(rightPower);
        
-        leftDrive.set(this.leftPower);
-        rightDrive.set(this.rightPower);
+        leftDrive.set(leftPower);
+        rightDrive.set(rightPower);
         
         updatePeriodicData();
     }
@@ -204,7 +194,6 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         return (rightDrive.getPosition() + leftDrive.getPosition()) / 2.0;
     }
 
-    int test = 0;
     /**
      * Get values from robot to output on the teleop interface
      * IMPORTANT: When setting power to motors call this method
@@ -220,15 +209,9 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         rightDriveEncoderTicksProp.set(rightDrive.getPosition());
         currentDisplacementInchProp.set(getDistance());
         
-        if (writer != null) {
-            writer.addField("Distance", getDistance());
-            writer.addField("Gucci", test);
-            test++;
-            try {
-                writer.writeData();
-            } catch (Exception e) {
-                log.error(e);
-            }
-        }
+        influxWriter.writeData("leftDrive", leftDrive.get());
+        influxWriter.writeData("leftDriveSlave", leftDriveSlave.get());
+        influxWriter.writeData("rightDrive", rightDrive.get());
+        influxWriter.writeData("rightDriveSlave", rightDriveSlave.get());
     }
 }
