@@ -3,6 +3,9 @@ package competition.subsystems.drive;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.subsystems.shift.ShiftSubsystem;
+import competition.subsystems.shift.ShiftSubsystem.Gear;
+
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 import xbot.common.command.BaseSubsystem;
@@ -29,12 +32,15 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     private final DoubleProperty fVelProp;
     private final DoubleProperty leftDriveEncoderTicksProp;
     private final DoubleProperty rightDriveEncoderTicksProp;
-    private final DoubleProperty ticksPerInch;
     private final DoubleProperty startPositionTicks;
     private final DoubleProperty currentDisplacementInchProp;
+    private final DoubleProperty highGearTicksPerInch;
+    private final DoubleProperty lowGearTicksPerInch;
+    
+    private ShiftSubsystem shift;
     
     @Inject
-    public DriveSubsystem(WPIFactory factory, XPropertyManager propManager) {
+    public DriveSubsystem(WPIFactory factory, XPropertyManager propManager, ShiftSubsystem shift) {
         log.info("Creating");
 
         // TODO: Update these defaults. The current values are blind guesses.
@@ -49,7 +55,8 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         leftDriveEncoderTicksProp = propManager.createEphemeralProperty("Left drive encoder ticks", 0);
         rightDriveEncoderTicksProp = propManager.createEphemeralProperty("Right drive encoder ticks", 0);
         
-        ticksPerInch = propManager.createPersistentProperty("Ticks per inch", 25.33);
+        highGearTicksPerInch = propManager.createPersistentProperty("Ticks per inch for high gear", 48.8);
+        lowGearTicksPerInch = propManager.createPersistentProperty("Ticks per inch for low gear", 48.8);
         
         startPositionTicks = propManager.createEphemeralProperty("Start position ticks", 0);
         currentDisplacementInchProp = propManager.createEphemeralProperty("Current position inches", 0);
@@ -66,6 +73,8 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         configMotorTeam(rightDrive, rightDriveSlave);
         rightDrive.createTelemetryProperties("Right master", propManager);
         rightDriveSlave.createTelemetryProperties("Right slave", propManager);
+        
+        this.shift = shift;
 
         resetDistance();
     }
@@ -175,11 +184,19 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     }
     
     public double convertTicksToInches(double ticks) {
-        return ticks / ticksPerInch.get();
+        if(shift.getGear() == Gear.HIGH_GEAR){
+            return ticks / highGearTicksPerInch.get();
+        } else {
+            return ticks / lowGearTicksPerInch.get();
+        }
     }
     
     public double convertInchesToTicks(double inches) {
-        return inches * ticksPerInch.get();
+        if(shift.getGear() == Gear.HIGH_GEAR){
+            return inches * highGearTicksPerInch.get(); 
+        } else {
+            return inches * lowGearTicksPerInch.get(); 
+        }
     }
     
     public double getPositionAverageTicks() {
