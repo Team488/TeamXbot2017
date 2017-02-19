@@ -11,6 +11,7 @@ import competition.subsystems.collector.CollectorSubsystem;
 import competition.subsystems.collector.commands.StopCollectorCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
+import competition.subsystems.vision.VisionSubsystem;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
 import competition.subsystems.shooter_belt.commands.StopBeltCommand;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;

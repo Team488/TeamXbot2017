@@ -2,15 +2,13 @@ package competition.subsystems.vision.commands;
 
 import com.google.inject.Inject;
 
-import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.turret_rotation.TurretRotationSubsystem;
 import competition.subsystems.vision.DetectedBoiler;
-import competition.subsystems.vision.DetectedLiftPeg;
 import competition.subsystems.vision.VisionSubsystem;
 import xbot.common.command.BaseCommand;
 import xbot.common.math.PIDFactory;
 import xbot.common.math.PIDManager;
+import xbot.common.properties.XPropertyManager;
 
 public class RotateRobotToBoilerCommand extends BaseCommand {
 
@@ -23,12 +21,13 @@ public class RotateRobotToBoilerCommand extends BaseCommand {
     public RotateRobotToBoilerCommand(
             VisionSubsystem visionSubsystem,
             DriveSubsystem driveSubsystem,
-            PIDFactory pidFactory)
+            PIDFactory pidFactory,
+            XPropertyManager propMan)
     {
         this.visionSubsystem = visionSubsystem;
         this.driveSubsystem = driveSubsystem;
         
-        rotationPid = pidFactory.createPIDManager("Robot vision rotation", 0.6, 0, 0);
+        rotationPid = pidFactory.createPIDManager("Robot vision rotation", 0.6, 0, 0, 0, 1, -1, 2, 2);
         
         this.requires(this.driveSubsystem);
     }
@@ -46,6 +45,14 @@ public class RotateRobotToBoilerCommand extends BaseCommand {
         double power = rotationPid.calculate(0, target == null ? 0 : target.offsetX * 0.6);
         
         driveSubsystem.tankDrivePowerMode(-power, -power);
+    }
+    
+    public boolean isFinished(){
+        return visionSubsystem.getTrackedBoiler() != null && rotationPid.isOnTarget();
+    }
+    
+    public void end(){
+        driveSubsystem.tankDrivePowerMode(0, 0);
     }
 
 }
