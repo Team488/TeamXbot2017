@@ -1,6 +1,5 @@
 package competition.subsystems.agitator;
 
-import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
 import competition.subsystems.RobotSide;
