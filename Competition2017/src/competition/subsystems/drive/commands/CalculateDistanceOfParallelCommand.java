@@ -1,11 +1,7 @@
 package competition.subsystems.drive.commands;
 
-import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
-import competition.subsystems.vision.VisionSubsystem;
-import competition.subsystems.vision.commands.RotateRobotToBoilerCommand;
 import xbot.common.command.BaseCommand;
-import xbot.common.math.PIDFactory;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
@@ -33,9 +29,7 @@ public class CalculateDistanceOfParallelCommand extends BaseCommand{
     }
 
     @Override
-    public void execute() {
-        
-    }
+    public void execute() {}
     
     @Override
     public boolean isFinished(){
