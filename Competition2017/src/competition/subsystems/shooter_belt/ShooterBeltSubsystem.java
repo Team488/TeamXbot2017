@@ -56,4 +56,9 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
     public void stop(){
         setPower(0);
     }
+    
+    @Override
+    public void updatePeriodicData() {
+        super.updatePeriodicData();
+    }
 }
