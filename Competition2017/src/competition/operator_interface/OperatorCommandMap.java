@@ -22,11 +22,11 @@ import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
 import competition.subsystems.shooter_belt.commands.RunShooterBeltCommand;
+import competition.subsystems.shooter_belt.commands.RunShooterBeltPowerCommand;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
-import xbot.common.controls.sensors.XboxControllerWpiAdapter.XboxButton;
 import xbot.common.properties.DoubleProperty;
 
 @Singleton
@@ -53,9 +53,8 @@ public class OperatorCommandMap {
             AscendCommand ascend,
             RopeAlignerCommand aligner)   
     {
-        oi.leftButtons.getifAvailable(2).whileHeld(descend);
-        oi.rightButtons.getifAvailable(2).whileHeld(ascend);
-        oi.rightButtons.getifAvailable(5).whileHeld(aligner);
+        oi.leftButtons.getifAvailable(3).whileHeld(descend);
+        oi.rightButtons.getifAvailable(3).whileHeld(ascend);
     }
     
      @Inject
@@ -70,8 +69,16 @@ public class OperatorCommandMap {
                         TypicalShootingPosition.FlushToBoiler, 
                         shooterWheelsManagerSubsystem.getLeftShooter());
         
-        oi.leftButtons.getifAvailable(6).whenPressed(shootLeft);
-        oi.leftButtons.getifAvailable(7).whenPressed(stopLeft);
+        StopShooterCommand stopRight = new StopShooterCommand(shooterWheelsManagerSubsystem.getRightShooter());
+        RunShooterWheelsForRangeCommand shootRight = 
+                new RunShooterWheelsForRangeCommand(
+                        TypicalShootingPosition.FlushToBoiler, 
+                        shooterWheelsManagerSubsystem.getRightShooter());
+        
+        oi.leftButtons.getifAvailable(5).whenPressed(shootLeft);
+        oi.leftButtons.getifAvailable(4).whenPressed(stopLeft);
+        oi.rightButtons.getifAvailable(4).whenPressed(shootRight);
+        oi.rightButtons.getifAvailable(5).whenPressed(stopRight);
     }
     
     @Inject
@@ -79,8 +86,10 @@ public class OperatorCommandMap {
             OperatorInterface oi,
             ShooterBeltsManagerSubsystem shooterBeltsSubsystem)
     {
-        RunShooterBeltCommand runBeltLeft = new RunShooterBeltCommand(shooterBeltsSubsystem.getLeftBelt());
-        oi.rightButtons.getifAvailable(7).whileHeld(runBeltLeft);
+        RunShooterBeltPowerCommand runBeltLeft = new RunShooterBeltPowerCommand(shooterBeltsSubsystem.getLeftBelt());
+        oi.leftButtons.getifAvailable(2).whileHeld(runBeltLeft);
+        RunShooterBeltPowerCommand runBeltRight = new RunShooterBeltPowerCommand(shooterBeltsSubsystem.getRightBelt());
+        oi.rightButtons.getifAvailable(2).whileHeld(runBeltRight);
     }
     
    @Inject
@@ -90,9 +99,9 @@ public class OperatorCommandMap {
            ShiftGearCommand shiftHigh)
    {
        shiftLow.setGear(Gear.LOW_GEAR);
-       oi.leftButtons.getifAvailable(1).whenPressed(shiftLow);
        shiftHigh.setGear(Gear.HIGH_GEAR);
-       oi.rightButtons.getifAvailable(1).whenPressed(shiftHigh);
+       shiftLow.includeOnSmartDashboard("Shift low");
+       shiftHigh.includeOnSmartDashboard("Shift high");
    }
     
     // CONTROLLER
@@ -103,8 +112,8 @@ public class OperatorCommandMap {
             EjectCollectorCommand eject,
             IntakeCollectorCommand intake)
     {
-        oi.controller.getXboxButton(XboxButton.LeftBumper).whileHeld(eject);
-        oi.controller.getXboxButton(XboxButton.RightBumper).whileHeld(intake);
+        oi.leftButtons.getifAvailable(1).whileHeld(eject);
+        oi.rightButtons.getifAvailable(1).whileHeld(intake);
     }
 
     @Inject
@@ -112,12 +121,17 @@ public class OperatorCommandMap {
             OperatorInterface oi,
             AgitatorsManagerSubsystem agitatorManagerSubsystem)
     {
+        IntakeAgitatorCommand intakeLeft = new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator());
+        IntakeAgitatorCommand intakeRight = new IntakeAgitatorCommand(agitatorManagerSubsystem.getRightAgitator());
+        EjectAgitatorCommand ejectLeft = new EjectAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator());
+        EjectAgitatorCommand ejectRight = new EjectAgitatorCommand(agitatorManagerSubsystem.getRightAgitator());
         
-        oi.controller.getXboxButton(XboxButton.Y).whenPressed(new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
-        oi.controller.getXboxButton(XboxButton.A).whenPressed(new EjectAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
-        oi.controller.getXboxButton(XboxButton.X).whenPressed(new StopAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
+        intakeLeft.includeOnSmartDashboard("Left Agitator Intake");
+        intakeRight.includeOnSmartDashboard("Right Agitator Intake");
+        
+        ejectLeft.includeOnSmartDashboard("Left Agitator Eject");
+        ejectRight.includeOnSmartDashboard("Right Agitator Eject");
     }
-    
     // OTHER
     
     @Inject
