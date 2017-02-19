@@ -133,7 +133,6 @@ public class OperatorCommandMap {
         oi.controller.getXboxButton(XboxButton.A).whenPressed(new EjectAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
         oi.controller.getXboxButton(XboxButton.X).whenPressed(new StopAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
     }
-    }
     // OTHER
     
     @Inject
@@ -156,7 +155,8 @@ public class OperatorCommandMap {
             OperatorInterface oi,
             RotateRobotToBoilerCommand rotateCommand
     )   {
-        oi.leftButtons.getifAvailable(3).whileHeld(rotateCommand);
+        oi.leftButtons.getifAvailable(7).whileHeld(rotateCommand);
+    }
 
     @Inject
     public void setupAutonomous(

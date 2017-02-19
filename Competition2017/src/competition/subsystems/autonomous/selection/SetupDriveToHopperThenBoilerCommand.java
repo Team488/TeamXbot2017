@@ -1,7 +1,6 @@
 package competition.subsystems.autonomous.selection;
 
 import com.google.inject.Inject;
-import com.sun.org.apache.xerces.internal.impl.PropertyManager;
 
 import competition.subsystems.autonomous.DriveToHopperCommandGroup;
 import competition.subsystems.autonomous.DriveToHopperThenBoilerCommandGroup;
