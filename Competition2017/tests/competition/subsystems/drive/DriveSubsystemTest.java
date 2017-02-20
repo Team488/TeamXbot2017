@@ -5,7 +5,8 @@ import org.junit.Test;
 
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
-import xbot.common.controls.sensors.MockXboxController;
+import xbot.common.controls.sensors.XXboxController;
+import xbot.common.controls.sensors.MockXboxControllerAdapter;
 
 public class DriveSubsystemTest extends DriveTestBase {
     
@@ -19,15 +20,13 @@ public class DriveSubsystemTest extends DriveTestBase {
        OperatorInterface oi = injector.getInstance(OperatorInterface.class);
        TankDriveWithGamePadCommand gamePad = injector.getInstance(TankDriveWithGamePadCommand.class);
        
-       MockXboxController xbox = (MockXboxController)oi.controller;
-       xbox.setLeftStick(0,-1);
-       xbox.setRightStick(0, -1);
+       XXboxController xbox = oi.controller;
+       ((MockXboxControllerAdapter)xbox).setLeftStick(0, -1);
+       ((MockXboxControllerAdapter)xbox).setRightStick(0, -1);
        
        gamePad.initialize();
        gamePad.execute();
        verifyDriveSetpoints(1, 1);
-       
-       
     }
     
     @Test
