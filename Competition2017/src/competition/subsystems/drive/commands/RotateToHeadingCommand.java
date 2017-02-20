@@ -76,4 +76,10 @@ public class RotateToHeadingCommand extends BaseDriveCommand {
     public boolean isFinished() {
         return headingDrivePid.isOnTarget();
     }
+    
+    @Override 
+    public void end(){
+        log.info("Ending. Current Heading is " + currentHeading + " and Target Heading was" 
+                +targetHeading);
+    }
 }

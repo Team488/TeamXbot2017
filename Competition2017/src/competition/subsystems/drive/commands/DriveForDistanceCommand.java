@@ -119,6 +119,9 @@ public class DriveForDistanceCommand extends BaseDriveCommand {
     
     @Override
     public void end() {
+        log.info("Ending, PreviousPosition was " + previousPositionInches 
+                + ", Targeted Delta in distance is " + deltaDistance + " Distance traveled is " 
+                + getYDistance());
         this.driveSubsystem.tankDrivePowerMode(0, 0);
     }
 }
