@@ -1,5 +1,6 @@
 package competition.subsystems.shooter_belt;
 
+import competition.InfluxDBWriter;
 import competition.subsystems.BaseXCANTalonSpeedControlledSubsystem;
 import competition.subsystems.RobotSide;
 import xbot.common.injection.wpi_factories.WPIFactory;
@@ -14,6 +15,8 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
     protected final DoubleProperty ejectPowerProperty;
     protected final DoubleProperty beltIntakeTargetSpeed;
 
+    private InfluxDBWriter influxWriter;
+    
     public ShooterBeltSubsystem(
             RobotSide side,
             int masterChannel,
@@ -21,7 +24,8 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
             boolean invertMasterSensor,
             WPIFactory factory, 
             PIDPropertyManager pidPropertyManager,
-            XPropertyManager propManager){
+            XPropertyManager propManager, 
+            InfluxDBWriter influxWriter) {
         super(
                 side + " ShooterBelt",
                 masterChannel,
@@ -35,6 +39,9 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
         intakePowerProperty = propManager.createPersistentProperty("ShooterBelt intake power", 0.5);
         ejectPowerProperty = propManager.createPersistentProperty("ShooterBelt eject power", -0.5);
         beltIntakeTargetSpeed = propManager.createPersistentProperty("ShooterBelt intake speed", 100);
+        
+        this.influxWriter = influxWriter;
+        influxWriter.setMeasurementName("ShooterBeltSubsystem");
     }
 
     public RobotSide getSide() {
@@ -60,5 +67,8 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
     @Override
     public void updatePeriodicData() {
         super.updatePeriodicData();
+        influxWriter.writeData("IntakePower", intakePowerProperty.get());
+        influxWriter.writeData("EjectPower", ejectPowerProperty.get());
+        influxWriter.writeData("BeltIntakePower", beltIntakeTargetSpeed.get());
     }
 }

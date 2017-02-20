@@ -1,7 +1,6 @@
 package competition;
 
 import java.io.IOException;
-import java.time.temporal.IsoFields;
 
 import org.apache.http.Header;
 import org.apache.http.client.config.RequestConfig;
@@ -12,10 +11,11 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
 
+import com.google.inject.Inject;
+
 import com.db.influxdb.Configuration;
 import com.db.influxdb.Constants;
 import com.db.influxdb.DataWriter;
-import com.google.inject.Inject;
 
 public class InfluxDBWriter {
     private static Logger log = Logger.getLogger(InfluxDBWriter.class);
