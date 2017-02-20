@@ -26,7 +26,7 @@ public class InfluxDBWriter {
    
     @Inject
     public InfluxDBWriter() {
-        config = new Configuration("172.22.11.1", "8086", "", "", "XbotRobotData");
+        config = new Configuration("10.4.88.100", "8086", "", "", "XbotRobotData");
         dbOnline = isInfluxOnline(config);
         try {
             this.writer = new DataWriter(config);
