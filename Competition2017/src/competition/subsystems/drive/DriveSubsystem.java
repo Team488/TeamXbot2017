@@ -3,6 +3,12 @@ package competition.subsystems.drive;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import telemetry.InfluxDBConnection;
+
+import java.util.concurrent.TimeUnit;
+
+import org.influxdb.dto.Point;
+
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 import xbot.common.command.BaseSubsystem;
@@ -32,10 +38,12 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     private final DoubleProperty ticksPerInch;
     private final DoubleProperty startPositionTicks;
     private final DoubleProperty currentDisplacementInchProp;
+    final InfluxDBConnection influxConnection;
     
     @Inject
-    public DriveSubsystem(WPIFactory factory, XPropertyManager propManager) {
+    public DriveSubsystem(WPIFactory factory, XPropertyManager propManager, InfluxDBConnection influxConnection) {
         log.info("Creating");
+        this.influxConnection = influxConnection;
 
         // TODO: Update these defaults. The current values are blind guesses.
         encoderCodesProperty = propManager.createPersistentProperty("Drive encoder codes per rev", 512);
@@ -199,5 +207,13 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         
         leftDriveEncoderTicksProp.set(leftDrive.getPosition());
         rightDriveEncoderTicksProp.set(rightDrive.getPosition());
+        
+        Point point = Point.measurement("DriveSubsystem")
+                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                .tag("side", "left")
+                .addField("power", leftDrive.get())
+                .addField("distance", leftDrive.getPosition())
+                .build();
+        influxConnection.writePoint(point);
     }
 }
