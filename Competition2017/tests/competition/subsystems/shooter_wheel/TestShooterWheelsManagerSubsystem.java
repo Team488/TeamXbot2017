@@ -5,6 +5,7 @@ import com.google.inject.Singleton;
 
 import competition.subsystems.RobotSide;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
+import telemetry.InfluxDBConnection;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.PIDFactory;
 import xbot.common.properties.XPropertyManager;
@@ -13,12 +14,12 @@ import xbot.common.properties.XPropertyManager;
 public class TestShooterWheelsManagerSubsystem extends ShooterWheelsManagerSubsystem {
 
     @Inject
-    public TestShooterWheelsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory) {
-        super(factory, propManager, pidFactory);
+    public TestShooterWheelsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory, InfluxDBConnection influxConnection) {
+        super(factory, propManager, pidFactory, influxConnection);
     }
     
     @Override
-    protected void createLeftAndRightShooter(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory) {        
+    protected void createLeftAndRightShooter(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory, InfluxDBConnection influxConnection) {        
         leftShooter = new TestShooterWheelSubsystem(
                 leftMotorMasterIndex,
                 leftMotorFollowerIndex,
@@ -28,7 +29,8 @@ public class TestShooterWheelsManagerSubsystem extends ShooterWheelsManagerSubsy
                 RobotSide.Left,
                 leftPIDValues,
                 factory,
-                propManager);
+                propManager,
+                influxConnection);
         
         rightShooter = new TestShooterWheelSubsystem(
                 rightMotorMasterIndex,
@@ -39,6 +41,7 @@ public class TestShooterWheelsManagerSubsystem extends ShooterWheelsManagerSubsy
                 RobotSide.Right,
                 rightPIDValues,
                 factory,
-                propManager);
+                propManager,
+                influxConnection);
     }
 }

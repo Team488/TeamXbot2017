@@ -38,7 +38,8 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     private final DoubleProperty ticksPerInch;
     private final DoubleProperty startPositionTicks;
     private final DoubleProperty currentDisplacementInchProp;
-    final InfluxDBConnection influxConnection;
+    
+    private final InfluxDBConnection influxConnection;
     
     @Inject
     public DriveSubsystem(WPIFactory factory, XPropertyManager propManager, InfluxDBConnection influxConnection) {
@@ -208,12 +209,40 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         leftDriveEncoderTicksProp.set(leftDrive.getPosition());
         rightDriveEncoderTicksProp.set(rightDrive.getPosition());
         
-        Point point = Point.measurement("DriveSubsystem")
+        Point leftMasterPoint = Point.measurement(this.getClass().getSimpleName())
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .tag("side", "left")
+                .tag("hierarchy", "master")
                 .addField("power", leftDrive.get())
                 .addField("distance", leftDrive.getPosition())
                 .build();
-        influxConnection.writePoint(point);
+        influxConnection.writePoint(leftMasterPoint);
+        
+        Point leftSlavePoint = Point.measurement(this.getClass().getSimpleName())
+                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                .tag("side", "left")
+                .tag("hierarchy", "slave")
+                .addField("power", leftDriveSlave.get())
+                .addField("distance", leftDriveSlave.getPosition())
+                .build();
+        influxConnection.writePoint(leftSlavePoint);
+        
+        Point rightMasterPoint = Point.measurement(this.getClass().getSimpleName())
+                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                .tag("side", "right")
+                .tag("hierarchy", "master")
+                .addField("power", rightDrive.get())
+                .addField("distance", rightDrive.getPosition())
+                .build();
+        influxConnection.writePoint(rightMasterPoint);
+        
+        Point rightSlavePoint = Point.measurement(this.getClass().getSimpleName())
+                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                .tag("side", "right")
+                .tag("hierarchy", "slave")
+                .addField("power", rightDriveSlave.get())
+                .addField("distance", rightDriveSlave.getPosition())
+                .build();
+        influxConnection.writePoint(rightSlavePoint);
     }
 }

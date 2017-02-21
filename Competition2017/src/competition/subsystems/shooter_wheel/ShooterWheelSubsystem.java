@@ -1,7 +1,12 @@
 package competition.subsystems.shooter_wheel;
 
+import java.util.concurrent.TimeUnit;
+
+import org.influxdb.dto.Point;
+
 import competition.subsystems.BaseXCANTalonPairSpeedControlledSubsystem;
 import competition.subsystems.RobotSide;
+import telemetry.InfluxDBConnection;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.PIDPropertyManager;
 import xbot.common.properties.DoubleProperty;
@@ -11,6 +16,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
     
     private final RobotSide side;
     protected final DoubleProperty flushToBoilerTargetSpeed;
+    private final InfluxDBConnection influxConnection;
     
     public enum TypicalShootingPosition {
         FlushToBoiler
@@ -25,7 +31,8 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
             RobotSide side,
             PIDPropertyManager pidPropertyManager,
             WPIFactory factory,
-            XPropertyManager propManager) {
+            XPropertyManager propManager,
+            InfluxDBConnection influxConnection) {
         super(
                 side+"ShooterWheel",
                 masterChannel,
@@ -40,6 +47,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         this.side = side;
         flushToBoilerTargetSpeed = 
                 propManager.createPersistentProperty(side + " flush to boiler target speed", 3500);
+        this.influxConnection = influxConnection;
     }
     
     public RobotSide getSide(){
@@ -64,6 +72,29 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         // (flush to boiler, one robot width, some other range...)
         // For now, it's just this one range.
         setTargetSpeed(flushToBoilerTargetSpeed.get());
+    }
+    
+    @Override
+    public void updatePeriodicData() {
+        super.updatePeriodicData();
+        
+        Point leftMasterPoint = Point.measurement(this.getClass().getSimpleName())
+                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                .tag("side", side.toString().toLowerCase())
+                .addField("power", masterMotor.get())
+                .tag("hirearchy", "master")
+                .addField("current", masterMotor.getOutputCurrent())
+                .build();
+        influxConnection.writePoint(leftMasterPoint);
+        
+        Point slavePoint = Point.measurement(this.getClass().getSimpleName())
+                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                .tag("side", side.toString().toLowerCase())
+                .addField("power", followerMotor.get())
+                .tag("hirearchy", "slave")
+                .addField("current", followerMotor.getOutputCurrent())
+                .build();
+        influxConnection.writePoint(slavePoint);
     }
 }
 

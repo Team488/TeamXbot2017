@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 
 import competition.subsystems.RobotSide;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
-
+import telemetry.InfluxDBConnection;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.PIDFactory;
 import xbot.common.properties.XPropertyManager;
@@ -12,12 +12,12 @@ import xbot.common.properties.XPropertyManager;
 public class TestShooterBeltsManagerSubsystem extends ShooterBeltsManagerSubsystem {
 
     @Inject
-    public TestShooterBeltsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory){
-        super(factory, propManager, pidFactory);
+    public TestShooterBeltsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory, InfluxDBConnection influxConnection){
+        super(factory, propManager, pidFactory, influxConnection);
     }
     
     @Override
-    protected void createLeftAndRightBelts(WPIFactory factory, XPropertyManager propManager) {        
+    protected void createLeftAndRightBelts(WPIFactory factory, XPropertyManager propManager, InfluxDBConnection influxConnection) {        
         leftBelt = new TestShooterBeltSubsystem(
                 RobotSide.Left,
                 leftMotorIndex,
@@ -25,7 +25,8 @@ public class TestShooterBeltsManagerSubsystem extends ShooterBeltsManagerSubsyst
                 invertLeftSensor,
                 factory, 
                 leftPIDValues,
-                propManager);
+                propManager,
+                influxConnection);
         
         rightBelt = new TestShooterBeltSubsystem(
                 RobotSide.Right,
@@ -34,6 +35,7 @@ public class TestShooterBeltsManagerSubsystem extends ShooterBeltsManagerSubsyst
                 invertRightSensor,
                 factory, 
                 rightPIDValues,
-                propManager);
+                propManager,
+                influxConnection);
     }
 }

@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.subsystems.RobotSide;
+import telemetry.InfluxDBConnection;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.PIDFactory;
@@ -31,20 +32,21 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
     protected final boolean rightMasterInverted = true;
     protected final boolean rightMasterEncoderInverted = true;
     protected final boolean rightFollowerInverted = true;
+   
     
     @Inject
-    public ShooterWheelsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory) {
+    public ShooterWheelsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory, InfluxDBConnection influxConnection) {
         log.info("Creating");
         
         leftPIDValues = pidFactory.createPIDPropertyManager(
                 "LeftShooter", .5, 0, 10, .099);
         rightPIDValues = pidFactory.createPIDPropertyManager(
                 "LeftShooter", .5, 0, 10, .099);
-                
-        createLeftAndRightShooter(factory, propManager, pidFactory);
+       
+        createLeftAndRightShooter(factory, propManager, pidFactory, influxConnection);
     }
     
-    protected void createLeftAndRightShooter(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory) {
+    protected void createLeftAndRightShooter(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory, InfluxDBConnection influxConnection) {
         leftShooter = new ShooterWheelSubsystem(
                 leftMotorMasterIndex,
                 leftMotorFollowerIndex,
@@ -54,7 +56,8 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
                 RobotSide.Left,
                 leftPIDValues,
                 factory,
-                propManager);
+                propManager,
+                influxConnection);
         
         rightShooter = new ShooterWheelSubsystem(
                 rightMotorMasterIndex,
@@ -65,7 +68,8 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
                 RobotSide.Right,
                 rightPIDValues,
                 factory,
-                propManager);
+                propManager,
+                influxConnection);
     }
     
     public ShooterWheelSubsystem getLeftShooter() {
