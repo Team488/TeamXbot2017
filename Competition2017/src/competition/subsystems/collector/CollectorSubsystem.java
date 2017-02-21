@@ -33,15 +33,15 @@ public class CollectorSubsystem extends BaseSubsystem {
         
     }
     
-    public void stop(){
+    public void stop() {
         collectorMotor.set(0);
     }
     
-    public void intake(){
+    public void intake() {
         collectorMotor.set(intakePowerProperty.get());
     }
     
-    public void eject(){
+    public void eject() {
         collectorMotor.set(ejectPowerProperty.get());
     }
 }

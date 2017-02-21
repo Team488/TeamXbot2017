@@ -1,5 +1,6 @@
 package competition.subsystems.shooter_wheel;
 
+import competition.InfluxDBWriter;
 import competition.subsystems.BaseXCANTalonPairSpeedControlledSubsystem;
 import competition.subsystems.RobotSide;
 
@@ -14,6 +15,8 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
     
     protected final DoubleProperty flushToBoilerTargetSpeed;
     
+    private InfluxDBWriter influxWriter;
+    
     public enum TypicalShootingPosition {
         FlushToBoiler
     }
@@ -27,9 +30,10 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
             RobotSide side,
             PIDPropertyManager pidPropertyManager,
             WPIFactory factory,
-            XPropertyManager propManager) {
+            XPropertyManager propManager,
+            InfluxDBWriter influxWriter) {
         super(
-                side+"ShooterWheel",
+                side+" ShooterWheel",
                 masterChannel,
                 followerChannel,
                 masterInverted,
@@ -42,6 +46,8 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         this.side = side;
         flushToBoilerTargetSpeed = 
                 propManager.createPersistentProperty(side + " flush to boiler target speed", 3500);
+        this.influxWriter = influxWriter;
+        this.influxWriter.setMeasurementName("ShooterWheelSubsystem");
     }
     
     public RobotSide getSide(){
@@ -71,6 +77,17 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
     @Override
     public void updatePeriodicData() {
         super.updatePeriodicData();
+        if (side == RobotSide.Left) {
+            this.influxWriter.writeData("leftSideShooterWheelPower", masterMotor.get());
+            this.influxWriter.writeData("leftSideShooteWheelCurrent", masterMotor.getOutputCurrent());
+            this.influxWriter.writeData("leftSideShooterWheelFollowerPower", followerMotor.get());
+            this.influxWriter.writeData("leftSideShooteWheelFollowerCurrent", followerMotor.getOutputCurrent());
+        } else if (side == RobotSide.Right) {
+            this.influxWriter.writeData("rightSideShooterWheelPower", masterMotor.get());
+            this.influxWriter.writeData("rightSideShooteWheelCurrent", masterMotor.getOutputCurrent());
+            this.influxWriter.writeData("rightSideShooterWheelFollowerPower", followerMotor.get());
+            this.influxWriter.writeData("rightSideShooteWheelFollowerCurrent", followerMotor.getOutputCurrent());
+        }
     }
 }
 

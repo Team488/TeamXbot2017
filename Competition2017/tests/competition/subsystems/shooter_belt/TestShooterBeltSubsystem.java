@@ -1,5 +1,6 @@
 package competition.subsystems.shooter_belt;
 
+import competition.InfluxDBWriter;
 import competition.subsystems.RobotSide;
 import competition.subsystems.shooter_belt.ShooterBeltSubsystem;
 
@@ -18,7 +19,8 @@ public class TestShooterBeltSubsystem extends ShooterBeltSubsystem {
             boolean invertMasterSensor,
             WPIFactory factory, 
             PIDPropertyManager pidPropertyManager,
-            XPropertyManager propManager){
+            XPropertyManager propManager,
+            InfluxDBWriter influxWriter) {
         super(
                 side,
                 masterChannel,
@@ -26,14 +28,15 @@ public class TestShooterBeltSubsystem extends ShooterBeltSubsystem {
                 invertMasterSensor,
                 factory,
                 pidPropertyManager,
-                propManager);
+                propManager,
+                influxWriter);
     }
 
-    public DoubleProperty getIntakeProp(){
+    public DoubleProperty getIntakeProp() {
         return intakePowerProperty;
     }
     
-    public DoubleProperty getEjectProp(){
+    public DoubleProperty getEjectProp() {
         return ejectPowerProperty;
     }
     

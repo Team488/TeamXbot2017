@@ -203,9 +203,14 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         leftDriveEncoderTicksProp.set(leftDrive.getPosition());
         rightDriveEncoderTicksProp.set(rightDrive.getPosition());
         
-        influxWriter.writeData("leftDrive", leftDrive.get());
-        influxWriter.writeData("leftDriveSlave", leftDriveSlave.get());
-        influxWriter.writeData("rightDrive", rightDrive.get());
-        influxWriter.writeData("rightDriveSlave", rightDriveSlave.get());
+        influxWriter.writeData("leftDrivePower", leftDrive.get());
+        influxWriter.writeData("leftDriveSlavePower", leftDriveSlave.get());
+        influxWriter.writeData("rightDrivePower", rightDrive.get());
+        influxWriter.writeData("rightDriveSlavePower", rightDriveSlave.get());
+        
+        influxWriter.writeData("leftDriveCurrent", leftDrive.getOutputCurrent());
+        influxWriter.writeData("leftDriveSlaveCurrent", leftDriveSlave.getOutputCurrent());
+        influxWriter.writeData("rightDriveCurrent", rightDrive.getOutputCurrent());
+        influxWriter.writeData("rightDriveSlaveCurrent", rightDriveSlave.getOutputCurrent());
     }
 }

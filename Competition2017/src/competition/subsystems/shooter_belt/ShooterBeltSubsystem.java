@@ -3,6 +3,7 @@ package competition.subsystems.shooter_belt;
 import competition.InfluxDBWriter;
 import competition.subsystems.BaseXCANTalonSpeedControlledSubsystem;
 import competition.subsystems.RobotSide;
+
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.PIDPropertyManager;
 import xbot.common.properties.DoubleProperty;
@@ -14,7 +15,7 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
     protected final DoubleProperty intakePowerProperty;
     protected final DoubleProperty ejectPowerProperty;
     protected final DoubleProperty beltIntakeTargetSpeed;
-
+    
     private InfluxDBWriter influxWriter;
     
     public ShooterBeltSubsystem(
@@ -24,7 +25,7 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
             boolean invertMasterSensor,
             WPIFactory factory, 
             PIDPropertyManager pidPropertyManager,
-            XPropertyManager propManager, 
+            XPropertyManager propManager,
             InfluxDBWriter influxWriter) {
         super(
                 side + " ShooterBelt",
@@ -41,7 +42,6 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
         beltIntakeTargetSpeed = propManager.createPersistentProperty("ShooterBelt intake speed", 100);
         
         this.influxWriter = influxWriter;
-        influxWriter.setMeasurementName("ShooterBeltSubsystem");
     }
 
     public RobotSide getSide() {
@@ -67,8 +67,16 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
     @Override
     public void updatePeriodicData() {
         super.updatePeriodicData();
-        influxWriter.writeData("IntakePower", intakePowerProperty.get());
-        influxWriter.writeData("EjectPower", ejectPowerProperty.get());
-        influxWriter.writeData("BeltIntakePower", beltIntakeTargetSpeed.get());
+        if (side == RobotSide.Left) {
+            this.influxWriter.writeData("leftSideShooterBeltPower", masterMotor.get());
+            this.influxWriter.writeData("leftSideShooteBeltCurrent", masterMotor.getOutputCurrent());
+            this.influxWriter.writeData("leftSideShooterBeltFollowerPower", followerMotor.get());
+            this.influxWriter.writeData("leftSideShooteBeltFollowerCurrent", followerMotor.getOutputCurrent());
+        } else if (side == RobotSide.Right) {
+            this.influxWriter.writeData("rightSideShooterBeltPower", masterMotor.get());
+            this.influxWriter.writeData("rightSideShooteBeltCurrent", masterMotor.getOutputCurrent());
+            this.influxWriter.writeData("rightSideShooterFollowerBeltPower", followerMotor.get());
+            this.influxWriter.writeData("rightSideShooteBeltFollowerCurrent", followerMotor.getOutputCurrent());
+        }
     }
 }

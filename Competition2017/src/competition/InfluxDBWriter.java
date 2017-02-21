@@ -47,7 +47,7 @@ public class InfluxDBWriter {
             writer.addField(columnName, value);
             try {
                 writer.writeData();
-            }   catch (Exception e) {
+            } catch (Exception e) {
                 log.error(e);
             }
         }

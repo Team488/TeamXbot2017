@@ -3,12 +3,13 @@ package competition.subsystems.shooter_belt;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.InfluxDBWriter;
 import competition.subsystems.RobotSide;
+
 import xbot.common.command.BaseSubsystem;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.PIDFactory;
 import xbot.common.math.PIDPropertyManager;
-import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
@@ -28,17 +29,17 @@ public class ShooterBeltsManagerSubsystem extends BaseSubsystem {
         
         protected final int leftMotorIndex = 31;
         protected final int rightMotorIndex = 24;
-
+       
         @Inject
-        public ShooterBeltsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory){
+        public ShooterBeltsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory, InfluxDBWriter influxWriter){
             log.info("Creating");
             leftPIDValues = pidFactory.createPIDPropertyManager("LeftBelt", 0, 0, 0, 0);
             rightPIDValues = pidFactory.createPIDPropertyManager("RightBelt", 0, 0, 0, 0);
             
-            createLeftAndRightBelts(factory, propManager);
+            createLeftAndRightBelts(factory, propManager, influxWriter);
         }
         
-        protected void createLeftAndRightBelts(WPIFactory factory, XPropertyManager propManager) {
+        protected void createLeftAndRightBelts(WPIFactory factory, XPropertyManager propManager, InfluxDBWriter influxWriter) {
             leftBelt = new ShooterBeltSubsystem(
                     RobotSide.Left,
                     leftMotorIndex,
@@ -46,7 +47,8 @@ public class ShooterBeltsManagerSubsystem extends BaseSubsystem {
                     invertLeftSensor,
                     factory, 
                     leftPIDValues,
-                    propManager);
+                    propManager,
+                    influxWriter);
             
             rightBelt = new ShooterBeltSubsystem(
                     RobotSide.Right,
@@ -55,14 +57,15 @@ public class ShooterBeltsManagerSubsystem extends BaseSubsystem {
                     invertRightSensor,
                     factory, 
                     rightPIDValues,
-                    propManager);
+                    propManager,
+                    influxWriter);
         }
 
-        public ShooterBeltSubsystem getLeftBelt(){
+        public ShooterBeltSubsystem getLeftBelt() {
             return leftBelt;
         }
 
-        public ShooterBeltSubsystem getRightBelt(){
+        public ShooterBeltSubsystem getRightBelt() {
             return rightBelt;
         }
 }
