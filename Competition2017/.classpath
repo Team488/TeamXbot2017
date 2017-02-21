@@ -12,7 +12,7 @@
 	<classpathentry kind="lib" path="/SeriouslyCommonLib/lib/WPILib-sources.jar"/>
 	<classpathentry kind="lib" path="/SeriouslyCommonLib/lib/WPILib.jar" sourcepath="/SeriouslyCommonLib/lib/WPILib-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/influxdb-2.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/influxdb-java-2.5.jar" sourcepath="/home/alex/frc/repos/influxdb-java"/>
+	<classpathentry kind="lib" path="lib/guava-21.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
