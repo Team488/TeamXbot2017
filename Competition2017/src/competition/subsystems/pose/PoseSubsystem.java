@@ -18,8 +18,6 @@ public class PoseSubsystem extends BasePoseSubsystem {
     public PoseSubsystem(WPIFactory factory, XPropertyManager propManager, DriveSubsystem drive) {
         super(factory, propManager);
         this.drive = drive;
-        
-        log.info("Creating");
     }
 
     @Override
