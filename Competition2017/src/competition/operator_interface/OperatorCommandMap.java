@@ -25,6 +25,7 @@ import competition.subsystems.shooter_belt.commands.RunShooterBeltCommand;
 import competition.subsystems.shooter_belt.commands.RunShooterBeltPowerCommand;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
+import competition.subsystems.shooter_wheel.commands.RunShooterWheelUsingPowerCommand;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
 import xbot.common.controls.sensors.XXboxController.XboxButton;
@@ -75,6 +76,14 @@ public class OperatorCommandMap {
                 new RunShooterWheelsForRangeCommand(
                         TypicalShootingPosition.FlushToBoiler, 
                         shooterWheelsManagerSubsystem.getRightShooter());
+        
+        RunShooterWheelUsingPowerCommand runLeftPower = new RunShooterWheelUsingPowerCommand(
+                shooterWheelsManagerSubsystem.getLeftShooter());
+        RunShooterWheelUsingPowerCommand runRightPower = new RunShooterWheelUsingPowerCommand(
+                shooterWheelsManagerSubsystem.getRightShooter());
+        
+        oi.controller.getXboxButton(XboxButton.LeftTrigger).whileHeld(runLeftPower);
+        oi.controller.getXboxButton(XboxButton.RightTrigger).whileHeld(runRightPower);
         
         oi.leftButtons.getifAvailable(5).whenPressed(shootLeft);
         oi.leftButtons.getifAvailable(4).whenPressed(stopLeft);
