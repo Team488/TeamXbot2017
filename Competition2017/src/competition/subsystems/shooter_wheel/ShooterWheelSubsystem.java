@@ -82,19 +82,9 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .tag("side", side.toString().toLowerCase())
                 .addField("power", masterMotor.get())
-                .tag("hirearchy", "master")
                 .addField("current", masterMotor.getOutputCurrent())
                 .build();
         influxConnection.writePoint(leftMasterPoint);
-        
-        Point slavePoint = Point.measurement(this.getClass().getSimpleName())
-                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                .tag("side", side.toString().toLowerCase())
-                .addField("power", followerMotor.get())
-                .tag("hirearchy", "slave")
-                .addField("current", followerMotor.getOutputCurrent())
-                .build();
-        influxConnection.writePoint(slavePoint);
     }
 }
 

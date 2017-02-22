@@ -212,37 +212,17 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         Point leftMasterPoint = Point.measurement(this.getClass().getSimpleName())
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .tag("side", "left")
-                .tag("hierarchy", "master")
                 .addField("power", leftDrive.get())
                 .addField("distance", leftDrive.getPosition())
                 .build();
         influxConnection.writePoint(leftMasterPoint);
         
-        Point leftSlavePoint = Point.measurement(this.getClass().getSimpleName())
-                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                .tag("side", "left")
-                .tag("hierarchy", "slave")
-                .addField("power", leftDriveSlave.get())
-                .addField("distance", leftDriveSlave.getPosition())
-                .build();
-        influxConnection.writePoint(leftSlavePoint);
-        
         Point rightMasterPoint = Point.measurement(this.getClass().getSimpleName())
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .tag("side", "right")
-                .tag("hierarchy", "master")
                 .addField("power", rightDrive.get())
                 .addField("distance", rightDrive.getPosition())
                 .build();
         influxConnection.writePoint(rightMasterPoint);
-        
-        Point rightSlavePoint = Point.measurement(this.getClass().getSimpleName())
-                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                .tag("side", "right")
-                .tag("hierarchy", "slave")
-                .addField("power", rightDriveSlave.get())
-                .addField("distance", rightDriveSlave.getPosition())
-                .build();
-        influxConnection.writePoint(rightSlavePoint);
     }
 }
