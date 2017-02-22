@@ -29,7 +29,7 @@ public class DriveForDistanceCommand extends BaseDriveCommand {
     private ContiguousHeading targetHeading;
     public final double defaultPValue = 1/80d;
 
-    private int onTargetCount = 0;
+    private  int onTargetCount = 0;
     
     @Inject
     public DriveForDistanceCommand(
