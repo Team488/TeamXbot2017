@@ -1,12 +1,12 @@
 package competition.subsystems.shooter_wheel;
 
-import java.util.concurrent.TimeUnit;
-
 import org.influxdb.dto.Point;
 
 import competition.subsystems.BaseXCANTalonPairSpeedControlledSubsystem;
 import competition.subsystems.RobotSide;
+
 import telemetry.InfluxDBConnection;
+
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.PIDPropertyManager;
 import xbot.common.properties.DoubleProperty;
@@ -34,7 +34,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
             XPropertyManager propManager,
             InfluxDBConnection influxConnection) {
         super(
-                side+"ShooterWheel",
+                side+" ShooterWheel",
                 masterChannel,
                 followerChannel,
                 masterInverted,
@@ -78,13 +78,8 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
     public void updatePeriodicData() {
         super.updatePeriodicData();
         
-        Point primaryMotorPoint = Point.measurement(this.getClass().getSimpleName())
-                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                .tag("side", side.toString().toLowerCase())
-                .addField("power", masterMotor.get())
-                .addField("current", masterMotor.getOutputCurrent())
-                .build();
-        influxConnection.writePoint(primaryMotorPoint);
+        Point primaryPoint = masterMotor.getTelemetryPoint(this.getClass().getSimpleName(), side.toString().toLowerCase(), false);
+        influxConnection.writePoint(primaryPoint);
     }
 }
 

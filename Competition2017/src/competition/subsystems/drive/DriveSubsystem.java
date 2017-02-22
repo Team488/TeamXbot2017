@@ -5,8 +5,6 @@ import com.google.inject.Singleton;
 
 import telemetry.InfluxDBConnection;
 
-import java.util.concurrent.TimeUnit;
-
 import org.influxdb.dto.Point;
 
 import com.ctre.CANTalon.FeedbackDevice;
@@ -209,20 +207,9 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         leftDriveEncoderTicksProp.set(leftDrive.getPosition());
         rightDriveEncoderTicksProp.set(rightDrive.getPosition());
         
-        Point leftPrimaryPoint = Point.measurement(this.getClass().getSimpleName())
-                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                .tag("side", "left")
-                .addField("power", leftDrive.get())
-                .addField("distance", leftDrive.getPosition())
-                .build();
+        Point leftPrimaryPoint = leftDrive.getTelemetryPoint(this.getClass().getSimpleName(), "left", true);
         influxConnection.writePoint(leftPrimaryPoint);
-        
-        Point rightPrimaryPoint = Point.measurement(this.getClass().getSimpleName())
-                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                .tag("side", "right")
-                .addField("power", rightDrive.get())
-                .addField("distance", rightDrive.getPosition())
-                .build();
+        Point rightPrimaryPoint = leftDrive.getTelemetryPoint(this.getClass().getSimpleName(), "right", true);
         influxConnection.writePoint(rightPrimaryPoint);
     }
 }
