@@ -27,6 +27,7 @@ import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootin
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
+import xbot.common.controls.sensors.XXboxController.XboxButton;
 import xbot.common.properties.DoubleProperty;
 
 @Singleton
@@ -131,6 +132,10 @@ public class OperatorCommandMap {
         
         ejectLeft.includeOnSmartDashboard("Left Agitator Eject");
         ejectRight.includeOnSmartDashboard("Right Agitator Eject");
+        
+        oi.controller.getXboxButton(XboxButton.LeftBumper).whileHeld(intakeLeft);
+        oi.controller.getXboxButton(XboxButton.RightBumper).whileHeld(intakeRight);
+        
     }
     // OTHER
     

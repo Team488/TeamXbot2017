@@ -27,6 +27,7 @@ public class CollectorSubsystem extends BaseSubsystem {
         
         collectorMotor.setProfile(0);
         collectorMotor.setControlMode(TalonControlMode.PercentVbus);
+        collectorMotor.setInverted(true);
         
         ejectPowerProperty = propManager.createPersistentProperty("Collector eject power", -0.5);
         intakePowerProperty = propManager.createPersistentProperty("Collector intake power", 0.5);

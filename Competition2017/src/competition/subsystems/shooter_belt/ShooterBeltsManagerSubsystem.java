@@ -21,11 +21,11 @@ public class ShooterBeltsManagerSubsystem extends BaseSubsystem {
         protected final PIDPropertyManager leftPIDValues;
         protected final PIDPropertyManager rightPIDValues;
         
-        protected final boolean invertLeft = false;
-        protected final boolean invertLeftSensor = false;
+        protected final boolean invertLeft = true;
+        protected final boolean invertLeftSensor = true;
         
-        protected final boolean invertRight = true;
-        protected final boolean invertRightSensor = true;
+        protected final boolean invertRight = false;
+        protected final boolean invertRightSensor = false;
         
         protected final int leftMotorIndex = 31;
         protected final int rightMotorIndex = 24;
