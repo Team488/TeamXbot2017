@@ -69,12 +69,12 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
     public void updatePeriodicData() {
         super.updatePeriodicData();
         
-        Point masterPoint = Point.measurement(this.getClass().getSimpleName())
+        Point primaryMotorPoint = Point.measurement(this.getClass().getSimpleName())
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .tag("side", side.toString().toLowerCase())
                 .addField("power", masterMotor.get())
                 .addField("current", masterMotor.getOutputCurrent())
                 .build();
-        influxConnection.writePoint(masterPoint);
+        influxConnection.writePoint(primaryMotorPoint);
     }
 }
