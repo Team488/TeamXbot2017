@@ -209,20 +209,20 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         leftDriveEncoderTicksProp.set(leftDrive.getPosition());
         rightDriveEncoderTicksProp.set(rightDrive.getPosition());
         
-        Point leftMasterPoint = Point.measurement(this.getClass().getSimpleName())
+        Point leftPrimaryPoint = Point.measurement(this.getClass().getSimpleName())
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .tag("side", "left")
                 .addField("power", leftDrive.get())
                 .addField("distance", leftDrive.getPosition())
                 .build();
-        influxConnection.writePoint(leftMasterPoint);
+        influxConnection.writePoint(leftPrimaryPoint);
         
-        Point rightMasterPoint = Point.measurement(this.getClass().getSimpleName())
+        Point rightPrimaryPoint = Point.measurement(this.getClass().getSimpleName())
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .tag("side", "right")
                 .addField("power", rightDrive.get())
                 .addField("distance", rightDrive.getPosition())
                 .build();
-        influxConnection.writePoint(rightMasterPoint);
+        influxConnection.writePoint(rightPrimaryPoint);
     }
 }

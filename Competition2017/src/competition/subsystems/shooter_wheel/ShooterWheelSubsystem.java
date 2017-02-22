@@ -78,13 +78,13 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
     public void updatePeriodicData() {
         super.updatePeriodicData();
         
-        Point leftMasterPoint = Point.measurement(this.getClass().getSimpleName())
+        Point primaryMotorPoint = Point.measurement(this.getClass().getSimpleName())
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .tag("side", side.toString().toLowerCase())
                 .addField("power", masterMotor.get())
                 .addField("current", masterMotor.getOutputCurrent())
                 .build();
-        influxConnection.writePoint(leftMasterPoint);
+        influxConnection.writePoint(primaryMotorPoint);
     }
 }
 
