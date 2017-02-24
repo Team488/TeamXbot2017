@@ -29,7 +29,7 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
     protected final boolean leftFollowerInverted = false;
     
     protected final boolean rightMasterInverted = false;
-    protected final boolean rightMasterEncoderInverted = false;
+    protected final boolean rightMasterEncoderInverted = true;
     protected final boolean rightFollowerInverted = false;
     
     @Inject
