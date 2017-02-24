@@ -11,6 +11,7 @@ import xbot.common.injection.wpi_factories.WPIFactory;
 public class ShiftSubsystem extends BaseSubsystem {
 
     public final XSolenoid solenoid;
+    public Gear gear;
     
     public enum Gear {
         LOW_GEAR, HIGH_GEAR
@@ -21,6 +22,7 @@ public class ShiftSubsystem extends BaseSubsystem {
         log.info("Creating");
     
         this.solenoid = factory.getSolenoid(0);
+        gear = Gear.LOW_GEAR;
     }
     
     /**
@@ -36,5 +38,10 @@ public class ShiftSubsystem extends BaseSubsystem {
             /* Defaults the gear to low just to be safe */
             solenoid.set(false);
         }
+        this.gear = gear;
+    }
+    
+    public Gear getGear() {
+        return gear;
     }
 }

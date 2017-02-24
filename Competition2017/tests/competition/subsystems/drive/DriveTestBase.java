@@ -49,4 +49,14 @@ public abstract class DriveTestBase extends BaseWPITest {
         assertTrue(((MockCANTalon)drive.leftDrive).getSetpoint() < 0);
         assertTrue(((MockCANTalon)drive.rightDrive).getSetpoint() < 0);
     }
+    
+    public void setDriveEncoderDistances(double left, double right) {
+        ((MockCANTalon)drive.leftDrive).setPosition(left);
+        ((MockCANTalon)drive.rightDrive).setPosition(right);
+    }
+    
+    public void driveDeltaEncoderDistances(double left, double right){
+        ((MockCANTalon)drive.leftDrive).setPosition(((MockCANTalon)drive.leftDrive).getEncoderPosition() + left);
+        ((MockCANTalon)drive.rightDrive).setPosition(((MockCANTalon)drive.leftDrive).getEncoderPosition() + right);
+    }
 }
