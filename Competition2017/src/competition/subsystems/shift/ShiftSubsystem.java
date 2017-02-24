@@ -10,8 +10,7 @@ import xbot.common.injection.wpi_factories.WPIFactory;
 @Singleton
 public class ShiftSubsystem extends BaseSubsystem {
 
-    public final XSolenoid solenoidLeft;
-    public final XSolenoid solenoidRight;
+    public final XSolenoid solenoid;
     
     public enum Gear {
         LOW_GEAR, HIGH_GEAR
@@ -20,9 +19,8 @@ public class ShiftSubsystem extends BaseSubsystem {
     @Inject
     public ShiftSubsystem(WPIFactory factory) {
         log.info("Creating");
-        
-        this.solenoidLeft = factory.getSolenoid(1);
-        this.solenoidRight = factory.getSolenoid(2);
+    
+        this.solenoid = factory.getSolenoid(0);
     }
     
     /**
@@ -31,15 +29,12 @@ public class ShiftSubsystem extends BaseSubsystem {
      */
     public void setGear(Gear gear) {
         if (gear == Gear.LOW_GEAR) {
-            solenoidLeft.set(false);
-            solenoidRight.set(false);
+            solenoid.set(false);
         } else if (gear == Gear.HIGH_GEAR) {
-            solenoidLeft.set(true);
-            solenoidRight.set(true);
+            solenoid.set(true);
         } else {
             /* Defaults the gear to low just to be safe */
-            solenoidLeft.set(false);
-            solenoidRight.set(false);
+            solenoid.set(false);
         }
     }
 }
