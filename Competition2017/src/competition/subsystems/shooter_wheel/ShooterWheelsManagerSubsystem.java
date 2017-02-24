@@ -25,7 +25,7 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
     protected final PIDPropertyManager rightPIDValues;
     
     protected final boolean leftMasterInverted = true;
-    protected final boolean leftMasterEncoderInverted = true;
+    protected final boolean leftMasterEncoderInverted = false;
     protected final boolean leftFollowerInverted = false;
     
     protected final boolean rightMasterInverted = false;
