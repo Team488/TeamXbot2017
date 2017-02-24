@@ -7,6 +7,9 @@ import telemetry.InfluxDBConnection;
 
 import org.influxdb.dto.Point;
 
+import competition.subsystems.shift.ShiftSubsystem;
+import competition.subsystems.shift.ShiftSubsystem.Gear;
+
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 import xbot.common.command.BaseSubsystem;
@@ -33,14 +36,21 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     private final DoubleProperty fVelProp;
     private final DoubleProperty leftDriveEncoderTicksProp;
     private final DoubleProperty rightDriveEncoderTicksProp;
-    private final DoubleProperty ticksPerInch;
     private final DoubleProperty startPositionTicks;
-    private final DoubleProperty currentDisplacementInchProp;
+    private final DoubleProperty ticksPerInchHighGear;
+    private final DoubleProperty ticksPerInchLowGear;
+    
+    private final ShiftSubsystem shiftSubsystem;
+    
+    private double leftInchesTraveled;
+    private double rightInchesTraveled;
+    private double previousLeftTicks;
+    private double previousRightTicks;
     
     private final InfluxDBConnection influxConnection;
     
     @Inject
-    public DriveSubsystem(WPIFactory factory, XPropertyManager propManager, InfluxDBConnection influxConnection) {
+    public DriveSubsystem(WPIFactory factory, XPropertyManager propManager, ShiftSubsystem shift, InfluxDBConnection influxConnection) {
         log.info("Creating");
         this.influxConnection = influxConnection;
 
@@ -55,11 +65,10 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         
         leftDriveEncoderTicksProp = propManager.createEphemeralProperty("Left drive encoder ticks", 0);
         rightDriveEncoderTicksProp = propManager.createEphemeralProperty("Right drive encoder ticks", 0);
-        
-        ticksPerInch = propManager.createPersistentProperty("Ticks per inch", 25.33);
-        
+                
         startPositionTicks = propManager.createEphemeralProperty("Start position ticks", 0);
-        currentDisplacementInchProp = propManager.createEphemeralProperty("Current position inches", 0);
+        ticksPerInchHighGear = propManager.createEphemeralProperty("Ticks Per Inch High Gear", 0);
+        ticksPerInchLowGear = propManager.createEphemeralProperty("Ticks Per Inch Low Gear", 25.33);
         
         this.leftDrive = factory.getCANTalonSpeedController(34);
         leftDrive.setInverted(true);
@@ -73,6 +82,13 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         configMotorTeam(rightDrive, rightDriveSlave);
         rightDrive.createTelemetryProperties("Right master", propManager);
         rightDriveSlave.createTelemetryProperties("Right slave", propManager);
+        
+        this.shiftSubsystem = shift;
+        
+        previousLeftTicks = startPositionTicks.get();
+        previousRightTicks = startPositionTicks.get();
+        leftInchesTraveled = 0;
+        rightInchesTraveled = 0;
     }
 
     private void configMotorTeam(XCANTalon master, XCANTalon slave) {
@@ -171,26 +187,30 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         motor.setF(fVelProp.get());
     }
     
+    private double getTicksPerInch() {
+        return shiftSubsystem.getGear() == Gear.HIGH_GEAR ? ticksPerInchHighGear.get() : ticksPerInchLowGear.get();
+    }
+    
     public double convertTicksToInches(double ticks) {
-        return ticks / ticksPerInch.get();
+        return ticks / getTicksPerInch();
     }
     
     public double convertInchesToTicks(double inches) {
-        return inches * ticksPerInch.get();
+        return inches * getTicksPerInch();
     }
     
     /**
      * Note - should normally only be called by the PoseSubsystem!
      */
     public double getLeftDistanceInInches() {
-        return convertTicksToInches(leftDrive.getPosition());
+        return leftInchesTraveled;
     }
     
     /**
      * Note - should normally only be called by the PoseSubsystem!
      */
     public double getRightDistanceInInches() {
-        return convertTicksToInches(rightDrive.getPosition());
+        return rightInchesTraveled;
     }
 
     /**
@@ -206,10 +226,14 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         
         leftDriveEncoderTicksProp.set(leftDrive.getPosition());
         rightDriveEncoderTicksProp.set(rightDrive.getPosition());
-        
         Point leftPrimaryPoint = leftDrive.getTelemetryPoint(this.getClass().getSimpleName(), "left", true);
         influxConnection.writePoint(leftPrimaryPoint);
         Point rightPrimaryPoint = leftDrive.getTelemetryPoint(this.getClass().getSimpleName(), "right", true);
         influxConnection.writePoint(rightPrimaryPoint);
+
+        leftInchesTraveled += convertTicksToInches(leftDrive.getPosition() - previousLeftTicks);
+        rightInchesTraveled += convertTicksToInches(rightDrive.getPosition() - previousRightTicks);
+        previousLeftTicks = leftDrive.getPosition();
+        previousRightTicks = rightDrive.getPosition();
     }
 }
