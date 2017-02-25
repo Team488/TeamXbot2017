@@ -1,5 +1,6 @@
 package competition.subsystems.autonomous;
 
+import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import competition.subsystems.drive.commands.CalculateDistanceOfParallelCommand;
@@ -11,10 +12,11 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
-public class MoveToHopperCommandGroup extends CommandGroup{
+public class DriveToBoilerWithVisionCommandGroup extends CommandGroup{
     private DoubleProperty angleToTurnTowardsBoiler;
 
-    public MoveToHopperCommandGroup(
+    @Inject
+    public DriveToBoilerWithVisionCommandGroup(
             XPropertyManager propMan,
             Provider<RotateToHeadingCommand> rotateToHeadingProvider,
             Provider<DriveForDistanceCommand> driveForDistanceProvider,

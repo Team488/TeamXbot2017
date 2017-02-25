@@ -5,12 +5,14 @@ import com.google.inject.Singleton;
 
 import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.pose.commands.ResetDistanceCommand;
+import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 import competition.subsystems.climbing.commands.AscendCommand;
 import competition.subsystems.climbing.commands.DescendClimbingCommand;
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.EjectAgitatorCommand;
 import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
 import competition.subsystems.agitator.commands.StopAgitatorCommand;
+import competition.subsystems.autonomous.DriveToBoilerWithVisionCommandGroup;
 import competition.subsystems.autonomous.selection.DisableAutonomousCommand;
 import competition.subsystems.autonomous.selection.SetupDriveToHopperThenBoilerCommand;
 import competition.subsystems.climbing.commands.RopeAlignerCommand;
@@ -18,6 +20,7 @@ import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
 import competition.subsystems.vision.commands.RotateRobotToBoilerCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
+import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
@@ -28,7 +31,7 @@ import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootin
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
-import xbot.common.controls.sensors.XboxControllerWpiAdapter.XboxButton;
+import xbot.common.controls.sensors.XXboxController.XboxButton;
 import xbot.common.properties.DoubleProperty;
 
 @Singleton
@@ -153,9 +156,19 @@ public class OperatorCommandMap {
     @Inject
     public void setupVisionCommands(
             OperatorInterface oi,
-            RotateRobotToBoilerCommand rotateCommand
+            RotateRobotToBoilerCommand rotateCommand,
+            DriveToBoilerWithVisionCommandGroup driveToBoilerCommand,
+            SetRobotHeadingCommand setHeadingCommand,
+            RotateToHeadingCommand rotateToHeadingCommand
     )   {
         oi.leftButtons.getifAvailable(7).whileHeld(rotateCommand);
+        oi.leftButtons.getifAvailable(8).whileHeld(driveToBoilerCommand);
+        
+        setHeadingCommand.setHeadingToApply(300);
+        oi.leftButtons.getifAvailable(9).whileHeld(setHeadingCommand);
+        
+        rotateToHeadingCommand.setTargetHeading(300);
+        oi.leftButtons.getifAvailable(10).whileHeld(rotateToHeadingCommand);
     }
 
     @Inject
