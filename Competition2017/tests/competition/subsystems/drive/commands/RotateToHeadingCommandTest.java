@@ -27,6 +27,7 @@ public class RotateToHeadingCommandTest extends DriveTestBase {
  
         command.initialize();
         command.execute();
+        verifyTurningLeft();
         
         setRobotHeading(90);
         // first execute, the "error is small" condition is hit

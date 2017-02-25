@@ -67,9 +67,9 @@ public class RotateToHeadingCommand extends BaseDriveCommand {
     @Override
     public void execute() {
         double errorInDegrees =  poseSubsystem.getCurrentHeading().difference(targetHeading);
-        double rotationalPower = headingDrivePid.calculate(0, errorInDegrees);
-
-        driveSubsystem.tankDrivePowerMode(rotationalPower, -rotationalPower);
+        double rotationalPower = headingDrivePid.calculate(errorInDegrees, 0);
+        
+        driveSubsystem.tankDrivePowerMode(-rotationalPower, rotationalPower);
     }
     
     @Override

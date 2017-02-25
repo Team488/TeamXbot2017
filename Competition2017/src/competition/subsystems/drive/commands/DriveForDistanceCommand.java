@@ -85,18 +85,16 @@ public class DriveForDistanceCommand extends BaseDriveCommand {
     public void execute() {
         double power = travelManager.calculate(targetDistance, getYDistance());
         
-        double leftPower = power - calculateHeadingPower();
-        double rightPower = power + calculateHeadingPower();
+        double headingPower = calculateHeadingPower();
+        double leftPower = power - headingPower;
+        double rightPower = power + headingPower;
         
         driveSubsystem.tankDrivePowerMode(leftPower, rightPower);
     }
     
     public double calculateHeadingPower() {
-
-        double errorInDegrees = targetHeading.difference(poseSubsystem.getCurrentHeading());
-        double normalizedError = errorInDegrees / 180;
-        double rotationalPower = headingDrivePid.calculate(0, normalizedError);
-
+        double errorInDegrees =  poseSubsystem.getCurrentHeading().difference(targetHeading);
+        double rotationalPower = headingDrivePid.calculate(errorInDegrees, 0);
         return rotationalPower;
     }
     
