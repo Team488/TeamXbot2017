@@ -29,6 +29,7 @@ import competition.subsystems.shooter_belt.commands.RunShooterBeltCommand;
 import competition.subsystems.shooter_belt.commands.RunShooterBeltPowerCommand;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
+import competition.subsystems.shooter_wheel.commands.RunShooterWheelUsingPowerCommand;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
 import xbot.common.controls.sensors.XXboxController.XboxButton;
@@ -80,6 +81,14 @@ public class OperatorCommandMap {
                         TypicalShootingPosition.FlushToBoiler, 
                         shooterWheelsManagerSubsystem.getRightShooter());
         
+        RunShooterWheelUsingPowerCommand runLeftPower = new RunShooterWheelUsingPowerCommand(
+                shooterWheelsManagerSubsystem.getLeftShooter());
+        RunShooterWheelUsingPowerCommand runRightPower = new RunShooterWheelUsingPowerCommand(
+                shooterWheelsManagerSubsystem.getRightShooter());
+        
+        oi.controller.getXboxButton(XboxButton.LeftTrigger).whileHeld(runLeftPower);
+        oi.controller.getXboxButton(XboxButton.RightTrigger).whileHeld(runRightPower);
+        
         oi.leftButtons.getifAvailable(5).whenPressed(shootLeft);
         oi.leftButtons.getifAvailable(4).whenPressed(stopLeft);
         oi.rightButtons.getifAvailable(4).whenPressed(shootRight);
@@ -117,8 +126,8 @@ public class OperatorCommandMap {
             EjectCollectorCommand eject,
             IntakeCollectorCommand intake)
     {
-        oi.controller.getXboxButton(XboxButton.LeftBumper).whileHeld(eject);
-        oi.controller.getXboxButton(XboxButton.RightBumper).whileHeld(intake);
+        oi.leftButtons.getifAvailable(1).whileHeld(eject);
+        oi.rightButtons.getifAvailable(1).whileHeld(intake);
     }
 
     @Inject
@@ -131,10 +140,15 @@ public class OperatorCommandMap {
         EjectAgitatorCommand ejectLeft = new EjectAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator());
         EjectAgitatorCommand ejectRight = new EjectAgitatorCommand(agitatorManagerSubsystem.getRightAgitator());
         
+        intakeLeft.includeOnSmartDashboard("Left Agitator Intake");
+        intakeRight.includeOnSmartDashboard("Right Agitator Intake");
         
-        oi.controller.getXboxButton(XboxButton.Y).whenPressed(new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
-        oi.controller.getXboxButton(XboxButton.A).whenPressed(new EjectAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
-        oi.controller.getXboxButton(XboxButton.X).whenPressed(new StopAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
+        ejectLeft.includeOnSmartDashboard("Left Agitator Eject");
+        ejectRight.includeOnSmartDashboard("Right Agitator Eject");
+        
+        oi.controller.getXboxButton(XboxButton.LeftBumper).whileHeld(intakeLeft);
+        oi.controller.getXboxButton(XboxButton.RightBumper).whileHeld(intakeRight);
+        
     }
     // OTHER
     

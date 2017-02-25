@@ -21,11 +21,9 @@ public abstract class ShiftTestBase extends BaseWPITest {
     
     public void verifyGear(Gear gear) {
         if (gear == Gear.LOW_GEAR) {
-            assertFalse(((MockSolenoid)shiftSubsystem.solenoidLeft).get());
-            assertFalse(((MockSolenoid)shiftSubsystem.solenoidRight).get());
+            assertFalse(((MockSolenoid)shiftSubsystem.solenoid).get());
         } else {
-            assertTrue(((MockSolenoid)shiftSubsystem.solenoidLeft).get());
-            assertTrue(((MockSolenoid)shiftSubsystem.solenoidRight).get());
+            assertTrue(((MockSolenoid)shiftSubsystem.solenoid).get());
         }
         
     }
@@ -35,11 +33,9 @@ public abstract class ShiftTestBase extends BaseWPITest {
         shiftSubsystem.setGear(gear);
         
         if (gear == Gear.LOW_GEAR) {
-            assertFalse(((MockSolenoid)shiftSubsystem.solenoidLeft).get());
-            assertFalse(((MockSolenoid)shiftSubsystem.solenoidRight).get());
+            assertFalse(((MockSolenoid)shiftSubsystem.solenoid).get());
         } else {
-            assertTrue(((MockSolenoid)shiftSubsystem.solenoidLeft).get());
-            assertTrue(((MockSolenoid)shiftSubsystem.solenoidRight).get());
+            assertTrue(((MockSolenoid)shiftSubsystem.solenoid).get());
         }
     }
 }

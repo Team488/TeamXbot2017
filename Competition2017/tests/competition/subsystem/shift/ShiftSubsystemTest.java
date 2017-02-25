@@ -1,5 +1,7 @@
 package competition.subsystem.shift;
 
+import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,5 +40,13 @@ public class ShiftSubsystemTest extends ShiftTestBase {
         verifyGear(Gear.HIGH_GEAR);
         shiftSubsystem.setGear(Gear.LOW_GEAR);
         verifyGear(Gear.LOW_GEAR);
+    }
+    
+    @Test
+    public void getGearTest(){
+        shiftSubsystem.setGear(Gear.LOW_GEAR);
+        assertEquals(shiftSubsystem.getGear(), Gear.LOW_GEAR);
+        shiftSubsystem.setGear(Gear.HIGH_GEAR);
+        assertEquals(shiftSubsystem.getGear(), Gear.HIGH_GEAR);
     }
 }
