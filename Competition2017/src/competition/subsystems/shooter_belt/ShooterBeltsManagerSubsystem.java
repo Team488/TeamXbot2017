@@ -4,12 +4,13 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.subsystems.RobotSide;
+
 import telemetry.InfluxDBConnection;
+
 import xbot.common.command.BaseSubsystem;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.PIDFactory;
 import xbot.common.math.PIDPropertyManager;
-import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
@@ -61,11 +62,11 @@ public class ShooterBeltsManagerSubsystem extends BaseSubsystem {
                     influxConnection);
         }
 
-        public ShooterBeltSubsystem getLeftBelt(){
+        public ShooterBeltSubsystem getLeftBelt() {
             return leftBelt;
         }
 
-        public ShooterBeltSubsystem getRightBelt(){
+        public ShooterBeltSubsystem getRightBelt() {
             return rightBelt;
         }
 }

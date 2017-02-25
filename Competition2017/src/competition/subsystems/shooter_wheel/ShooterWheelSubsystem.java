@@ -50,7 +50,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         this.influxConnection = influxConnection;
     }
     
-    public RobotSide getSide(){
+    public RobotSide getSide() {
         return side;
     }
     
