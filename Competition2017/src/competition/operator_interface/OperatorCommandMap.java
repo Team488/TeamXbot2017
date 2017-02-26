@@ -56,6 +56,8 @@ public class OperatorCommandMap {
     {
         oi.leftButtons.getifAvailable(3).whileHeld(descend);
         oi.rightButtons.getifAvailable(3).whileHeld(ascend);
+        
+        oi.rightButtons.getifAvailable(8).whileHeld(aligner);
     }
     
      @Inject
