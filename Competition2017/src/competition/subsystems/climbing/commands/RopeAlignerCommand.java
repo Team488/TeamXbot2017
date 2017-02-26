@@ -4,15 +4,16 @@ import com.google.inject.Inject;
 
 import competition.subsystems.climbing.ClimbingSubsystem;
 import competition.subsystems.climbing.RopeAlignerSubsystem;
+import xbot.common.command.BaseCommand;
 
-public class RopeAlignerCommand extends BaseClimbingCommand {
+public class RopeAlignerCommand extends BaseCommand {
     
     private final RopeAlignerSubsystem ropeAlignerSubsystem;
     
     @Inject
-    public RopeAlignerCommand(RopeAlignerSubsystem ropeAlignerSubsystem, ClimbingSubsystem climbingSubsystem) {
-        super(climbingSubsystem);
+    public RopeAlignerCommand(RopeAlignerSubsystem ropeAlignerSubsystem) {
         this.ropeAlignerSubsystem = ropeAlignerSubsystem;
+        this.requires(ropeAlignerSubsystem);
     }
 
     @Override
