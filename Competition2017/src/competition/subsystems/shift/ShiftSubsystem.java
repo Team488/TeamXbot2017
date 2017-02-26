@@ -31,12 +31,12 @@ public class ShiftSubsystem extends BaseSubsystem {
      */
     public void setGear(Gear gear) {
         if (gear == Gear.LOW_GEAR) {
-            solenoid.set(false);
+            solenoid.setOn(false);
         } else if (gear == Gear.HIGH_GEAR) {
-            solenoid.set(true);
+            solenoid.setOn(true);
         } else {
             /* Defaults the gear to low just to be safe */
-            solenoid.set(false);
+            solenoid.setOn(false);
         }
         this.gear = gear;
     }

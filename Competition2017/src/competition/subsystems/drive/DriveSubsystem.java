@@ -67,14 +67,14 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         leftDrive.setInverted(true);
         this.leftDriveSlave = factory.getCANTalonSpeedController(35);
         configMotorTeam(leftDrive, leftDriveSlave);
-        leftDrive.createTelemetryProperties("Left master", propManager);
-        leftDriveSlave.createTelemetryProperties("Left slave", propManager);
+        leftDrive.createTelemetryProperties("Left master");
+        leftDriveSlave.createTelemetryProperties("Left slave");
         
         this.rightDrive = factory.getCANTalonSpeedController(21);
         this.rightDriveSlave = factory.getCANTalonSpeedController(20);
         configMotorTeam(rightDrive, rightDriveSlave);
-        rightDrive.createTelemetryProperties("Right master", propManager);
-        rightDriveSlave.createTelemetryProperties("Right slave", propManager);
+        rightDrive.createTelemetryProperties("Right master");
+        rightDriveSlave.createTelemetryProperties("Right slave");
         
         this.shiftSubsystem = shift;
         

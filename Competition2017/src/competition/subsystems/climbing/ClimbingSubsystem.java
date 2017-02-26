@@ -37,20 +37,20 @@ public class ClimbingSubsystem extends BaseSubsystem {
 
     public void stop() {
         climbingMotor.set(0);
-        brakeSolenoid.set(true);
+        brakeSolenoid.setOn(true);
     }
 
     public void ascend() {
         climbingMotor.set(ascendPowerProperty.get());
-        brakeSolenoid.set(false);
+        brakeSolenoid.setOn(false);
     }
 
     public void descend() {
         climbingMotor.set(descendPowerProperty.get());
-        brakeSolenoid.set(false);
+        brakeSolenoid.setOn(false);
     }
     
     public void setBrake(boolean brakeOn) {
-        brakeSolenoid.set(brakeOn);
+        brakeSolenoid.setOn(brakeOn);
     }
 }
