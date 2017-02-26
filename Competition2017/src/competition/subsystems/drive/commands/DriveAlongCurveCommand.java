@@ -12,60 +12,45 @@ import xbot.common.properties.XPropertyManager;
 
 public class DriveAlongCurveCommand extends BaseDriveCommand {
     
-        private final PoseSubsystem poseSubsystem;
-        private double EquationCoefficient;
-        private final DoubleProperty XFinal;
-        private final DoubleProperty YFinal;
-        
-        private final PIDManager headingDrivePid;
-        private ContiguousHeading targetHeading;
-        public final double defaultPValue = 1/80d;
+    private final DoubleProperty totalTime;
+    private final DoubleProperty timeStep;
+    private final DoubleProperty robotTrackWidth;
+    
+    AutonomousCurveTrajectoryPlanner path;
     
     @Inject
     public DriveAlongCurveCommand
             (DriveSubsystem driveSubsystem,
-            XPropertyManager prop,
-            PIDFactory pidFactory,
-            PoseSubsystem pose) {
+            XPropertyManager prop
+            ) {
         
         super(driveSubsystem);
         this.requires(driveSubsystem);
         
-        this.XFinal = prop.createPersistentProperty("Final X position", 3);
-        this.YFinal = prop.createPersistentProperty("Final Y position" , 2);
-        headingDrivePid = pidFactory.createPIDManager("Heading module", defaultPValue, 0, 0);
-        targetHeading = new ContiguousHeading();
-        this.poseSubsystem = pose;
+        //Input points to create trajectory for robot
+        double[][] waypoints = new double[][]{
+            {1,1},
+            {2,3},
+            {4,5},
+            {5,4},
+            {7,7}
+        };
         
+        totalTime = prop.createPersistentProperty("Total time for autonomous command", 10);//seconds
+        timeStep = prop.createPersistentProperty("Rate at which controller runs", 0.1);//rate at which rio iterates, seconds
+        robotTrackWidth = prop.createPersistentProperty("Distance between left and right wheel", 2); //feet
+        
+        AutonomousCurveTrajectoryPlanner path = new AutonomousCurveTrajectoryPlanner(waypoints);
     }
     
     @Override
     public void initialize(){
-        setEquation();
+        path.calculate(totalTime.get(), timeStep.get(), robotTrackWidth.get());
     }
     
     @Override
     public void execute(){
         
-    }
-    
-    //Creates equation/path which robot should take
-    public void setEquation(){
-        this.EquationCoefficient = YFinal.get() / Math.pow(XFinal.get(), 2);
-    }
-    
-    //Creates next point in which robot should go to
-    public void nextPoint(){
-        
-    }
-    
-    public double calculateHeadingPower() {
-
-        double errorInDegrees = targetHeading.difference(poseSubsystem.getCurrentHeading());
-        double normalizedError = errorInDegrees / 180;
-        double rotationalPower = headingDrivePid.calculate(0, normalizedError);
-
-        return rotationalPower;
     }
     
     @Override
