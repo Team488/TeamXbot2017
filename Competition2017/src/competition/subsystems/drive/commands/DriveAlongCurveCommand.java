@@ -50,12 +50,15 @@ public class DriveAlongCurveCommand extends BaseDriveCommand {
     
     @Override
     public void execute(){
-        
+        for(int i = 0; i < path.smoothLeftVelocity.length; i++){
+            driveSubsystem.tankDriveVelocity(path.smoothLeftVelocity[i][1],
+                    path.smoothRightVelocity[i][1]);
+        }
     }
     
     @Override
     public boolean isFinished(){
-        
+        return true;
     }
     
     @Override

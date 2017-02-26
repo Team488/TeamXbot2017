@@ -153,6 +153,18 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         updatePeriodicData();
     }
     
+    public void tankDriveVelocity(double leftVelocity, double rightVelocity){
+        ensureSpeedModeForDrive();
+        
+        updateMotorConfig(leftDrive);
+        updateMotorConfig(rightDrive);
+        
+        leftDrive.set(leftVelocity);
+        rightDrive.set(rightVelocity);
+        
+        updatePeriodicData();
+    }
+    
     /**
      * Simple power based tank drive method of the robot
      */
