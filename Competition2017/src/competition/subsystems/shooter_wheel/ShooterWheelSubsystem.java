@@ -42,7 +42,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
                 propManager.createPersistentProperty(side + " flush to boiler target speed", 3500);
     }
     
-    public RobotSide getSide(){
+    public RobotSide getSide() {
         return side;
     }
     

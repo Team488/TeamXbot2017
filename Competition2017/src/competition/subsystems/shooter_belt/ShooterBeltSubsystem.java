@@ -53,7 +53,7 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
         setTargetSpeed(beltIntakeTargetSpeed.get());
     }
     
-    public void stop(){
+    public void stop() {
         setPower(0);
     }
 }

@@ -4,11 +4,11 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.subsystems.RobotSide;
+
 import xbot.common.command.BaseSubsystem;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.PIDFactory;
 import xbot.common.math.PIDPropertyManager;
-import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
@@ -30,7 +30,7 @@ public class ShooterBeltsManagerSubsystem extends BaseSubsystem {
         protected final int rightMotorIndex = 24;
 
         @Inject
-        public ShooterBeltsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory){
+        public ShooterBeltsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory) {
             log.info("Creating");
             leftPIDValues = pidFactory.createPIDPropertyManager("LeftBelt", 0, 0, 0, 0);
             rightPIDValues = pidFactory.createPIDPropertyManager("RightBelt", 0, 0, 0, 0);
@@ -58,11 +58,11 @@ public class ShooterBeltsManagerSubsystem extends BaseSubsystem {
                     propManager);
         }
 
-        public ShooterBeltSubsystem getLeftBelt(){
+        public ShooterBeltSubsystem getLeftBelt() {
             return leftBelt;
         }
 
-        public ShooterBeltSubsystem getRightBelt(){
+        public ShooterBeltSubsystem getRightBelt() {
             return rightBelt;
         }
 }
