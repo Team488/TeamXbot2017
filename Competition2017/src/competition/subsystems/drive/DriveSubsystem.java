@@ -60,18 +60,18 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         rightDriveEncoderTicksProp = propManager.createEphemeralProperty("Right drive encoder ticks", 0);
                 
         startPositionTicks = propManager.createEphemeralProperty("Start position ticks", 0);
-        ticksPerInchHighGear = propManager.createEphemeralProperty("Ticks Per Inch High Gear", 0);
-        ticksPerInchLowGear = propManager.createEphemeralProperty("Ticks Per Inch Low Gear", 25.33);
+        ticksPerInchHighGear = propManager.createPersistentProperty("Ticks Per Inch High Gear", 1);
+        ticksPerInchLowGear = propManager.createPersistentProperty("Ticks Per Inch Low Gear", 25.33);
         
         this.leftDrive = factory.getCANTalonSpeedController(34);
-        leftDrive.setInverted(true);
-        leftDrive.reverseSensor(true);
+        this.leftDrive.setInverted(true);
         this.leftDriveSlave = factory.getCANTalonSpeedController(35);
         configMotorTeam(leftDrive, leftDriveSlave);
         leftDrive.createTelemetryProperties("Left master", propManager);
         leftDriveSlave.createTelemetryProperties("Left slave", propManager);
         
         this.rightDrive = factory.getCANTalonSpeedController(21);
+        this.rightDrive.reverseSensor(true);
         this.rightDriveSlave = factory.getCANTalonSpeedController(20);
         configMotorTeam(rightDrive, rightDriveSlave);
         rightDrive.createTelemetryProperties("Right master", propManager);
@@ -79,8 +79,8 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         
         this.shiftSubsystem = shift;
         
-        previousLeftTicks = startPositionTicks.get();
-        previousRightTicks = startPositionTicks.get();
+        previousLeftTicks = leftDrive.getPosition();
+        previousRightTicks = rightDrive.getPosition();
         leftInchesTraveled = 0;
         rightInchesTraveled = 0;
     }
@@ -91,7 +91,6 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         // Master config
         master.setFeedbackDevice(FeedbackDevice.QuadEncoder);
         master.setBrakeEnableDuringNeutral(false);
-        master.reverseSensor(true);
         master.enableLimitSwitches(false, false);
         
         master.configNominalOutputVoltage(0,  -0);
