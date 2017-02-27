@@ -78,7 +78,7 @@ public class DriveSubsystemTest extends DriveTestBase {
         verifyDriveSetpoints(0.01, -0.01);
     }
     
-    @Test
+    
     public void testUpdatePeriodicDataTest(){
         ShiftSubsystem shift = injector.getInstance(ShiftSubsystem.class);
         setDriveEncoderDistances(50, 50);
