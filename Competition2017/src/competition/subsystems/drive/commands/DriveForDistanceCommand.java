@@ -27,7 +27,6 @@ public class DriveForDistanceCommand extends BaseDriveCommand {
     
     private final PIDManager headingDrivePid;
     private ContiguousHeading targetHeading;
-    public final double defaultPValue = 1/80d;
 
     private int onTargetCount = 0;
     
@@ -42,9 +41,9 @@ public class DriveForDistanceCommand extends BaseDriveCommand {
         
         this.poseSubsystem = pose;
         this.requires(driveSubsystem);
-        this.travelManager = pidFactory.createPIDManager("Drive to position", 0.1, 0, 0, 0.5, -0.5);
+        this.travelManager = pidFactory.createPIDManager("Drive to position", 0.0775, 0, 0.4, 0.5, -0.5);
 
-        headingDrivePid = pidFactory.createPIDManager("Heading module", defaultPValue, 0, 0);
+        headingDrivePid = pidFactory.createPIDManager("Heading module", 10, 0, 0);
         targetHeading = new ContiguousHeading();
         onTargetCountThresholdProp = propManager.createPersistentProperty("DrvToPos min stabilization loop count", 3);
         distanceToleranceInches = propManager.createPersistentProperty("Distance tolerance inches", 1.0);
