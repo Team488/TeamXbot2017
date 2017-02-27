@@ -5,6 +5,7 @@ import com.google.inject.Singleton;
 
 import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.pose.commands.ResetDistanceCommand;
+import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 import xbot.common.controls.sensors.XXboxController.XboxButton;
 import xbot.common.properties.DoubleProperty;
 
@@ -19,6 +20,7 @@ import competition.subsystems.climbing.commands.RopeAlignerCommand;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
+import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
@@ -153,6 +155,8 @@ public class OperatorCommandMap {
     public void setupDriveCommand(
             DriveForDistanceCommand driveForDistance, 
             ResetDistanceCommand resetDisplacement,
+            RotateToHeadingCommand rotateToHeading,
+            SetRobotHeadingCommand setHeading,
             XPropertyManager propManager,
             TankDriveWithGamePadCommand gamepad)
     {
@@ -161,6 +165,12 @@ public class OperatorCommandMap {
         driveForDistance.setDeltaDistance(deltaDistance);
         driveForDistance.includeOnSmartDashboard("Test drive for distance");
         gamepad.includeOnSmartDashboard("Change to GamePad Controls");
+        
+        setHeading.setHeadingToApply(0);
+        rotateToHeading.setTargetHeading(90);
+        
+        setHeading.includeOnSmartDashboard();
+        rotateToHeading.includeOnSmartDashboard();
     }
     
     @Inject

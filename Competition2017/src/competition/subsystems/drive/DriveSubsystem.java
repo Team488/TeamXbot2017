@@ -72,6 +72,7 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         
         this.leftDrive = factory.getCANTalonSpeedController(34);
         leftDrive.setInverted(true);
+        leftDrive.reverseSensor(true);
         this.leftDriveSlave = factory.getCANTalonSpeedController(35);
         configMotorTeam(leftDrive, leftDriveSlave);
         leftDrive.createTelemetryProperties("Left master", propManager);
