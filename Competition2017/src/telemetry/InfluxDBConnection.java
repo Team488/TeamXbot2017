@@ -25,11 +25,11 @@ public class InfluxDBConnection {
     @Inject
     public InfluxDBConnection(XPropertyManager propMan) {
         isEnabledProp = propMan.createPersistentProperty("InfluxDB logging enabled", false);
-        influxAddressProp = propMan.createPersistentProperty("Influx address", "http://10.4.88.100:8086");
+        influxAddressProp = propMan.createPersistentProperty("Influx address", "10.4.88.100");
         
         if(isEnabledProp.get()) {
             // current raspberrypi static ip
-            influxDB = InfluxDBFactory.connect(influxAddressProp.get(), "root", "root");
+            influxDB = InfluxDBFactory.connect("http://" + influxAddressProp.get() + ":8086", "root", "root");
             
             int flushEveryPointsCount = 2000;
             int flushEveryMS = 1000;
