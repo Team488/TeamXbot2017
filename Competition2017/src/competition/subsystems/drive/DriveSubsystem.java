@@ -61,7 +61,7 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
                 
         startPositionTicks = propManager.createEphemeralProperty("Start position ticks", 0);
         ticksPerInchHighGear = propManager.createPersistentProperty("Ticks Per Inch High Gear", 1);
-        ticksPerInchLowGear = propManager.createPersistentProperty("Ticks Per Inch Low Gear", 25.33);
+        ticksPerInchLowGear = propManager.createPersistentProperty("Ticks Per Inch Low Gear", 214.48);
         
         this.leftDrive = factory.getCANTalonSpeedController(34);
         this.leftDrive.setInverted(true);
