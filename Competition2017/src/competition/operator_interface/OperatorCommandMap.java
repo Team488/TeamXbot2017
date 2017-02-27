@@ -115,6 +115,9 @@ public class OperatorCommandMap {
        shiftHigh.setGear(Gear.HIGH_GEAR);
        shiftLow.includeOnSmartDashboard("Shift low");
        shiftHigh.includeOnSmartDashboard("Shift high");
+       
+       oi.leftButtons.getifAvailable(1).whenPressed(shiftHigh);
+       oi.rightButtons.getifAvailable(1).whenPressed(shiftLow);
    }
     
     // CONTROLLER
@@ -125,8 +128,8 @@ public class OperatorCommandMap {
             EjectCollectorCommand eject,
             IntakeCollectorCommand intake)
     {
-        oi.leftButtons.getifAvailable(1).whileHeld(eject);
-        oi.rightButtons.getifAvailable(1).whileHeld(intake);
+        oi.controller.getXboxButton(XboxButton.A).whileHeld(intake);
+        oi.controller.getXboxButton(XboxButton.B).whileHeld(eject);
     }
 
     @Inject
