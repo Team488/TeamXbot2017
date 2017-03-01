@@ -12,19 +12,21 @@ public class AutonomousDrivePathPlannerTest {
         
         double[][] waypointPath = new double[][]{
             {0, 0},
-            {1, 0}
+            {100, 0}
         };
         
         
-                
+        
         AutonomousDrivePathPlanner planner = new AutonomousDrivePathPlanner(waypointPath);
         planner.calculate(5, 0.1, 3);
         
-        AutonomousDrivePathPlanner velocity = new AutonomousDrivePathPlanner();
-        velocity.velocityFix(smoothVelocity, origVelocity, tolerance);
+        for(int i=0; i<planner.smoothLeftVelocity.length; i++)
+        {
+            double timeStep = planner.smoothLeftVelocity[i][0];
+            double leftVelocity = planner.smoothLeftVelocity[i][1];
+            double rightVelocity = planner.smoothRightVelocity[i][1];
         
-        log.info("Smooth velocity: " + smoothVelocity);
-        log.info("Original velocity: " + origVelocity);
-        log.info("Tolerence: " + tolerence);
+            System.out.println("Time step: " + timeStep +" Left velocity: " + leftVelocity + " Right velocity: " + rightVelocity);
+        }
     }
 }
