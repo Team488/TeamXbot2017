@@ -4,6 +4,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.subsystems.climbing.ClimbingSubsystem;
+import competition.subsystems.climbing.RopeAlignerSubsystem;
+import competition.subsystems.climbing.commands.RopeAlignerCommand;
+import competition.subsystems.climbing.commands.StopAligningCommand;
 import competition.subsystems.climbing.commands.StopClimbingCommand;
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.StopAgitatorCommand;
@@ -47,6 +50,14 @@ public class SubsystemDefaultCommandMap {
     public void setupClimbingSubsystem(ClimbingSubsystem climbingSystem, StopClimbingCommand stop) {
         climbingSystem.setDefaultCommand(stop);
     }
+    
+    @Inject
+    public void setupRopeAligningSubsystem(
+            RopeAlignerSubsystem aligner,
+            StopAligningCommand stop) {
+        aligner.setDefaultCommand(stop);
+    }
+            
     
     @Inject
     public void setupCollectorSubsystem(CollectorSubsystem collectorSystem, StopCollectorCommand stop) {
