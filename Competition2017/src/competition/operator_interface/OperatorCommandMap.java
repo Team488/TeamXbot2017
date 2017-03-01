@@ -178,10 +178,10 @@ public class OperatorCommandMap {
         oi.leftButtons.getifAvailable(7).whileHeld(rotateCommand);
         oi.leftButtons.getifAvailable(8).whileHeld(driveToBoilerCommand);
         
-        setHeadingCommand.setHeadingToApply(300);
+        setHeadingCommand.setHeadingToApply(248);
         oi.leftButtons.getifAvailable(9).whileHeld(setHeadingCommand);
         
-        rotateToHeadingCommand.setTargetHeading(300);
+        rotateToHeadingCommand.setTargetHeading(248);
         oi.leftButtons.getifAvailable(10).whileHeld(rotateToHeadingCommand);
     }
 
