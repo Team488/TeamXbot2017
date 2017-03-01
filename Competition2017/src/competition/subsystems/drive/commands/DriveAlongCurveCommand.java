@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
+import edu.wpi.first.wpilibj.Timer;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.PIDFactory;
 import xbot.common.math.PIDManager;
@@ -16,6 +17,9 @@ public class DriveAlongCurveCommand extends BaseDriveCommand {
     private final DoubleProperty timeStep;
     private final DoubleProperty robotTrackWidth;
     
+    private final double initialCommandStart;
+    private int i;
+    
     AutonomousCurveTrajectoryPlanner path;
     
     @Inject
@@ -26,6 +30,9 @@ public class DriveAlongCurveCommand extends BaseDriveCommand {
         
         super(driveSubsystem);
         this.requires(driveSubsystem);
+        
+        this.i = 0;
+        this.initialCommandStart = Timer.getFPGATimestamp();
         
         //Input points to create trajectory for robot
         double[][] waypoints = new double[][]{
@@ -50,15 +57,18 @@ public class DriveAlongCurveCommand extends BaseDriveCommand {
     
     @Override
     public void execute(){
-        for(int i = 0; i < path.smoothLeftVelocity.length; i++){
-            driveSubsystem.tankDriveVelocity(path.smoothLeftVelocity[i][1],
-                    path.smoothRightVelocity[i][1]);
+        if(Timer.getFPGATimestamp()-initialCommandStart == path.smoothLeftVelocity[i][0]){
+            driveSubsystem.tankDriveVelocityPid(path.smoothLeftVelocity[i][1], path.smoothRightVelocity[i][1]);
+            i++;
         }
     }
     
     @Override
     public boolean isFinished(){
-        return true;
+        if(i  == path.smoothLeftVelocity[0].length-1){
+            return true;
+        }
+        return false;
     }
     
     @Override
