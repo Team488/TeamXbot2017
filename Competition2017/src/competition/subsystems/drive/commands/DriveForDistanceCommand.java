@@ -28,7 +28,7 @@ public class DriveForDistanceCommand extends BaseDriveCommand {
     private final PIDManager headingDrivePid;
     private ContiguousHeading targetHeading;
 
-    private  int onTargetCount = 0;
+    private int onTargetCount = 0;
     
     @Inject
     public DriveForDistanceCommand(
