@@ -120,6 +120,11 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         return power * maxTicksPerTenMs;
     }
     
+    public double convertInchesPerSecToVelocityTarget(double inchesPerSec) {
+        double maxTicksPerTenMs = maxSpeedProperty.get() * encoderCodesProperty.get() / 100;
+        return power * maxTicksPerTenMs;
+    }
+    
     private void ensureModeForTalon(XCANTalon talon, TalonControlMode mode) {
         if (talon.getControlMode() != mode) {
             talon.setControlMode(mode);
@@ -143,6 +148,19 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         // Coerce powers into appropriate limits
         leftPower = MathUtils.constrainDoubleToRobotScale(leftPower);
         rightPower = MathUtils.constrainDoubleToRobotScale(rightPower);
+        
+        updateMotorConfig(leftDrive);
+        updateMotorConfig(rightDrive);
+
+        leftDrive.set(convertPowerToVelocityTarget(leftPower));
+        rightDrive.set(convertPowerToVelocityTarget(rightPower));
+
+        updatePeriodicData();
+    }
+    
+    public void tankDriveVelocityPid(double leftInchesPerSec, double rightInchesPerSec) {
+        // TODO: Move parameter updates to something more consistent
+        ensureSpeedModeForDrive();
         
         updateMotorConfig(leftDrive);
         updateMotorConfig(rightDrive);
