@@ -3,12 +3,14 @@ package competition.subsystems.autonomous.selection;
 import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import edu.wpi.first.wpilibj.command.Command;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.properties.StringProperty;
 import xbot.common.properties.XPropertyManager;
 
+@Singleton
 public class AutonomousCommandSelector extends BaseSubsystem {
     private static Logger log = Logger.getLogger(AutonomousCommandSelector.class);
     

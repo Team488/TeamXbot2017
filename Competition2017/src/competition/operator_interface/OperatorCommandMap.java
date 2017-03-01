@@ -6,6 +6,9 @@ import com.google.inject.Singleton;
 import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.pose.commands.ResetDistanceCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
+import xbot.common.controls.sensors.XXboxController.XboxButton;
+import xbot.common.properties.DoubleProperty;
+
 import competition.subsystems.climbing.commands.AscendCommand;
 import competition.subsystems.climbing.commands.DescendClimbingCommand;
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;
@@ -25,15 +28,12 @@ import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
-import competition.subsystems.shooter_belt.commands.RunShooterBeltCommand;
 import competition.subsystems.shooter_belt.commands.RunShooterBeltPowerCommand;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelUsingPowerCommand;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
-import xbot.common.controls.sensors.XXboxController.XboxButton;
-import xbot.common.properties.DoubleProperty;
 
 @Singleton
 public class OperatorCommandMap {
@@ -61,6 +61,8 @@ public class OperatorCommandMap {
     {
         oi.leftButtons.getifAvailable(3).whileHeld(descend);
         oi.rightButtons.getifAvailable(3).whileHeld(ascend);
+        
+        oi.rightButtons.getifAvailable(8).whileHeld(aligner);
     }
     
      @Inject
@@ -116,6 +118,9 @@ public class OperatorCommandMap {
        shiftHigh.setGear(Gear.HIGH_GEAR);
        shiftLow.includeOnSmartDashboard("Shift low");
        shiftHigh.includeOnSmartDashboard("Shift high");
+       
+       oi.leftButtons.getifAvailable(1).whenPressed(shiftHigh);
+       oi.rightButtons.getifAvailable(1).whenPressed(shiftLow);
    }
     
     // CONTROLLER
@@ -126,8 +131,8 @@ public class OperatorCommandMap {
             EjectCollectorCommand eject,
             IntakeCollectorCommand intake)
     {
-        oi.leftButtons.getifAvailable(1).whileHeld(eject);
-        oi.rightButtons.getifAvailable(1).whileHeld(intake);
+        oi.controller.getXboxButton(XboxButton.A).whileHeld(intake);
+        oi.controller.getXboxButton(XboxButton.B).whileHeld(eject);
     }
 
     @Inject
@@ -156,15 +161,22 @@ public class OperatorCommandMap {
     public void setupDriveCommand(
             DriveForDistanceCommand driveForDistance, 
             ResetDistanceCommand resetDisplacement,
+            RotateToHeadingCommand rotateToHeading,
+            SetRobotHeadingCommand setHeading,
             XPropertyManager propManager,
-            TankDriveWithGamePadCommand gamepad
-            )
+            TankDriveWithGamePadCommand gamepad)
     {
         DoubleProperty deltaDistance = propManager.createPersistentProperty("Drive for distance test distance", 20);
         resetDisplacement.includeOnSmartDashboard();
         driveForDistance.setDeltaDistance(deltaDistance);
         driveForDistance.includeOnSmartDashboard("Test drive for distance");
         gamepad.includeOnSmartDashboard("Change to GamePad Controls");
+        
+        setHeading.setHeadingToApply(0);
+        rotateToHeading.setTargetHeading(90);
+        
+        setHeading.includeOnSmartDashboard();
+        rotateToHeading.includeOnSmartDashboard();
     }
     
     @Inject
@@ -189,8 +201,8 @@ public class OperatorCommandMap {
     public void setupAutonomous(
             OperatorInterface oi,
             DisableAutonomousCommand disableCommand,
-            SetupDriveToHopperThenBoilerCommand driveToBoiler
-            ){
+            SetupDriveToHopperThenBoilerCommand driveToBoiler)
+    {
         disableCommand.includeOnSmartDashboard("Disable Autonomous");
         driveToBoiler.includeOnSmartDashboard("Run DriveToBoiler Autonomous Command");
     }
