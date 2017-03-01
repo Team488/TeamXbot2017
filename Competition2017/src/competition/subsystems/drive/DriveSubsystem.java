@@ -33,10 +33,11 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     private final DoubleProperty rightDriveEncoderTicksProp;
     private final DoubleProperty ticksPerInch;
     
-    private double leftInchesTraveled;
-    private double rightInchesTraveled;
     private double previousLeftTicks;
     private double previousRightTicks;
+    private double leftInchesTraveled;
+    private double rightInchesTraveled;
+    
     
     @Inject
     public DriveSubsystem(WPIFactory factory, XPropertyManager propManager, ShiftSubsystem shift) {
@@ -53,8 +54,8 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         
         leftDriveEncoderTicksProp = propManager.createEphemeralProperty("Left drive encoder ticks", 0);
         rightDriveEncoderTicksProp = propManager.createEphemeralProperty("Right drive encoder ticks", 0);
-                
-        ticksPerInch = propManager.createPersistentProperty("Ticks Per Inch", 214.48);
+        
+        ticksPerInch = propManager.createPersistentProperty("Ticks per inch", 25.33);
         
         this.leftDrive = factory.getCANTalonSpeedController(34);
         this.leftDrive.setInverted(true);
