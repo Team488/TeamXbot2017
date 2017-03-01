@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.subsystems.shift.ShiftSubsystem;
-import competition.subsystems.shift.ShiftSubsystem.Gear;
 
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
@@ -20,9 +19,9 @@ import xbot.common.properties.XPropertyManager;
 public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource {
 
     public final XCANTalon leftDrive;
-    public final XCANTalon leftDriveSlave;
+    public final XCANTalon leftDriveFollower;
     public final XCANTalon rightDrive;
-    public final XCANTalon rightDriveSlave;
+    public final XCANTalon rightDriveFollower;
     
     private final DoubleProperty encoderCodesProperty;
     private final DoubleProperty maxSpeedProperty;
@@ -32,11 +31,7 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     private final DoubleProperty fVelProp;
     private final DoubleProperty leftDriveEncoderTicksProp;
     private final DoubleProperty rightDriveEncoderTicksProp;
-    private final DoubleProperty startPositionTicks;
-    private final DoubleProperty ticksPerInchHighGear;
-    private final DoubleProperty ticksPerInchLowGear;
-    
-    private final ShiftSubsystem shiftSubsystem;
+    private final DoubleProperty ticksPerInch;
     
     private double leftInchesTraveled;
     private double rightInchesTraveled;
@@ -59,25 +54,21 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         leftDriveEncoderTicksProp = propManager.createEphemeralProperty("Left drive encoder ticks", 0);
         rightDriveEncoderTicksProp = propManager.createEphemeralProperty("Right drive encoder ticks", 0);
                 
-        startPositionTicks = propManager.createEphemeralProperty("Start position ticks", 0);
-        ticksPerInchHighGear = propManager.createPersistentProperty("Ticks Per Inch High Gear", 1);
-        ticksPerInchLowGear = propManager.createPersistentProperty("Ticks Per Inch Low Gear", 214.48);
+        ticksPerInch = propManager.createPersistentProperty("Ticks Per Inch", 214.48);
         
         this.leftDrive = factory.getCANTalonSpeedController(34);
         this.leftDrive.setInverted(true);
-        this.leftDriveSlave = factory.getCANTalonSpeedController(35);
-        configMotorTeam(leftDrive, leftDriveSlave);
-        leftDrive.createTelemetryProperties("Left master", propManager);
-        leftDriveSlave.createTelemetryProperties("Left slave", propManager);
+        this.leftDriveFollower = factory.getCANTalonSpeedController(35);
+        configMotorTeam(leftDrive, leftDriveFollower);
+        leftDrive.createTelemetryProperties("Left primary", propManager);
+        leftDriveFollower.createTelemetryProperties("Left follower", propManager);
         
         this.rightDrive = factory.getCANTalonSpeedController(21);
         this.rightDrive.reverseSensor(true);
-        this.rightDriveSlave = factory.getCANTalonSpeedController(20);
-        configMotorTeam(rightDrive, rightDriveSlave);
-        rightDrive.createTelemetryProperties("Right master", propManager);
-        rightDriveSlave.createTelemetryProperties("Right slave", propManager);
-        
-        this.shiftSubsystem = shift;
+        this.rightDriveFollower = factory.getCANTalonSpeedController(20);
+        configMotorTeam(rightDrive, rightDriveFollower);
+        rightDrive.createTelemetryProperties("Right primary", propManager);
+        rightDriveFollower.createTelemetryProperties("Right follower", propManager);
         
         previousLeftTicks = leftDrive.getPosition();
         previousRightTicks = rightDrive.getPosition();
@@ -181,7 +172,7 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     }
     
     private double getTicksPerInch() {
-        return shiftSubsystem.getGear() == Gear.HIGH_GEAR ? ticksPerInchHighGear.get() : ticksPerInchLowGear.get();
+        return ticksPerInch.get();
     }
     
     public double convertTicksToInches(double ticks) {
@@ -213,9 +204,9 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     @Override
     public void updatePeriodicData() {
         leftDrive.updateTelemetryProperties();
-        leftDriveSlave.updateTelemetryProperties();
+        leftDriveFollower.updateTelemetryProperties();
         rightDrive.updateTelemetryProperties();
-        rightDriveSlave.updateTelemetryProperties();
+        rightDriveFollower.updateTelemetryProperties();
         
         leftDriveEncoderTicksProp.set(leftDrive.getPosition());
         rightDriveEncoderTicksProp.set(rightDrive.getPosition());
