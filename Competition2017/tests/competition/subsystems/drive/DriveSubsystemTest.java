@@ -77,22 +77,5 @@ public class DriveSubsystemTest extends DriveTestBase {
         drive.tankDrivePowerMode(0.01, -0.01);
         verifyDriveSetpoints(0.01, -0.01);
     }
-    
-    
-    public void testUpdatePeriodicDataTest(){
-        ShiftSubsystem shift = injector.getInstance(ShiftSubsystem.class);
-        setDriveEncoderDistances(50, 50);
-        drive.updatePeriodicData();
-        assertEquals(drive.getRightDistanceInInches(), drive.convertTicksToInches(50), 0.0001);
-        assertEquals(drive.getLeftDistanceInInches(), drive.convertTicksToInches(50), 0.0001);
-
-        shift.setGear(Gear.LOW_GEAR);
-        setDriveEncoderDistances(50, 50);
-        shift.setGear(Gear.HIGH_GEAR);
-        driveDeltaEncoderDistances(50, 50);
-        drive.updatePeriodicData();
-        assertEquals(drive.getRightDistanceInInches(), drive.convertTicksToInches(100), 0.0001);
-        assertEquals(drive.getLeftDistanceInInches(), drive.convertTicksToInches(100), 0.0001);
-    }
 }
 
