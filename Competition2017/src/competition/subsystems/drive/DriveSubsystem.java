@@ -126,7 +126,19 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         ensureModeForTalon(leftDrive, TalonControlMode.PercentVbus);
         ensureModeForTalon(rightDrive, TalonControlMode.PercentVbus);
     }
-
+    
+    public void tankDriveVelocity(double leftVelocity, double rightVelocity){
+        ensureSpeedModeForDrive();
+        
+        updateMotorConfig(leftDrive);
+        updateMotorConfig(rightDrive);
+        
+        leftDrive.set(leftVelocity);
+        rightDrive.set(rightVelocity);
+        
+        updatePeriodicData();
+    }
+    
     public void tankDriveVelocityPid(double leftPower, double rightPower) {
         // TODO: Move parameter updates to something more consistent
         ensureSpeedModeForDrive();
@@ -141,18 +153,6 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         leftDrive.set(convertPowerToVelocityTarget(leftPower));
         rightDrive.set(convertPowerToVelocityTarget(rightPower));
 
-        updatePeriodicData();
-    }
-    
-    public void tankDriveVelocity(double leftVelocity, double rightVelocity){
-        ensureSpeedModeForDrive();
-        
-        updateMotorConfig(leftDrive);
-        updateMotorConfig(rightDrive);
-        
-        leftDrive.set(leftVelocity);
-        rightDrive.set(rightVelocity);
-        
         updatePeriodicData();
     }
     
