@@ -1,3 +1,4 @@
+
 package competition.subsystems.drive.commands;
 
 import java.util.LinkedList;
@@ -30,7 +31,7 @@ import java.util.List;
  * @date 2014-Aug-11
  *
  */
-public class AutonomousCurveTrajectoryPlanner
+public class AutonomousPathTrajectoryPlanner
 {
 
 	//Path Variables
@@ -86,7 +87,7 @@ public class AutonomousCurveTrajectoryPlanner
 		The units of these coordinates are position units assumed by the user (i.e inch, foot, meters) 
 	 * @param path
 	 */
-	public AutonomousCurveTrajectoryPlanner(double[][] path)
+	public AutonomousPathTrajectoryPlanner(double[][] path)
 	{
 		this.origPath = doubleArrayCopy(path);
 

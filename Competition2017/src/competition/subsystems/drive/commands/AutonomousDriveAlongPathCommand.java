@@ -11,7 +11,7 @@ import xbot.common.math.PIDManager;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
-public class AutonomousDriveAlongCurveCommand extends BaseDriveCommand {
+public class AutonomousDriveAlongPathCommand extends BaseDriveCommand {
     
     private final DoubleProperty totalTimeOfAutoCurve;
     private final DoubleProperty timeStep;
@@ -22,10 +22,10 @@ public class AutonomousDriveAlongCurveCommand extends BaseDriveCommand {
     private final double initialCommandTime;
     private int indexOfTimeStep;
     
-    final AutonomousCurveTrajectoryPlanner path;
+    final AutonomousPathTrajectoryPlanner path;
     
     @Inject
-    public AutonomousDriveAlongCurveCommand
+    public AutonomousDriveAlongPathCommand
             (DriveSubsystem driveSubsystem,
             XPropertyManager prop
             ) {
@@ -50,38 +50,42 @@ public class AutonomousDriveAlongCurveCommand extends BaseDriveCommand {
         timeStep = prop.createPersistentProperty("Rate at which controller runs", 0.1);//rate at which rio iterates, seconds
         robotTrackWidth = prop.createPersistentProperty("Distance between left and right wheel", 29.25); //inches
         
-        path = new AutonomousCurveTrajectoryPlanner(waypoints);
+        path = new AutonomousPathTrajectoryPlanner(waypoints);
     }
     
     public void setWayPoints(double[][] waypoints){
         this.waypoints = waypoints;
     }
     
-    public AutonomousCurveTrajectoryPlanner getPath(){
+    public AutonomousPathTrajectoryPlanner getPath(){
         return path;
     }
     
     @Override
     public void initialize(){
-        path.calculate(totalTimeOfAutoCurve.get(), timeStep.get(), robotTrackWidth.get());
+        path.calculate(totalTimeOfAutoCurve.get(),
+                        timeStep.get(),
+                        robotTrackWidth.get());
     }
     
     @Override
     public void execute(){
         if(Timer.getFPGATimestamp()-initialCommandTime >= path.smoothLeftVelocity[indexOfTimeStep][0]){
             driveSubsystem.tankDriveVelocityInchesPerSec(path.smoothLeftVelocity[indexOfTimeStep][1], path.smoothRightVelocity[indexOfTimeStep][1]);
+            driveSubsystem.tankDriveVelocity(path.smoothLeftVelocity[indexOfTimeStep][1],
+                    path.smoothRightVelocity[indexOfTimeStep][1]);
             indexOfTimeStep++;
         }
     }
     
     @Override
     public boolean isFinished(){
-        return(indexOfTimeStep  == path.smoothLeftVelocity[0].length-1);
+        return indexOfTimeStep  == path.smoothLeftVelocity[0].length-1;
     }
     
     @Override
     public void end(){
-        log.info("Time took to complete command:" + (Timer.getFPGATimestamp()-initialCommandTime)); 
+        log.info("Time taken to complete command:" + (Timer.getFPGATimestamp()-initialCommandTime)); 
                 
     }
     

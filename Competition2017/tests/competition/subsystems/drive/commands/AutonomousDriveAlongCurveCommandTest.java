@@ -9,7 +9,7 @@ import org.junit.Test;
 
 public class AutonomousDriveAlongCurveCommandTest extends DriveTestBase {
     MockTimer time;
-    AutonomousDriveAlongCurveCommand command;
+    AutonomousDriveAlongPathCommand command;
     double[][] waypoints;
     DriveSubsystem drive;
     
@@ -18,6 +18,7 @@ public class AutonomousDriveAlongCurveCommandTest extends DriveTestBase {
         time = injector.getInstance(MockTimer.class);
         command = injector.getInstance(AutonomousDriveAlongCurveCommand.class);
         drive = injector.getInstance(DriveSubsystem.class);
+
         waypoints = new double[][]{
             {0,100},
             {100,100},
@@ -32,7 +33,6 @@ public class AutonomousDriveAlongCurveCommandTest extends DriveTestBase {
         command.setWayPoints(waypoints);
         
         command.initialize();
-        command.isFinished();
         command.execute();
         
         //eval
@@ -41,7 +41,6 @@ public class AutonomousDriveAlongCurveCommandTest extends DriveTestBase {
         
         time.setTimeInSeconds(command.getPath().smoothLeftVelocity[1][0]);
         //run
-        command.isFinished();
         command.execute();
         
         verifyDriveSetpoints(drive.convertInchesToTicks(command.getPath().smoothLeftVelocity[1][1]/100),
@@ -63,7 +62,5 @@ public class AutonomousDriveAlongCurveCommandTest extends DriveTestBase {
         }
         verifyDriveSetpoints(0, 0);
     }
-        
-        
-    }
+}
 
