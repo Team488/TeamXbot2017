@@ -13,22 +13,16 @@ import competition.subsystems.pose.PoseSubsystem;
 public class DriveForDistanceCommand extends BaseDriveCommand {
     
     private final PIDManager travelManager;
+    private final PIDManager headingDrivePid;
     private final PoseSubsystem poseSubsystem;
     
-    private final DoubleProperty onTargetCountThresholdProp;
-    private final DoubleProperty distanceToleranceInches;
+    private double deltaDistance;
+    private double targetDistance;
+    private double previousPositionInches;
+    public final double defaultPValue = 1/80d;
     
     private DoubleProperty deltaDistanceProp;
-    private double deltaDistance;
-    
-    private double targetDistance;
-
-    private double previousPositionInches;
-    
-    private final PIDManager headingDrivePid;
     private ContiguousHeading targetHeading;
-
-    private int onTargetCount = 0;
     
     @Inject
     public DriveForDistanceCommand(
@@ -41,12 +35,9 @@ public class DriveForDistanceCommand extends BaseDriveCommand {
         
         this.poseSubsystem = pose;
         this.requires(driveSubsystem);
-        this.travelManager = pidFactory.createPIDManager("Drive to position", 0.0775, 0, 0.4, 0.5, -0.5);
-
-        headingDrivePid = pidFactory.createPIDManager("Heading module", 10, 0, 0);
+        this.travelManager = pidFactory.createPIDManager("Drive to position", 0.1, 0, 0, 0, 0.5, -0.5, 3, 1, 0.5);
+        headingDrivePid = pidFactory.createPIDManager("Heading module", defaultPValue, 0, 0);
         targetHeading = new ContiguousHeading();
-        onTargetCountThresholdProp = propManager.createPersistentProperty("DrvToPos min stabilization loop count", 3);
-        distanceToleranceInches = propManager.createPersistentProperty("Distance tolerance inches", 1.0);
     }
     
     /**
@@ -67,7 +58,6 @@ public class DriveForDistanceCommand extends BaseDriveCommand {
     
     @Override
     public void initialize() {
-        onTargetCount = 0;
         previousPositionInches = getYDistance();
         
         targetHeading = poseSubsystem.getCurrentHeading();
@@ -91,7 +81,6 @@ public class DriveForDistanceCommand extends BaseDriveCommand {
     }
     
     public double calculateHeadingPower() {
-
         double errorInDegrees = targetHeading.difference(poseSubsystem.getCurrentHeading());
         double normalizedError = errorInDegrees / 180;
         double rotationalPower = headingDrivePid.calculate(0, normalizedError);
@@ -105,16 +94,7 @@ public class DriveForDistanceCommand extends BaseDriveCommand {
     
     @Override
     public boolean isFinished() {
-        double velocity = getYDistance() - previousPositionInches;
-        previousPositionInches = getYDistance();
-        boolean isOnTarget = travelManager.isOnTarget(distanceToleranceInches.get());
-        boolean shouldFinish = velocity < 0.0001 && isOnTarget;
-        if (shouldFinish) {
-            onTargetCount++;
-        } else {
-            onTargetCount = 0;
-        }
-        return onTargetCount >= onTargetCountThresholdProp.get();
+        return  travelManager.isOnTarget();
     }
     
     @Override

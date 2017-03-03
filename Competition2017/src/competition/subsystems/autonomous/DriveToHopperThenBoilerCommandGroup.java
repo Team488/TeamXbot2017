@@ -20,7 +20,7 @@ public class DriveToHopperThenBoilerCommandGroup extends CommandGroup {
             Provider<DriveToHopperCommandGroup> driveToHopperCommandGroupProvider) {
         headingToFaceBoiler = propManager.createPersistentProperty("Heading To Face Boiler In Degees", 70.2);
         distanceFromTurningPointToBoiler = propManager
-                .createPersistentProperty("Distance From Turning Point To Hopper In Inches", 72);
+                .createPersistentProperty("Distance From Turning Point To Boiler In Inches", 72);
         distanceBackFromHopperToTurningPoint = propManager
                 .createPersistentProperty("Distance Back From Hopper To Turning Point", -43.25);
 
