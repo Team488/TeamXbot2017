@@ -12,16 +12,13 @@ import competition.networking.OffboardCommunicationServer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 
 import json.JSONArray;
 import json.JSONObject;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.PeriodicDataSource;
-import xbot.common.controls.actuators.XSpeedController;
 import xbot.common.injection.wpi_factories.WPIFactory;
-import xbot.common.math.XYPair;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 import edu.wpi.first.wpilibj.Timer;
@@ -38,12 +35,12 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
     private static final String trackedLiftPegsProperty = "trackedLiftPegs";
     private static final String trackedBoilersProperty = "trackedBoilers";
 
-    private volatile double lastTimePacketRecieved = Timer.getFPGATimestamp();
-    private double timeOfReset = 0;
-    private double packetsPerSecond;
-    private int numberOfPackets = 0;
-    private DoubleProperty timeThreshold;
-    private boolean isConnected = false;
+    private volatile double lastTimePacketRecieved = -1;
+    private volatile double lastPacketCounterResetTime = -1;
+    private volatile boolean isConnected = false;
+    private volatile int numPacketsSinceReset = 0;
+    
+    private DoubleProperty connectionTimeoutThreshold;
     private DoubleProperty connectionReportInterval;
 
     @Inject
@@ -54,8 +51,8 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
 
         server.start();
         log.info("Started server");
-        timeThreshold = propManager.createPersistentProperty("The time threshold for the number of packets recieved", 1);
-        connectionReportInterval = propManager.createPersistentProperty("the time interval for a report on connection", 5);
+        connectionTimeoutThreshold = propManager.createPersistentProperty("Vision connection timeout threshold", 1);
+        connectionReportInterval = propManager.createPersistentProperty("Vision telemetry report interval", 20);
     }
 
     public DetectedLiftPeg getTrackedLiftPeg() {
@@ -65,42 +62,50 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
     public DetectedBoiler getTrackedBoiler() {
         return trackedBoilers.stream().filter(target -> target.isTracked).findFirst().orElse(null);
     }
+    
+    public boolean isConnected() {
+        return isConnected;
+    }
 
     private void handleCommPacket(OffboardCommPacket packet) {
-        lastTimePacketRecieved = Timer.getFPGATimestamp() - timeOfReset;
-        numberOfPackets++;
+        lastTimePacketRecieved = Timer.getFPGATimestamp();
+        numPacketsSinceReset++;
 
         if (packet.packetType.equals(targetSnapshotPacketType)) {
             loadJsonArray(trackedLiftPegs, packet.payload, trackedLiftPegsProperty, jsonTarget -> {
+              //CHECKSTYLE:OFF
+                if(!(
+                        jsonTarget.has("pegOffsetX")
+                        && jsonTarget.has("pegOffsetY")
+                        && jsonTarget.has("isTracked"))) {
+                        return null;
+                }
+                //CHECKSTYLE:ON
+                
                 DetectedLiftPeg newTarget = new DetectedLiftPeg();
 
-                // TODO: Don't assume props exist (check with ".has()")
                 // TODO: Move strings to constants
-                if(jsonTarget.has("pegOffsetX")){
-                    newTarget.pegOffsetX = jsonTarget.getDouble("pegOffsetX");
-                } else {
-                    newTarget.pegOffsetX = 0;
-                }
-                
-                if(jsonTarget.has("pegOffsetY")){
-                    newTarget.pegOffsetY = jsonTarget.getDouble("pegOffsetY");
-                } else {
-                    newTarget.pegOffsetX = 0;
-                }
-                
-                if(jsonTarget.has("isTracked")){
-                    newTarget.isTracked = jsonTarget.getBoolean("isTracked");
-                } else{
-                    newTarget.isTracked = false;
-                }
+                newTarget.pegOffsetX = jsonTarget.getDouble("pegOffsetX");
+                newTarget.pegOffsetY = jsonTarget.getDouble("pegOffsetY");
+                newTarget.isTracked = jsonTarget.getBoolean("isTracked");
 
                 return newTarget;
             });
 
             loadJsonArray(trackedBoilers, packet.payload, trackedBoilersProperty, jsonTarget -> {
+                //CHECKSTYLE:OFF
+                if(!(
+                        jsonTarget.has("offsetX")
+                        && jsonTarget.has("targetAngleX")
+                        && jsonTarget.has("targetAngleY")
+                        && jsonTarget.has("isTracked")
+                        && jsonTarget.has("distance"))) {
+                        return null;
+                }
+                //CHECKSTYLE:ON
+                
                 DetectedBoiler newTarget = new DetectedBoiler();
 
-                // TODO: Don't assume props exist (check with ".has()")
                 // TODO: Move strings to constants
 
                 newTarget.offsetX = jsonTarget.getDouble("offsetX");
@@ -122,7 +127,10 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
             JSONArray jsonTargets = payload.getJSONArray(jsonKey);
             for (Object targetObj : jsonTargets) {
                 if (JSONObject.class.isInstance(targetObj)) {
-                    outList.add(objectParser.apply((JSONObject) targetObj));
+                    T newValue = objectParser.apply((JSONObject) targetObj);
+                    if(newValue != null) {
+                        outList.add(newValue);
+                    }
                 }
             }
         }
@@ -130,17 +138,26 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
 
     @Override
     public void updatePeriodicData() {
-        if (lastTimePacketRecieved >= timeThreshold.get() || !isConnected) {
-            log.info("Disconnected");
-        } else {
-            packetsPerSecond = numberOfPackets / lastTimePacketRecieved; 
-            numberOfPackets = 0;
-            timeOfReset = Timer.getFPGATimestamp();
-            log.info(packetsPerSecond + trackedBoilers.size());
-        }
+        double timeSinceLastPacket = lastTimePacketRecieved >= 0 ? Timer.getFPGATimestamp() - lastTimePacketRecieved : 0;
         
-        if(lastTimePacketRecieved >= connectionReportInterval.get()){
-            log.info("Connected");
+        if(timeSinceLastPacket <= connectionTimeoutThreshold.get()) {
+            if(!isConnected) {
+                log.info("Connected");
+                isConnected = true;
+            }
+            
+            double timeSinceLastLog = Timer.getFPGATimestamp() - lastPacketCounterResetTime;
+            if(lastPacketCounterResetTime > 0 && timeSinceLastLog >= connectionReportInterval.get()) {
+                double packetsPerSecond = numPacketsSinceReset / timeSinceLastLog; 
+                numPacketsSinceReset = 0;
+                lastPacketCounterResetTime = Timer.getFPGATimestamp();
+                
+                log.info("Packets per second: " + packetsPerSecond + " (" + trackedBoilers.size() + " tracked boiler(s))");
+            }
+        }
+        else if (isConnected) {
+            log.info("Disconnected");
+            isConnected = false;
         }
     }
 }
