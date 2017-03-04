@@ -24,13 +24,12 @@ import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
+import competition.subsystems.shoot_fuel.LeftShootFuelCommandGroup;
+import competition.subsystems.shoot_fuel.RightShootFuelCommandGroup;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
 import competition.subsystems.shooter_belt.commands.RunShooterBeltPowerCommand;
-import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelUsingPowerCommand;
-import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
-import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
 
 @Singleton
 public class OperatorCommandMap {
@@ -56,42 +55,30 @@ public class OperatorCommandMap {
             AscendCommand ascend,
             RopeAlignerCommand aligner)   
     {
-        oi.leftButtons.getifAvailable(3).whileHeld(descend);
-        oi.rightButtons.getifAvailable(3).whileHeld(ascend);
+        oi.controller.getXboxButton(XboxButton.Y).whileHeld(descend);
+        oi.controller.getXboxButton(XboxButton.X).whileHeld(ascend);
         
-        oi.rightButtons.getifAvailable(8).whileHeld(aligner);
+        oi.controller.getXboxButton(XboxButton.Start).whileHeld(aligner);
     }
     
-     @Inject
+    @Inject
     public void setupShooterWheelCommands(
             OperatorInterface oi,
             ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem,
-            XPropertyManager propertyManager) 
+            XPropertyManager propertyManager,
+            LeftShootFuelCommandGroup shootLeft,
+            RightShootFuelCommandGroup shootRight) 
     {
-        StopShooterCommand stopLeft = new StopShooterCommand(shooterWheelsManagerSubsystem.getLeftShooter());
-        RunShooterWheelsForRangeCommand shootLeft = 
-                new RunShooterWheelsForRangeCommand(
-                        TypicalShootingPosition.FlushToBoiler, 
-                        shooterWheelsManagerSubsystem.getLeftShooter());
-        
-        StopShooterCommand stopRight = new StopShooterCommand(shooterWheelsManagerSubsystem.getRightShooter());
-        RunShooterWheelsForRangeCommand shootRight = 
-                new RunShooterWheelsForRangeCommand(
-                        TypicalShootingPosition.FlushToBoiler, 
-                        shooterWheelsManagerSubsystem.getRightShooter());
-        
         RunShooterWheelUsingPowerCommand runLeftPower = new RunShooterWheelUsingPowerCommand(
                 shooterWheelsManagerSubsystem.getLeftShooter());
         RunShooterWheelUsingPowerCommand runRightPower = new RunShooterWheelUsingPowerCommand(
                 shooterWheelsManagerSubsystem.getRightShooter());
         
-        oi.controller.getXboxButton(XboxButton.LeftTrigger).whileHeld(runLeftPower);
-        oi.controller.getXboxButton(XboxButton.RightTrigger).whileHeld(runRightPower);
+        runLeftPower.includeOnSmartDashboard("Run shooter wheel using power - left");
+        runRightPower.includeOnSmartDashboard("Run shooter wheel using power - right");
         
-        oi.leftButtons.getifAvailable(5).whenPressed(shootLeft);
-        oi.leftButtons.getifAvailable(4).whenPressed(stopLeft);
-        oi.rightButtons.getifAvailable(4).whenPressed(shootRight);
-        oi.rightButtons.getifAvailable(5).whenPressed(stopRight);
+        oi.controller.getXboxButton(XboxButton.LeftTrigger).whileHeld(shootLeft);
+        oi.controller.getXboxButton(XboxButton.RightTrigger).whileHeld(shootRight);
     }
     
     @Inject
@@ -99,10 +86,11 @@ public class OperatorCommandMap {
             OperatorInterface oi,
             ShooterBeltsManagerSubsystem shooterBeltsSubsystem)
     {
+        // Just used to do simple tests in the pits or something - not part of normal robot operation
         RunShooterBeltPowerCommand runBeltLeft = new RunShooterBeltPowerCommand(shooterBeltsSubsystem.getLeftBelt());
-        oi.leftButtons.getifAvailable(2).whileHeld(runBeltLeft);
+        oi.controller.getXboxButton(XboxButton.LeftStick).whileHeld(runBeltLeft);
         RunShooterBeltPowerCommand runBeltRight = new RunShooterBeltPowerCommand(shooterBeltsSubsystem.getRightBelt());
-        oi.rightButtons.getifAvailable(2).whileHeld(runBeltRight);
+        oi.controller.getXboxButton(XboxButton.RightStick).whileHeld(runBeltRight);
     }
     
    @Inject
