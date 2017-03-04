@@ -20,6 +20,7 @@ import competition.subsystems.climbing.commands.RopeAlignerCommand;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
+import competition.subsystems.drive.commands.DriveToPointUsingHeuristicsCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
@@ -149,7 +150,8 @@ public class OperatorCommandMap {
             RotateToHeadingCommand rotateToHeading,
             SetRobotHeadingCommand setHeading,
             XPropertyManager propManager,
-            TankDriveWithGamePadCommand gamepad)
+            TankDriveWithGamePadCommand gamepad,
+            DriveToPointUsingHeuristicsCommand driveUsingHeuristics)
     {
         DoubleProperty deltaDistance = propManager.createPersistentProperty("Drive for distance test distance", 20);
         resetDisplacement.includeOnSmartDashboard();
@@ -162,6 +164,9 @@ public class OperatorCommandMap {
         
         setHeading.includeOnSmartDashboard();
         rotateToHeading.includeOnSmartDashboard();
+        
+        driveUsingHeuristics.setDeltaBasedTravel(60, 60, 90);
+        driveUsingHeuristics.includeOnSmartDashboard();
     }
     
     @Inject
