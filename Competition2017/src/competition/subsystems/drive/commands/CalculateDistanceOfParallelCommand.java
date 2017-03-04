@@ -38,7 +38,7 @@ public class CalculateDistanceOfParallelCommand extends BaseCommand{
         else {
             double distanceToBoiler = boiler.distance;
             angleOfLineFromRobotToBoiler = pose.getCurrentHeading().getValue();
-            distanceOnParallel = distanceToBoiler * Math.cos((angleOfLineFromRobotToBoiler - angleOfParallel.get()));
+            distanceOnParallel = distanceToBoiler * Math.cos(Math.toRadians(angleOfLineFromRobotToBoiler - angleOfParallel.get()));
             driveForDistance.setDeltaDistance(distanceOnParallel);
             
             isFinished = true;

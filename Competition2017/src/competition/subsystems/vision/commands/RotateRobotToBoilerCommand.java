@@ -27,7 +27,7 @@ public class RotateRobotToBoilerCommand extends BaseCommand {
         this.visionSubsystem = visionSubsystem;
         this.driveSubsystem = driveSubsystem;
         
-        rotationPid = pidFactory.createPIDManager("Robot vision rotation", 0.6, 0, 0, 0, 1, -1, 2, 2, 0);
+        rotationPid = pidFactory.createPIDManager("Robot vision rotation", 0.6, 0, 0, 0, 1, -1, 0.002, 0.002, 0);
         
         this.requires(this.driveSubsystem);
     }
