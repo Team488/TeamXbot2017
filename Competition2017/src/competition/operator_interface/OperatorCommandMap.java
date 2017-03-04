@@ -84,7 +84,7 @@ public class OperatorCommandMap {
            ShiftGearCommand shiftLow, 
            ShiftGearCommand shiftHigh)
    {
-       shiftLow.setGear(Gear.LOW_GEAR);
+       shiftLow.setGear(Gear.LOW_GEAR); 
        shiftHigh.setGear(Gear.HIGH_GEAR);
        shiftLow.includeOnSmartDashboard("Shift low");
        shiftHigh.includeOnSmartDashboard("Shift high");
