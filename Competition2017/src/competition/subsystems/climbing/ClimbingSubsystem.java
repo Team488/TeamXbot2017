@@ -36,6 +36,8 @@ public class ClimbingSubsystem extends BaseSubsystem implements PeriodicDataSour
         ascendPowerProperty = propManager.createPersistentProperty("Climber ascend power", 0.5);
         
         climbingMotor.createTelemetryProperties("Climbing motor", propManager);
+        
+        climbingMotor.enableLimitSwitches(true, false);
     }
 
     public void stop() {
@@ -55,6 +57,10 @@ public class ClimbingSubsystem extends BaseSubsystem implements PeriodicDataSour
     
     public void setBrake(boolean brakeOn) {
         brakeSolenoid.set(brakeOn);
+    }
+    
+    public boolean isLimitSwitchPressed() {
+        return climbingMotor.isForwardLimitSwitchClosed();
     }
 
     @Override

@@ -16,6 +16,10 @@ public class AscendCommand extends BaseClimbingCommand {
     }
 
     public void execute() {
-        climbingSubsystem.ascend();
+        if (climbingSubsystem.isLimitSwitchPressed()) {
+            climbingSubsystem.stop();
+        } else {
+            climbingSubsystem.ascend();
+        }
     }
 }
