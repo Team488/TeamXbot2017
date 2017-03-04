@@ -23,8 +23,8 @@ public class AgitatorsManagerSubsystem extends BaseSubsystem {
         }
         
         protected void createLeftAndRightAgitators(WPIFactory factory, XPropertyManager propManager, RobotAssertionManager assertionManager) {
-            leftAgitator = new AgitatorSubsystem(leftMotorIndex, RobotSide.Left, factory, propManager, assertionManager);
-            rightAgitator = new AgitatorSubsystem(rightMotorIndex, RobotSide.Right, factory, propManager, assertionManager);
+            leftAgitator = new AgitatorSubsystem(leftMotorIndex, RobotSide.Left, true, factory, propManager, assertionManager);
+            rightAgitator = new AgitatorSubsystem(rightMotorIndex, RobotSide.Right, false, factory, propManager, assertionManager);
         }
 
         public AgitatorSubsystem getLeftAgitator(){

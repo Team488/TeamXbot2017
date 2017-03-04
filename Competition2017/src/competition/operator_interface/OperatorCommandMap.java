@@ -5,12 +5,17 @@ import com.google.inject.Singleton;
 
 import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.pose.commands.ResetDistanceCommand;
+import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
+import xbot.common.controls.sensors.XXboxController.XboxButton;
+import xbot.common.properties.DoubleProperty;
+
 import competition.subsystems.climbing.commands.AscendCommand;
 import competition.subsystems.climbing.commands.DescendClimbingCommand;
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.EjectAgitatorCommand;
 import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
 import competition.subsystems.agitator.commands.StopAgitatorCommand;
+import competition.subsystems.autonomous.DriveToBoilerWithVisionCommandGroup;
 import competition.subsystems.autonomous.selection.DisableAutonomousCommand;
 import competition.subsystems.autonomous.selection.SetupDriveToHopperThenBoilerCommand;
 import competition.subsystems.climbing.commands.RopeAlignerCommand;
@@ -18,18 +23,17 @@ import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
 import competition.subsystems.vision.commands.RotateRobotToBoilerCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
+import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
-import competition.subsystems.shooter_belt.commands.RunShooterBeltCommand;
 import competition.subsystems.shooter_belt.commands.RunShooterBeltPowerCommand;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
+import competition.subsystems.shooter_wheel.commands.RunShooterWheelUsingPowerCommand;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
-import xbot.common.controls.sensors.XboxControllerWpiAdapter.XboxButton;
-import xbot.common.properties.DoubleProperty;
 
 @Singleton
 public class OperatorCommandMap {
@@ -57,6 +61,8 @@ public class OperatorCommandMap {
     {
         oi.leftButtons.getifAvailable(3).whileHeld(descend);
         oi.rightButtons.getifAvailable(3).whileHeld(ascend);
+        
+        oi.rightButtons.getifAvailable(8).whileHeld(aligner);
     }
     
      @Inject
@@ -76,6 +82,14 @@ public class OperatorCommandMap {
                 new RunShooterWheelsForRangeCommand(
                         TypicalShootingPosition.FlushToBoiler, 
                         shooterWheelsManagerSubsystem.getRightShooter());
+        
+        RunShooterWheelUsingPowerCommand runLeftPower = new RunShooterWheelUsingPowerCommand(
+                shooterWheelsManagerSubsystem.getLeftShooter());
+        RunShooterWheelUsingPowerCommand runRightPower = new RunShooterWheelUsingPowerCommand(
+                shooterWheelsManagerSubsystem.getRightShooter());
+        
+        oi.controller.getXboxButton(XboxButton.LeftTrigger).whileHeld(runLeftPower);
+        oi.controller.getXboxButton(XboxButton.RightTrigger).whileHeld(runRightPower);
         
         oi.leftButtons.getifAvailable(5).whenPressed(shootLeft);
         oi.leftButtons.getifAvailable(4).whenPressed(stopLeft);
@@ -104,6 +118,9 @@ public class OperatorCommandMap {
        shiftHigh.setGear(Gear.HIGH_GEAR);
        shiftLow.includeOnSmartDashboard("Shift low");
        shiftHigh.includeOnSmartDashboard("Shift high");
+       
+       oi.leftButtons.getifAvailable(1).whenPressed(shiftHigh);
+       oi.rightButtons.getifAvailable(1).whenPressed(shiftLow);
    }
     
     // CONTROLLER
@@ -114,8 +131,8 @@ public class OperatorCommandMap {
             EjectCollectorCommand eject,
             IntakeCollectorCommand intake)
     {
-        oi.controller.getXboxButton(XboxButton.LeftBumper).whileHeld(eject);
-        oi.controller.getXboxButton(XboxButton.RightBumper).whileHeld(intake);
+        oi.controller.getXboxButton(XboxButton.A).whileHeld(intake);
+        oi.controller.getXboxButton(XboxButton.B).whileHeld(eject);
     }
 
     @Inject
@@ -129,9 +146,15 @@ public class OperatorCommandMap {
         EjectAgitatorCommand ejectRight = new EjectAgitatorCommand(agitatorManagerSubsystem.getRightAgitator());
         
         
-        oi.controller.getXboxButton(XboxButton.Y).whenPressed(new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
-        oi.controller.getXboxButton(XboxButton.A).whenPressed(new EjectAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
-        oi.controller.getXboxButton(XboxButton.X).whenPressed(new StopAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator()));
+        intakeLeft.includeOnSmartDashboard("Left Agitator Intake");
+        intakeRight.includeOnSmartDashboard("Right Agitator Intake");
+        
+        ejectLeft.includeOnSmartDashboard("Left Agitator Eject");
+        ejectRight.includeOnSmartDashboard("Right Agitator Eject");
+        
+        oi.controller.getXboxButton(XboxButton.LeftBumper).whileHeld(intakeLeft);
+        oi.controller.getXboxButton(XboxButton.RightBumper).whileHeld(intakeRight);
+        
     }
     // OTHER
     
@@ -139,31 +162,48 @@ public class OperatorCommandMap {
     public void setupDriveCommand(
             DriveForDistanceCommand driveForDistance, 
             ResetDistanceCommand resetDisplacement,
+            RotateToHeadingCommand rotateToHeading,
+            SetRobotHeadingCommand setHeading,
             XPropertyManager propManager,
-            TankDriveWithGamePadCommand gamepad
-            )
+            TankDriveWithGamePadCommand gamepad)
     {
         DoubleProperty deltaDistance = propManager.createPersistentProperty("Drive for distance test distance", 20);
         resetDisplacement.includeOnSmartDashboard();
         driveForDistance.setDeltaDistance(deltaDistance);
         driveForDistance.includeOnSmartDashboard("Test drive for distance");
         gamepad.includeOnSmartDashboard("Change to GamePad Controls");
+        
+        setHeading.setHeadingToApply(0);
+        rotateToHeading.setTargetHeading(90);
+        
+        setHeading.includeOnSmartDashboard();
+        rotateToHeading.includeOnSmartDashboard();
     }
     
     @Inject
     public void setupVisionCommands(
             OperatorInterface oi,
-            RotateRobotToBoilerCommand rotateCommand
+            RotateRobotToBoilerCommand rotateCommand,
+            DriveToBoilerWithVisionCommandGroup driveToBoilerCommand,
+            SetRobotHeadingCommand setHeadingCommand,
+            RotateToHeadingCommand rotateToHeadingCommand
     )   {
         oi.leftButtons.getifAvailable(7).whileHeld(rotateCommand);
+        oi.leftButtons.getifAvailable(8).whileHeld(driveToBoilerCommand);
+        
+        setHeadingCommand.setHeadingToApply(248);
+        oi.leftButtons.getifAvailable(9).whileHeld(setHeadingCommand);
+        
+        rotateToHeadingCommand.setTargetHeading(248);
+        oi.leftButtons.getifAvailable(10).whileHeld(rotateToHeadingCommand);
     }
 
     @Inject
     public void setupAutonomous(
             OperatorInterface oi,
             DisableAutonomousCommand disableCommand,
-            SetupDriveToHopperThenBoilerCommand driveToBoiler
-            ){
+            SetupDriveToHopperThenBoilerCommand driveToBoiler)
+    {
         disableCommand.includeOnSmartDashboard("Disable Autonomous");
         driveToBoiler.includeOnSmartDashboard("Run DriveToBoiler Autonomous Command");
     }

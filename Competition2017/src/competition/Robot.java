@@ -9,7 +9,6 @@ import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
 import xbot.common.command.BaseRobot;
-import xbot.common.injection.RobotModule;
 
 public class Robot extends BaseRobot {
     
@@ -26,6 +25,7 @@ public class Robot extends BaseRobot {
         super.initializeSystems();
         this.injector.getInstance(SubsystemDefaultCommandMap.class);
         this.injector.getInstance(OperatorCommandMap.class);
+        autonomousCommandSelector = this.injector.getInstance(AutonomousCommandSelector.class);
         
         // register telemetry sources to be updated even when disabled
         this.registerPeriodicDataSource(this.injector.getInstance(DriveSubsystem.class));

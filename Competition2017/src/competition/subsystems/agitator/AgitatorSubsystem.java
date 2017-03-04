@@ -1,6 +1,5 @@
 package competition.subsystems.agitator;
 
-import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
 import competition.subsystems.RobotSide;
@@ -19,7 +18,13 @@ public class AgitatorSubsystem extends BaseSubsystem {
     protected final DoubleProperty intakePowerProperty;
     protected final DoubleProperty ejectPowerProperty;    
 
-    public AgitatorSubsystem(int motor, RobotSide side, WPIFactory factory, XPropertyManager propManager, RobotAssertionManager assertionManager){
+    public AgitatorSubsystem(
+            int motor,
+            RobotSide side,
+            boolean invertMotor,
+            WPIFactory factory, 
+            XPropertyManager propManager, 
+            RobotAssertionManager assertionManager){
         super(side + " Agitator");
 
         this.side = side;
@@ -30,6 +35,7 @@ public class AgitatorSubsystem extends BaseSubsystem {
 
         agitatorMotor.setBrakeEnableDuringNeutral(false);
         agitatorMotor.setProfile(0);
+        agitatorMotor.setInverted(invertMotor);
         agitatorMotor.setControlMode(TalonControlMode.PercentVbus);
     }
 

@@ -27,14 +27,14 @@ public class RotateRobotToBoilerCommand extends BaseCommand {
         this.visionSubsystem = visionSubsystem;
         this.driveSubsystem = driveSubsystem;
         
-        rotationPid = pidFactory.createPIDManager("Robot vision rotation", 0.6, 0, 0, 0, 1, -1, 2, 2);
+        rotationPid = pidFactory.createPIDManager("Robot vision rotation", 0.6, 0, 0, 0, 1, -1, 2, 2, 0);
         
         this.requires(this.driveSubsystem);
     }
 
     @Override
     public void initialize() {
-
+        log.info("Initializing");
     }
 
     @Override
@@ -44,7 +44,15 @@ public class RotateRobotToBoilerCommand extends BaseCommand {
         rotationPid.setIMask(target == null);
         double power = rotationPid.calculate(0, target == null ? 0 : target.offsetX * 0.6);
         
-        driveSubsystem.tankDrivePowerMode(-power, -power);
+        driveSubsystem.tankDrivePowerMode(power, -power);
+    }
+    
+    public boolean isFinished(){
+        return visionSubsystem.getTrackedBoiler() != null && rotationPid.isOnTarget();
+    }
+    
+    public void end(){
+        driveSubsystem.tankDrivePowerMode(0, 0);
     }
     
     public boolean isFinished(){

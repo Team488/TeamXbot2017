@@ -10,6 +10,8 @@ import competition.networking.OffboardCommPacket;
 import competition.networking.OffboardCommunicationServer;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -26,8 +28,8 @@ public class VisionSubsystem extends BaseSubsystem {
     private static Logger log = Logger.getLogger(VisionSubsystem.class);
 
     OffboardCommunicationServer server = new NetworkedCommunicationServer();
-    ArrayList<DetectedLiftPeg> trackedLiftPegs = new ArrayList<>();
-    ArrayList<DetectedBoiler> trackedBoilers = new ArrayList<>();
+    List<DetectedLiftPeg> trackedLiftPegs = Collections.synchronizedList(new ArrayList<>());
+    List<DetectedBoiler> trackedBoilers = Collections.synchronizedList(new ArrayList<>());
 
     private static final String targetSnapshotPacketType = "trackedTargetsSnapshot";
     private static final String trackedLiftPegsProperty = "trackedLiftPegs";
@@ -82,16 +84,20 @@ public class VisionSubsystem extends BaseSubsystem {
                 
                 // TODO: Don't assume props exist (check with ".has()")
                 // TODO: Move strings to constants
-                
+
                 newTarget.offsetX = jsonTarget.getDouble("offsetX");
+                newTarget.targetAngleX = jsonTarget.getDouble("targetAngleX");
+                newTarget.targetAngleY = jsonTarget.getDouble("targetAngleY");
                 newTarget.isTracked = jsonTarget.getBoolean("isTracked");
+
+                newTarget.distance = jsonTarget.getDouble("distance");
                 
                 return newTarget;
             });
         }
     }
     
-    private <T> void loadJsonArray(ArrayList<T> outList, JSONObject payload, String jsonKey, Function<JSONObject, T> objectParser) {
+    private <T> void loadJsonArray(List<T> outList, JSONObject payload, String jsonKey, Function<JSONObject, T> objectParser) {
         outList.clear();
         if(payload.has(jsonKey)) {
             JSONArray jsonTargets = payload.getJSONArray(jsonKey);
