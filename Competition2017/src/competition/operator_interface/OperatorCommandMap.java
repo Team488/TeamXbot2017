@@ -26,6 +26,7 @@ import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shoot_fuel.LeftShootFuelCommandGroup;
 import competition.subsystems.shoot_fuel.RightShootFuelCommandGroup;
+import competition.subsystems.shoot_fuel.ShootFuelCommandGroup;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
 import competition.subsystems.shooter_belt.commands.RunShooterBeltPowerCommand;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
@@ -59,6 +60,9 @@ public class OperatorCommandMap {
         oi.controller.getXboxButton(XboxButton.X).whileHeld(ascend);
         
         oi.controller.getXboxButton(XboxButton.Start).whileHeld(aligner);
+        
+        oi.operatorButtons.getifAvailable(5).whileHeld(descend);
+        oi.operatorButtons.getifAvailable(4).whileHeld(ascend);
     }
     
     @Inject
@@ -99,7 +103,7 @@ public class OperatorCommandMap {
            ShiftGearCommand shiftLow, 
            ShiftGearCommand shiftHigh)
    {
-       shiftLow.setGear(Gear.LOW_GEAR);
+       shiftLow.setGear(Gear.LOW_GEAR); 
        shiftHigh.setGear(Gear.HIGH_GEAR);
        shiftLow.includeOnSmartDashboard("Shift low");
        shiftHigh.includeOnSmartDashboard("Shift high");
@@ -118,6 +122,9 @@ public class OperatorCommandMap {
     {
         oi.controller.getXboxButton(XboxButton.A).whileHeld(intake);
         oi.controller.getXboxButton(XboxButton.B).whileHeld(eject);
+        
+        oi.operatorButtons.getifAvailable(2).whileHeld(intake);
+        oi.operatorButtons.getifAvailable(3).whileHeld(eject);
     }
 
     @Inject
@@ -139,6 +146,10 @@ public class OperatorCommandMap {
         oi.controller.getXboxButton(XboxButton.LeftBumper).whileHeld(intakeLeft);
         oi.controller.getXboxButton(XboxButton.RightBumper).whileHeld(intakeRight);
         
+        oi.operatorButtons.getifAvailable(8).whileHeld(intakeLeft);
+        oi.operatorButtons.getifAvailable(9).whileHeld(ejectLeft);
+        oi.operatorButtons.getifAvailable(6).whileHeld(intakeRight);  
+        oi.operatorButtons.getifAvailable(7).whileHeld(ejectRight);  
     }
     // OTHER
     
@@ -172,5 +183,17 @@ public class OperatorCommandMap {
     {
         disableCommand.includeOnSmartDashboard("Disable Autonomous");
         driveToBoiler.includeOnSmartDashboard("Run DriveToBoiler Autonomous Command");
+    }
+    
+    @Inject
+    public void setupShooterCommandGroup(
+            OperatorInterface oi,
+            ShootFuelCommandGroup shootFuel,
+            LeftShootFuelCommandGroup shootLeftFuel,
+            RightShootFuelCommandGroup shootRightFuel){
+        
+        oi.operatorButtons.getifAvailable(1).whileHeld(shootFuel);
+        oi.operatorButtons.getifAvailable(10).whileHeld(shootLeftFuel);
+        oi.operatorButtons.getifAvailable(11).whileHeld(shootRightFuel);
     }
 }
