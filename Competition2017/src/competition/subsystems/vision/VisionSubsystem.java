@@ -30,15 +30,16 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
     OffboardCommunicationServer server = new NetworkedCommunicationServer();
     List<DetectedLiftPeg> trackedLiftPegs = Collections.synchronizedList(new ArrayList<>());
     List<DetectedBoiler> trackedBoilers = Collections.synchronizedList(new ArrayList<>());
-
+    
     private static final String targetSnapshotPacketType = "trackedTargetsSnapshot";
     private static final String trackedLiftPegsProperty = "trackedLiftPegs";
     private static final String trackedBoilersProperty = "trackedBoilers";
 
     private volatile double lastTimePacketRecieved = -1;
     private volatile double lastPacketCounterResetTime = -1;
-    private volatile boolean isConnected = false;
     private volatile int numPacketsSinceReset = 0;
+
+    private volatile boolean isConnected = false;
     
     private DoubleProperty connectionTimeoutThreshold;
     private DoubleProperty connectionReportInterval;

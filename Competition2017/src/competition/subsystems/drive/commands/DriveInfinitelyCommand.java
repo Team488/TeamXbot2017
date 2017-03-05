@@ -3,17 +3,19 @@ package competition.subsystems.drive.commands;
 import com.google.inject.Inject;
 
 import competition.subsystems.drive.DriveSubsystem;
-import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 public class DriveInfinitelyCommand extends BaseDriveCommand{
-    private DoubleProperty power;
+    private double power = 0;
 
     @Inject
     public DriveInfinitelyCommand(DriveSubsystem driveSubsystem, XPropertyManager propMan) {
         super(driveSubsystem);
         this.requires(driveSubsystem);
-        power = propMan.createPersistentProperty("power of inifinite driving", 1);
+    }
+    
+    public void setDrivePower(double power) {
+        this.power = power;
     }
 
     @Override
@@ -21,7 +23,6 @@ public class DriveInfinitelyCommand extends BaseDriveCommand{
 
     @Override
     public void execute() {
-        driveSubsystem.tankDrivePowerMode(power.get(), power.get());
+        driveSubsystem.tankDrivePowerMode(power, power);
     }
-
 }

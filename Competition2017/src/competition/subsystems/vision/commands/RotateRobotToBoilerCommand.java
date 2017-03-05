@@ -42,7 +42,7 @@ public class RotateRobotToBoilerCommand extends BaseCommand {
         DetectedBoiler target = visionSubsystem.getTrackedBoiler();
         
         rotationPid.setIMask(target == null);
-        double power = rotationPid.calculate(0, target == null ? 0 : target.offsetX * 0.6);
+        double power = rotationPid.calculate(0, target == null ? 0 : target.offsetX);
         
         driveSubsystem.tankDrivePowerMode(power, -power);
     }

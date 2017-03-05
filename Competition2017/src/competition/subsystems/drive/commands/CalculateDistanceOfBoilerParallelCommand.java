@@ -9,7 +9,7 @@ import xbot.common.command.BaseCommand;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
-public class CalculateDistanceOfParallelCommand extends BaseCommand{
+public class CalculateDistanceOfBoilerParallelCommand extends BaseCommand{
     private double angleOfLineFromRobotToBoiler;
     private PoseSubsystem pose;
     private VisionSubsystem vision;
@@ -20,7 +20,7 @@ public class CalculateDistanceOfParallelCommand extends BaseCommand{
     private boolean isFinished = false;
     
     @Inject
-    public CalculateDistanceOfParallelCommand(
+    public CalculateDistanceOfBoilerParallelCommand(
             PoseSubsystem pose,
             VisionSubsystem vision,
             XPropertyManager propMan){

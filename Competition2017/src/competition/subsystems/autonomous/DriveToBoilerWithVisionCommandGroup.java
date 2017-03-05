@@ -3,7 +3,7 @@ package competition.subsystems.autonomous;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import competition.subsystems.drive.commands.CalculateDistanceOfParallelCommand;
+import competition.subsystems.drive.commands.CalculateDistanceOfBoilerParallelCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.DriveInfinitelyCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
@@ -14,6 +14,7 @@ import xbot.common.properties.XPropertyManager;
 
 public class DriveToBoilerWithVisionCommandGroup extends CommandGroup{
     private DoubleProperty angleToTurnTowardsBoiler;
+    private DoubleProperty boilerApproachPower;
 
     @Inject
     public DriveToBoilerWithVisionCommandGroup(
@@ -21,12 +22,15 @@ public class DriveToBoilerWithVisionCommandGroup extends CommandGroup{
             Provider<RotateToHeadingCommand> rotateToHeadingProvider,
             Provider<DriveForDistanceCommand> driveForDistanceProvider,
             Provider<RotateRobotToBoilerCommand> rotateRobotToBoilerProvider,
-            Provider<CalculateDistanceOfParallelCommand> calculateParallelDistanceProvider,
-            Provider<DriveInfinitelyCommand> driveInfintelyProvider){        
+            Provider<CalculateDistanceOfBoilerParallelCommand> calculateParallelDistanceProvider,
+            Provider<DriveInfinitelyCommand> driveInfintelyProvider){    
+        angleToTurnTowardsBoiler = propMan.createPersistentProperty("angle to turn to put the boiler within the field of view", 70);
+        boilerApproachPower = propMan.createPersistentProperty("Vision boiler approach power", 0.3);
+        
         RotateRobotToBoilerCommand rotateRobotToBoiler1 = rotateRobotToBoilerProvider.get();
         this.addSequential(rotateRobotToBoiler1);
         
-        CalculateDistanceOfParallelCommand findAngleAndDistanceOfParallel = calculateParallelDistanceProvider.get();
+        CalculateDistanceOfBoilerParallelCommand findAngleAndDistanceOfParallel = calculateParallelDistanceProvider.get();
         DriveForDistanceCommand driveAlongParallel = driveForDistanceProvider.get();
         findAngleAndDistanceOfParallel.setChildDistanceCommand(driveAlongParallel);
         this.addSequential(findAngleAndDistanceOfParallel);
@@ -37,7 +41,6 @@ public class DriveToBoilerWithVisionCommandGroup extends CommandGroup{
 
         this.addSequential(driveAlongParallel);
 
-        angleToTurnTowardsBoiler = propMan.createPersistentProperty("angle to turn to put the boiler within the field of view", 70);
         RotateToHeadingCommand rotateToTurnTowardsBoilerCommand = rotateToHeadingProvider.get();
         rotateToTurnTowardsBoilerCommand.setTargetHeadingProp(angleToTurnTowardsBoiler);
         this.addSequential(rotateToTurnTowardsBoilerCommand);
@@ -46,6 +49,8 @@ public class DriveToBoilerWithVisionCommandGroup extends CommandGroup{
         this.addSequential(rotateRobotToBoiler2);
 
         DriveInfinitelyCommand infinitelyDriveToBoilerCommand = driveInfintelyProvider.get();
+        // Changing this power property will have no effect until the robot code is reloaded
+        infinitelyDriveToBoilerCommand.setDrivePower(boilerApproachPower.get());
         this.addSequential(infinitelyDriveToBoilerCommand);
     }
     

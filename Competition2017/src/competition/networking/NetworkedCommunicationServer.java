@@ -13,10 +13,18 @@ import json.JSONObject;
 public class NetworkedCommunicationServer implements OffboardCommunicationServer {
     private static Logger log = Logger.getLogger(NetworkedCommunicationServer.class);
     
-    private static final int connectionPort = 3000;
-    
     private Consumer<OffboardCommPacket> packetHandler;
     private NetworkedServer server;
+
+    private final int connectionPort;
+    
+    public NetworkedCommunicationServer(int connectionPort) {
+        this.connectionPort = connectionPort;
+    }
+    
+    public NetworkedCommunicationServer() {
+        this(5800);
+    }
     
     @Override
     public void start() {
@@ -33,21 +41,27 @@ public class NetworkedCommunicationServer implements OffboardCommunicationServer
     @Override
     public void setNewPacketHandler(Consumer<OffboardCommPacket> handler) {
         this.packetHandler = handler;
-        
     }
     
     private static class NetworkedServer extends Thread {
         private static Logger log = Logger.getLogger(NetworkedServer.class);
-        private static final int RECV_BUFFER_LEN = 20480;
+        
+        // 8192 is the maximum allowed length; if the packet overflows, the length
+        // reported is the max length of the buffer, so the length of the buffer
+        // is set to be one greater than the limit to allow for a full 8192 bytes
+        // of data before the warning is triggered.
+        private static final int RECV_BUFFER_LEN = 8192 + 1;
+        
         private static final String packetIdKey = "packetId";
         private static final String packetPayloadKey = "packetPayload";
         private static final String packetTypeKey = "packetType";
         
-        private volatile int connectionPort = 3000;
+        private volatile int connectionPort;
         
         private volatile boolean isRunning = false;
         private volatile DatagramSocket serverSocket;
         private volatile Consumer<OffboardCommPacket> packetHandler;
+        private volatile boolean lastHandlerState = true;
 
         public NetworkedServer(int connectionPort) {
             this.connectionPort = connectionPort;
@@ -64,7 +78,7 @@ public class NetworkedCommunicationServer implements OffboardCommunicationServer
                 this.start();
                 log.info("Internal server started");
             } catch (IOException e) {
-                log.error("Error starting server");
+                log.error("Error starting server:");
                 log.error(e.toString());
             }
         }
@@ -85,39 +99,44 @@ public class NetworkedCommunicationServer implements OffboardCommunicationServer
                 try {            
                     byte[] receiveBuffer = new byte[RECV_BUFFER_LEN];
                     DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
-                    // TODO: Check for overflow
                     
                     // Block on thread until data are received
                     serverSocket.receive(receivePacket);
-                    //log.info("Packet received");
-                    dataString = new String(receivePacket.getData(), 0, receivePacket.getLength());
-                    if(dataString.length() >= RECV_BUFFER_LEN) {
+                    
+                    if(receivePacket.getLength() >= RECV_BUFFER_LEN) {
                         log.warn("Received string longer than buffer! Aborting parse.");
                     }
                     else {
+                        dataString = new String(receivePacket.getData(), 0, receivePacket.getLength());
+                        
                         JSONObject receivedObject = new JSONObject(dataString);
                         if(packetHandler == null){
-                            log.warn("Received packet but no handler has been registered");
+                            if(lastHandlerState) {
+                                log.warn("Received packet but no handler has been registered");
+                                lastHandlerState = false;
+                            }
                         }
                         else {
+                            lastHandlerState = true;
+                            
                             OffboardCommPacket packet = new OffboardCommPacket();
                             
                             if(receivedObject.has(packetIdKey) && receivedObject.has(packetTypeKey) && receivedObject.has(packetPayloadKey)) {
                                 packet.id = receivedObject.getLong(packetIdKey);
                                 packet.packetType = receivedObject.getString(packetTypeKey);
                                 packet.payload = receivedObject.getJSONObject(packetPayloadKey);
-    
+                                
                                 packetHandler.accept(packet);
                             }
                             else {
                                 log.error("Malformed packet received! One or more required keys were not present."
-                                        + "All packets should have " + packetIdKey + ", " + packetTypeKey + " and " + packetPayloadKey + " keys.");
+                                        + " All packets should have " + packetIdKey + ", " + packetTypeKey + " and " + packetPayloadKey + " keys.");
                             }
                         }
                     }
                 }
                 catch (EOFException e) {
-                    log.error("End of packet reached unexpectedly!");
+                    log.error("End of packet reached unexpectedly");
                     log.error(e.toString());
                 }
                 catch (IOException e) {
@@ -125,7 +144,7 @@ public class NetworkedCommunicationServer implements OffboardCommunicationServer
                     log.error(e.toString());
                 }
                 catch (json.JSONException e) {
-                    log.error("Error parsing JSON string: " + dataString);
+                    log.error("Error parsing JSON string \"" + dataString + "\"");
                     log.error(e.toString());
                 }
             }
