@@ -159,8 +159,8 @@ public class OperatorCommandMap {
         driveForDistance.includeOnSmartDashboard("Test drive for distance");
         gamepad.includeOnSmartDashboard("Change to GamePad Controls");
         
-        setHeading.setHeadingToApply(0);
-        rotateToHeading.setTargetHeading(90);
+        setHeading.setHeadingToApply(90);
+        rotateToHeading.setTargetHeading(180);
         
         setHeading.includeOnSmartDashboard();
         rotateToHeading.includeOnSmartDashboard();
