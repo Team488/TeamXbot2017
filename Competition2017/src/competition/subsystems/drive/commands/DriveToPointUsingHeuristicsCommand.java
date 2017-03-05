@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
+import xbot.common.command.BaseCommand;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
 import xbot.common.math.PIDFactory;
@@ -12,9 +13,10 @@ import xbot.common.math.XYPair;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
-public class DriveToPointUsingHeuristicsCommand extends BaseDriveCommand {
+public class DriveToPointUsingHeuristicsCommand extends BaseCommand {
 
     private final PoseSubsystem poseSubsystem;
+    private final DriveSubsystem driveSubsystem;
     private FieldPose goalPoint;
     
     private final PIDManager alignToFinalHeadingPid;
@@ -23,6 +25,10 @@ public class DriveToPointUsingHeuristicsCommand extends BaseDriveCommand {
     
     private final DoubleProperty finalHeadingEffectDistance;
     private final DoubleProperty driveToLineEffectDistance;
+    
+    private final DoubleProperty yForce;
+    private final DoubleProperty lineForce;
+    private final DoubleProperty finalForce;
     
     private boolean deltaMode = false;
     private double xDeltaInches;
@@ -35,7 +41,7 @@ public class DriveToPointUsingHeuristicsCommand extends BaseDriveCommand {
             PoseSubsystem poseSubsystem,
             PIDFactory pidFactory,
             XPropertyManager propMan) {
-        super(driveSubsystem);
+        this.driveSubsystem = driveSubsystem;
         this.poseSubsystem = poseSubsystem;
         
         alignToFinalHeadingPid = pidFactory.createPIDManager("Align to final heading", .1, 0, 0, 0, 1, -1, 2, 2, 1);
@@ -44,6 +50,10 @@ public class DriveToPointUsingHeuristicsCommand extends BaseDriveCommand {
         
         finalHeadingEffectDistance = propMan.createPersistentProperty("DriveHeuristics heading effect distance", 12.0);
         driveToLineEffectDistance = propMan.createPersistentProperty("DriveHeuristics line effect distance", 12.0);
+        
+        yForce = propMan.createEphemeralProperty("DH-Y Force", 0.0);
+        lineForce = propMan.createEphemeralProperty("DH-Line Force", 0.0);
+        finalForce = propMan.createEphemeralProperty("DH-Final Force", 0.0);
     }
     
     public void setDeltaBasedTravel(double xInches, double yInches, double deltaHeading) {
@@ -146,7 +156,7 @@ public class DriveToPointUsingHeuristicsCommand extends BaseDriveCommand {
         double leftPower = yForce - scaledFinalHeadingForce - scaledHeadTowardsLineForce;
         double rightPower = yForce + scaledFinalHeadingForce + scaledHeadTowardsLineForce;
         
-        driveSubsystem.tankDrivePowerMode(leftPower, rightPower);
+        //driveSubsystem.tankDrivePowerMode(leftPower, rightPower);
     }
     
     @Override
