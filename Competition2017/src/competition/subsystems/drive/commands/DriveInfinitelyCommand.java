@@ -1,12 +1,16 @@
 package competition.subsystems.drive.commands;
 
+import java.util.function.DoubleSupplier;
+
 import com.google.inject.Inject;
 
 import competition.subsystems.drive.DriveSubsystem;
+import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 public class DriveInfinitelyCommand extends BaseDriveCommand{
     private double power = 0;
+    private DoubleSupplier powerTargetSupplier;
 
     @Inject
     public DriveInfinitelyCommand(DriveSubsystem driveSubsystem, XPropertyManager propMan) {
@@ -15,11 +19,17 @@ public class DriveInfinitelyCommand extends BaseDriveCommand{
     }
     
     public void setDrivePower(double power) {
-        this.power = power;
+        powerTargetSupplier = () -> power;
+    }
+    
+    public void setDrivePowerProp(DoubleProperty prop) {
+        powerTargetSupplier = () -> prop.get();
     }
 
     @Override
-    public void initialize() {}
+    public void initialize() {
+        power = powerTargetSupplier == null ? 0 : powerTargetSupplier.getAsDouble();
+    }
 
     @Override
     public void execute() {

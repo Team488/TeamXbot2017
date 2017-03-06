@@ -1,5 +1,7 @@
 package competition.subsystems.drive.commands;
 
+import java.util.function.DoubleSupplier;
+
 import com.google.inject.Inject;
 
 import competition.subsystems.pose.PoseSubsystem;
@@ -13,9 +15,9 @@ public class CalculateDistanceOfBoilerParallelCommand extends BaseCommand{
     private double angleOfLineFromRobotToBoiler;
     private PoseSubsystem pose;
     private VisionSubsystem vision;
-    private DoubleProperty angleOfParallel;
     private double distanceOnParallel;
     private DriveForDistanceCommand driveForDistance;
+    private DoubleSupplier parallelAngleSupplier;
 
     private boolean isFinished = false;
     
@@ -26,7 +28,14 @@ public class CalculateDistanceOfBoilerParallelCommand extends BaseCommand{
             XPropertyManager propMan){
         this.pose = pose;
         this.vision = vision;
-        angleOfParallel = propMan.createPersistentProperty("Angle of line parallel to boiler", 248);
+    }
+    
+    public void setParallelAngle(double angle) {
+        parallelAngleSupplier = () -> angle;
+    }
+    
+    public void setParallelAngleProp(DoubleProperty prop) {
+        parallelAngleSupplier = () -> prop.get();
     }
 
     @Override
@@ -38,12 +47,12 @@ public class CalculateDistanceOfBoilerParallelCommand extends BaseCommand{
         else {
             double distanceToBoiler = boiler.distance;
             angleOfLineFromRobotToBoiler = pose.getCurrentHeading().getValue();
-            distanceOnParallel = distanceToBoiler * Math.cos(Math.toRadians(angleOfLineFromRobotToBoiler - angleOfParallel.get()));
+            distanceOnParallel = distanceToBoiler * Math.cos(Math.toRadians(angleOfLineFromRobotToBoiler - parallelAngleSupplier.getAsDouble()));
             driveForDistance.setDeltaDistance(distanceOnParallel);
             
             isFinished = true;
             
-            log.info("Calculated distance to drive: " + distanceOnParallel);
+            log.info("Reported distance to boiler: " + distanceToBoiler + "; calculated parallel distance: " + distanceOnParallel);
         }
     }
 
@@ -53,10 +62,6 @@ public class CalculateDistanceOfBoilerParallelCommand extends BaseCommand{
     @Override
     public boolean isFinished(){
         return isFinished;
-    }
-    
-    public DoubleProperty getAngle(){
-        return angleOfParallel;
     }
     
     public void setChildDistanceCommand(DriveForDistanceCommand drive){

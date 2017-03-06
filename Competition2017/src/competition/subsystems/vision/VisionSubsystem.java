@@ -74,7 +74,7 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
 
         if (packet.packetType.equals(targetSnapshotPacketType)) {
             loadJsonArray(trackedLiftPegs, packet.payload, trackedLiftPegsProperty, jsonTarget -> {
-              //CHECKSTYLE:OFF
+                //CHECKSTYLE:OFF
                 if(!(
                         jsonTarget.has("pegOffsetX")
                         && jsonTarget.has("pegOffsetY")
@@ -85,7 +85,6 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
                 
                 DetectedLiftPeg newTarget = new DetectedLiftPeg();
 
-                // TODO: Move strings to constants
                 newTarget.pegOffsetX = jsonTarget.getDouble("pegOffsetX");
                 newTarget.pegOffsetY = jsonTarget.getDouble("pegOffsetY");
                 newTarget.isTracked = jsonTarget.getBoolean("isTracked");
@@ -106,8 +105,6 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
                 //CHECKSTYLE:ON
                 
                 DetectedBoiler newTarget = new DetectedBoiler();
-
-                // TODO: Move strings to constants
 
                 newTarget.offsetX = jsonTarget.getDouble("offsetX");
                 newTarget.targetAngleX = jsonTarget.getDouble("targetAngleX");
@@ -141,14 +138,14 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
     public void updatePeriodicData() {
         double timeSinceLastPacket = lastTimePacketRecieved >= 0 ? Timer.getFPGATimestamp() - lastTimePacketRecieved : 0;
         
-        if(timeSinceLastPacket <= connectionTimeoutThreshold.get()) {
+        if(timeSinceLastPacket > 0 && timeSinceLastPacket <= connectionTimeoutThreshold.get()) {
             if(!isConnected) {
                 log.info("Connected");
                 isConnected = true;
             }
             
             double timeSinceLastLog = Timer.getFPGATimestamp() - lastPacketCounterResetTime;
-            if(lastPacketCounterResetTime > 0 && timeSinceLastLog >= connectionReportInterval.get()) {
+            if(lastPacketCounterResetTime < 0 || timeSinceLastLog >= connectionReportInterval.get()) {
                 double packetsPerSecond = numPacketsSinceReset / timeSinceLastLog; 
                 numPacketsSinceReset = 0;
                 lastPacketCounterResetTime = Timer.getFPGATimestamp();
