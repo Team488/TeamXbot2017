@@ -115,7 +115,7 @@ public class DriveToPointUsingHeuristicsCommand extends BaseDriveCommand {
         FieldPose currentPose = poseSubsystem.getCurrentFieldPose();
         
         double distanceToLine = goalPoint.getDistanceToLineFromPoint(currentPose.getPoint());
-        double yDisplacement = goalPoint.getPointRelativeYDisplacementFromLine(currentPose);
+        double yDisplacement = goalPoint.getPoseRelativeDisplacement(currentPose).y;;
         
         // once we are close, this begins to get important
         double finalHeadingScalingFactor = finalHeadingEffectDistance.get() / (finalHeadingEffectDistance.get() + distanceToLine);
@@ -124,13 +124,9 @@ public class DriveToPointUsingHeuristicsCommand extends BaseDriveCommand {
         double alignTowardsLineScalingFactor = distanceToLine / driveToLineEffectDistance.get();
         alignTowardsLineScalingFactor = alignTowardsLineScalingFactor > 1 ? 1 : alignTowardsLineScalingFactor;
         
-        ContiguousHeading alignTowardsLineHeading = 
-                goalPoint.getPerpendicularLineThatIncludesPoint(currentPose.getPoint()).getHeading();
-        alignTowardsLineHeading = yDisplacement > 0 ? alignTowardsLineHeading : alignTowardsLineHeading.shiftValue(180);
+        ContiguousHeading alignTowardsLineHeading = goalPoint.getPerpendicularHeadingTowardsPoint(currentPose);
         double alignTowardsLineError = currentPose.getHeading().difference(alignTowardsLineHeading);  
         
-        
-        ContiguousHeading goalHeading = goalPoint.getHeading();
         double finalHeadingError = currentPose.getHeading().difference(goalPoint.getHeading());
         
         // so now we have both scaling factors, our final heading, and our "go to line" heading.
