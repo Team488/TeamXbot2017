@@ -38,16 +38,17 @@ public class AutonomousDriveAlongCurveCommand extends BaseDriveCommand {
         
         //Input points to create trajectory for robot
          this.waypoints = new double[][]{
-            {1,1},
-            {2,3},
-            {4,5},
-            {5,4},
-            {7,7}
+            {0,10},
+            {0,20},
+            {0,30},
+            {10,30},
+            {20,30},
+            {30,30}
         };
         
-        totalTimeOfAutoCurve = prop.createPersistentProperty("Total time for autonomous curve command", 10);//seconds
+        totalTimeOfAutoCurve = prop.createPersistentProperty("Total time for autonomous curve command", 20);//seconds
         timeStep = prop.createPersistentProperty("Rate at which controller runs", 0.1);//rate at which rio iterates, seconds
-        robotTrackWidth = prop.createPersistentProperty("Distance between left and right wheel", 2); //inches
+        robotTrackWidth = prop.createPersistentProperty("Distance between left and right wheel", 29.25); //inches
         
         path = new AutonomousCurveTrajectoryPlanner(waypoints);
     }
