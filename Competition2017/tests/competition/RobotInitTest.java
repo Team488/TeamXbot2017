@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import competition.operator_interface.OperatorCommandMap;
 import competition.subsystems.SubsystemDefaultCommandMap;
-import xbot.common.injection.BaseWPITest;
 
 public class RobotInitTest extends BaseTest {
     @Test

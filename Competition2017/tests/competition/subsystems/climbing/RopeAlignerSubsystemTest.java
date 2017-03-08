@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import competition.BaseTest;
 import xbot.common.controls.actuators.MockCANTalon;
-import xbot.common.injection.BaseWPITest;
 
 public class RopeAlignerSubsystemTest extends BaseTest {
 

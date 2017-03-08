@@ -1,7 +1,5 @@
 package competition.subsystems.collector;
 
-
-import xbot.common.injection.BaseWPITest;
 import static org.junit.Assert.assertEquals;
 
 import competition.BaseTest;

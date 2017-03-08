@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 
 import competition.BaseTest;
-import xbot.common.injection.BaseWPITest;
 
 public class AgitatorTestBase extends BaseTest{
 

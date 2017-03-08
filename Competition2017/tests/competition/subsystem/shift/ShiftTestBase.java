@@ -4,10 +4,10 @@ import static org.junit.Assert.assertTrue;
 
 import static org.junit.Assert.assertFalse;
 
+import competition.BaseTest;
 import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import edu.wpi.first.wpilibj.MockSolenoid;
-import xbot.common.injection.BaseWPITest;
 
 public abstract class ShiftTestBase extends BaseTest {
     

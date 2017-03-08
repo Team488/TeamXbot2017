@@ -1,6 +1,5 @@
 package competition.subsystems.shooter_wheel;
 
-import xbot.common.injection.BaseWPITest;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
