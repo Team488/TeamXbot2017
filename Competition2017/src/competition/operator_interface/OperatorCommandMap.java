@@ -20,6 +20,7 @@ import competition.subsystems.climbing.commands.RopeAlignerCommand;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
+import competition.subsystems.drive.commands.DriveToPointUsingHeuristicsCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
@@ -146,10 +147,10 @@ public class OperatorCommandMap {
         oi.controller.getXboxButton(XboxButton.LeftBumper).whileHeld(intakeLeft);
         oi.controller.getXboxButton(XboxButton.RightBumper).whileHeld(intakeRight);
         
-        oi.operatorButtons.getifAvailable(9).whileHeld(intakeLeft);
-        oi.operatorButtons.getifAvailable(8).whileHeld(ejectLeft);
-        oi.operatorButtons.getifAvailable(7).whileHeld(intakeRight);  
-        oi.operatorButtons.getifAvailable(6).whileHeld(ejectRight);  
+        oi.operatorButtons.getifAvailable(8).whileHeld(intakeLeft);
+        oi.operatorButtons.getifAvailable(9).whileHeld(ejectLeft);
+        oi.operatorButtons.getifAvailable(6).whileHeld(intakeRight);  
+        oi.operatorButtons.getifAvailable(7).whileHeld(ejectRight);  
     }
     // OTHER
     
@@ -160,7 +161,8 @@ public class OperatorCommandMap {
             RotateToHeadingCommand rotateToHeading,
             SetRobotHeadingCommand setHeading,
             XPropertyManager propManager,
-            TankDriveWithGamePadCommand gamepad)
+            TankDriveWithGamePadCommand gamepad,
+            DriveToPointUsingHeuristicsCommand driveUsingHeuristics)
     {
         DoubleProperty deltaDistance = propManager.createPersistentProperty("Drive for distance test distance", 20);
         resetDisplacement.includeOnSmartDashboard();
@@ -168,11 +170,14 @@ public class OperatorCommandMap {
         driveForDistance.includeOnSmartDashboard("Test drive for distance");
         gamepad.includeOnSmartDashboard("Change to GamePad Controls");
         
-        setHeading.setHeadingToApply(0);
-        rotateToHeading.setTargetHeading(90);
+        setHeading.setHeadingToApply(90);
+        rotateToHeading.setTargetHeading(180);
         
         setHeading.includeOnSmartDashboard();
         rotateToHeading.includeOnSmartDashboard();
+        
+        driveUsingHeuristics.setDeltaBasedTravel(60, 60, 90);
+        driveUsingHeuristics.includeOnSmartDashboard();
     }
     
     @Inject

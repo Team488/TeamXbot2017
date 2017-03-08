@@ -3,11 +3,11 @@ package competition.subsystems.drive;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import competition.BaseTest;
 import competition.subsystems.pose.PoseSubsystem;
 import xbot.common.controls.actuators.MockCANTalon;
-import xbot.common.injection.BaseWPITest;
 
-public abstract class DriveTestBase extends BaseWPITest {
+public abstract class DriveTestBase extends BaseTest {
     
     protected DriveSubsystem drive;
     protected PoseSubsystem pose;
@@ -50,13 +50,60 @@ public abstract class DriveTestBase extends BaseWPITest {
         assertTrue(((MockCANTalon)drive.rightDrive).getSetpoint() < 0);
     }
     
-    public void setDriveEncoderDistances(double left, double right) {
+    public void setDriveEncoderDistancesTicks(double left, double right) {
         ((MockCANTalon)drive.leftDrive).setPosition(left);
         ((MockCANTalon)drive.rightDrive).setPosition(right);
+        
+        drive.updatePeriodicData();
+        pose.updatePeriodicData();
     }
     
-    public void driveDeltaEncoderDistances(double left, double right){
-        ((MockCANTalon)drive.leftDrive).setPosition(((MockCANTalon)drive.leftDrive).getEncoderPosition() + left);
-        ((MockCANTalon)drive.rightDrive).setPosition(((MockCANTalon)drive.leftDrive).getEncoderPosition() + right);
+    public void driveDeltaEncoderTicks(double left, double right){
+        setDriveEncoderDistancesTicks(
+                ((MockCANTalon)drive.leftDrive).getEncoderPosition() + left, 
+                ((MockCANTalon)drive.rightDrive).getEncoderPosition() + right);
+    }
+    
+    public void driveDeltaEncoderInches(double leftInches, double rightInches) {
+        driveDeltaEncoderTicks(
+                drive.convertInchesToTicks(leftInches),
+                drive.convertInchesToTicks(rightInches));
+    }
+    
+    public void verifyDriveArcingLeft(double minimumDifference) {
+        assertTrue((getRightSetpoint() - getLeftSetpoint()) > minimumDifference);
+        assertTrue(((MockCANTalon)drive.leftDrive).getSetpoint() > 0);
+    }
+    
+    public void verifyDriveArcingRight(double minimumDifference) {
+        assertTrue((getLeftSetpoint() - getRightSetpoint()) > minimumDifference);
+        assertTrue(((MockCANTalon)drive.rightDrive).getSetpoint() > 0);
+    }
+    
+    public void verifyTurningLeft() {
+        assertTrue(getLeftSetpoint() < 0);
+        assertTrue(getRightSetpoint() > 0);
+    }
+    
+    public void verifyTurningRight() {
+        assertTrue(getLeftSetpoint() > 0);
+        assertTrue(getRightSetpoint() < 0);
+    }
+    
+    public void verifyNotTurning(double minimumDifference) {
+        assertEquals(getLeftSetpoint(), getRightSetpoint(), minimumDifference);
+    }
+    
+    public void verifyStopped(double minimumPower) {
+        assertEquals(0, getLeftSetpoint(), minimumPower);
+        assertEquals(0, getRightSetpoint(),  minimumPower);
+    }
+    
+    private double getLeftSetpoint() {
+        return ((MockCANTalon)drive.leftDrive).getSetpoint();
+    }
+    
+    private double getRightSetpoint() {
+        return ((MockCANTalon)drive.rightDrive).getSetpoint();
     }
 }

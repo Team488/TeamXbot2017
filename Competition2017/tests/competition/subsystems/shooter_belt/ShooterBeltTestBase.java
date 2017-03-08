@@ -1,9 +1,10 @@
 package competition.subsystems.shooter_belt;
 
-import xbot.common.injection.BaseWPITest;
 import static org.junit.Assert.assertEquals;
 
-public abstract class ShooterBeltTestBase extends BaseWPITest {
+import competition.BaseTest;
+
+public abstract class ShooterBeltTestBase extends BaseTest {
 
     protected TestShooterBeltsManagerSubsystem beltsManager;
     protected TestShooterBeltSubsystem leftBelt;
