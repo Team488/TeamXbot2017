@@ -6,7 +6,7 @@ import competition.operator_interface.OperatorCommandMap;
 import competition.subsystems.SubsystemDefaultCommandMap;
 import xbot.common.injection.BaseWPITest;
 
-public class RobotInitTest extends BaseWPITest {
+public class RobotInitTest extends BaseTest {
     @Test
     public void testDefaultSystem() {
         this.injector.getInstance(SubsystemDefaultCommandMap.class);

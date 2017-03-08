@@ -3,7 +3,9 @@ package competition.subsystems.climb;
 import xbot.common.injection.BaseWPITest;
 import static org.junit.Assert.assertEquals;
 
-public abstract class ClimbTestBase extends BaseWPITest {
+import competition.BaseTest;
+
+public abstract class ClimbTestBase extends BaseTest {
     
     TestClimbingSubsystem climb;
     

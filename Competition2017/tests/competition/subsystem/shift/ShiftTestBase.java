@@ -9,7 +9,7 @@ import competition.subsystems.shift.ShiftSubsystem.Gear;
 import edu.wpi.first.wpilibj.MockSolenoid;
 import xbot.common.injection.BaseWPITest;
 
-public abstract class ShiftTestBase extends BaseWPITest {
+public abstract class ShiftTestBase extends BaseTest {
     
     protected ShiftSubsystem shiftSubsystem;
     

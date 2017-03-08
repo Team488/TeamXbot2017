@@ -5,7 +5,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 
-public abstract class ShooterWheelTestBase extends BaseWPITest {
+import competition.BaseTest;
+
+public abstract class ShooterWheelTestBase extends BaseTest {
    
     protected TestShooterWheelsManagerSubsystem shooter;
     protected TestShooterWheelSubsystem leftShooter;

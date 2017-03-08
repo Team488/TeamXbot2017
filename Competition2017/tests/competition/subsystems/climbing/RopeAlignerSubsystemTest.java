@@ -5,10 +5,11 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import competition.BaseTest;
 import xbot.common.controls.actuators.MockCANTalon;
 import xbot.common.injection.BaseWPITest;
 
-public class RopeAlignerSubsystemTest extends BaseWPITest {
+public class RopeAlignerSubsystemTest extends BaseTest {
 
     @Test
     public void intakeTest() {

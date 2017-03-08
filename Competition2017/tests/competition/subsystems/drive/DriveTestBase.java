@@ -3,11 +3,12 @@ package competition.subsystems.drive;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import competition.BaseTest;
 import competition.subsystems.pose.PoseSubsystem;
 import xbot.common.controls.actuators.MockCANTalon;
 import xbot.common.injection.BaseWPITest;
 
-public abstract class DriveTestBase extends BaseWPITest {
+public abstract class DriveTestBase extends BaseTest {
     
     protected DriveSubsystem drive;
     protected PoseSubsystem pose;
