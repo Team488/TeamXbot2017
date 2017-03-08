@@ -30,15 +30,16 @@ public class DriveToBoilerWithVisionCommandGroup extends CommandGroup{
         angleOfParallel = propMan.createPersistentProperty("Angle of line parallel to boiler", 248);
         
         // TODO: Rotate 180 when necessary to ensure we drive forward
-        
-        RotateRobotToBoilerCommand rotateRobotToBoiler = rotateRobotToBoilerProvider.get();
+
+        RotateRobotToBoilerCommand rotateRobotToBoiler1 = rotateRobotToBoilerProvider.get();
+        RotateRobotToBoilerCommand rotateRobotToBoiler2 = rotateRobotToBoilerProvider.get();
         CalculateDistanceOfBoilerParallelCommand findDistanceOfParallel = calculateParallelDistanceProvider.get();
         RotateToHeadingCommand rotateParallelToBoiler = rotateToHeadingProvider.get();
         DriveForDistanceCommand driveAlongParallel = driveForDistanceProvider.get();
         RotateToHeadingCommand rotateToTurnTowardsBoilerCommand = rotateToHeadingProvider.get();
         DriveInfinitelyCommand infinitelyDriveToBoilerCommand = driveInfintelyProvider.get();
         
-        this.addSequential(rotateRobotToBoiler);
+        this.addSequential(rotateRobotToBoiler1);
         
         findDistanceOfParallel.setParallelAngleProp(angleOfParallel);
         findDistanceOfParallel.setChildDistanceCommand(driveAlongParallel);
@@ -52,7 +53,7 @@ public class DriveToBoilerWithVisionCommandGroup extends CommandGroup{
         rotateToTurnTowardsBoilerCommand.setTargetHeadingSupplier(() -> angleToTurnTowardsBoiler.get() + angleOfParallel.get());
         this.addSequential(rotateToTurnTowardsBoilerCommand);
         
-        this.addSequential(rotateRobotToBoiler);
+        this.addSequential(rotateRobotToBoiler2);
 
         infinitelyDriveToBoilerCommand.setDrivePowerProp(boilerApproachPower);
         this.addSequential(infinitelyDriveToBoilerCommand);
