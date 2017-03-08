@@ -1,10 +1,10 @@
 package competition.subsystems.collector;
 
-
-import xbot.common.injection.BaseWPITest;
 import static org.junit.Assert.assertEquals;
 
-public abstract class CollectorTestBase extends BaseWPITest {
+import competition.BaseTest;
+
+public abstract class CollectorTestBase extends BaseTest {
     
     TestCollectorSubsystem collect;
     
