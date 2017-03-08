@@ -1,5 +1,6 @@
 package competition.subsystems.drive.commands;
 
+import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.DriveTestBase;
 import edu.wpi.first.wpilibj.MockTimer;
 
@@ -10,11 +11,13 @@ public class AutonomousDriveAlongCurveCommandTest extends DriveTestBase {
     MockTimer time;
     AutonomousDriveAlongCurveCommand command;
     double[][] waypoints;
+    DriveSubsystem drive;
     
     @Before
     public void setup() {
         time = injector.getInstance(MockTimer.class);
         command = injector.getInstance(AutonomousDriveAlongCurveCommand.class);
+        drive = injector.getInstance(DriveSubsystem.class);
         waypoints = new double[][]{
             {0,100},
             {100,100},
@@ -33,16 +36,16 @@ public class AutonomousDriveAlongCurveCommandTest extends DriveTestBase {
         command.execute();
         
         //eval
-        verifyDriveSetpoints(command.getPath().smoothLeftVelocity[0][1],
-                command.getPath().smoothRightVelocity[0][1]);
+        verifyDriveSetpoints(drive.convertInchesToTicks(command.getPath().smoothLeftVelocity[0][1]),
+                drive.convertInchesToTicks(command.getPath().smoothRightVelocity[0][1]/100));
         
         time.setTimeInSeconds(command.getPath().smoothLeftVelocity[1][0]);
         //run
         command.isFinished();
         command.execute();
         
-        verifyDriveSetpoints(command.getPath().smoothLeftVelocity[1][1],
-                command.getPath().smoothRightVelocity[1][1]);
+        verifyDriveSetpoints(drive.convertInchesToTicks(command.getPath().smoothLeftVelocity[1][1]/100),
+                drive.convertInchesToTicks(command.getPath().smoothRightVelocity[1][1]/100));
         
     }
     /*
