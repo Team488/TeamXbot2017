@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource {
     private static Logger log = Logger.getLogger(VisionSubsystem.class);
 
-    OffboardCommunicationServer server = new NetworkedCommunicationServer();
+    OffboardCommunicationServer server;
     List<DetectedLiftPeg> trackedLiftPegs = Collections.synchronizedList(new ArrayList<>());
     List<DetectedBoiler> trackedBoilers = Collections.synchronizedList(new ArrayList<>());
     
@@ -45,13 +45,15 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
     private DoubleProperty connectionReportInterval;
 
     @Inject
-    public VisionSubsystem(WPIFactory factory, XPropertyManager propManager) {
+    public VisionSubsystem(WPIFactory factory, XPropertyManager propManager, OffboardCommunicationServer server) {
         log.info("Creating VisionSubsystem");
-
+        
+        this.server = server;
         server.setNewPacketHandler(packet -> handleCommPacket(packet));
-
         server.start();
+        
         log.info("Started server");
+        
         connectionTimeoutThreshold = propManager.createPersistentProperty("Vision connection timeout threshold", 1);
         connectionReportInterval = propManager.createPersistentProperty("Vision telemetry report interval", 20);
     }
@@ -154,6 +156,8 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
             }
         }
         else if (isConnected) {
+            trackedBoilers.clear();
+            trackedLiftPegs.clear();
             log.info("Disconnected");
             isConnected = false;
         }
