@@ -9,7 +9,7 @@ import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 import xbot.common.controls.sensors.XXboxController.XboxButton;
 import xbot.common.properties.DoubleProperty;
 
-import competition.subsystems.climbing.commands.AscendCommand;
+import competition.subsystems.climbing.commands.AscendClimbingCommand;
 import competition.subsystems.climbing.commands.DescendClimbingCommand;
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.EjectAgitatorCommand;
@@ -53,7 +53,7 @@ public class OperatorCommandMap {
     public void setupClimbingCommands(
             OperatorInterface oi,
             DescendClimbingCommand descend,
-            AscendCommand ascend,
+            AscendClimbingCommand ascend,
             RopeAlignerCommand aligner)   
     {
         oi.controller.getXboxButton(XboxButton.Y).whileHeld(descend);
@@ -146,10 +146,10 @@ public class OperatorCommandMap {
         oi.controller.getXboxButton(XboxButton.LeftBumper).whileHeld(intakeLeft);
         oi.controller.getXboxButton(XboxButton.RightBumper).whileHeld(intakeRight);
         
-        oi.operatorButtons.getifAvailable(8).whileHeld(intakeLeft);
-        oi.operatorButtons.getifAvailable(9).whileHeld(ejectLeft);
-        oi.operatorButtons.getifAvailable(6).whileHeld(intakeRight);  
-        oi.operatorButtons.getifAvailable(7).whileHeld(ejectRight);  
+        oi.operatorButtons.getifAvailable(9).whileHeld(intakeLeft);
+        oi.operatorButtons.getifAvailable(8).whileHeld(ejectLeft);
+        oi.operatorButtons.getifAvailable(7).whileHeld(intakeRight);  
+        oi.operatorButtons.getifAvailable(6).whileHeld(ejectRight);  
     }
     // OTHER
     
