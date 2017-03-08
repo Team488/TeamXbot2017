@@ -16,10 +16,10 @@ public class AutonomousDriveAlongCurveCommandTest extends DriveTestBase {
         time = injector.getInstance(MockTimer.class);
         command = injector.getInstance(AutonomousDriveAlongCurveCommand.class);
         waypoints = new double[][]{
-            {0,1},
-            {1,1},
-            {2,1},
-            {3,1}};
+            {0,100},
+            {100,100},
+            {200,100},
+            {300,100}};
     }
     /*
      * Tests to see if DriveAlongCurve sets the right velocities to the motors;
