@@ -4,11 +4,11 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import competition.BaseTest;
 import competition.subsystems.climbing.RopeAlignerSubsystem;
 import xbot.common.controls.actuators.MockCANTalon;
-import xbot.common.injection.BaseWPITest;
 
-public class RopeAlignerCommandTest extends BaseWPITest {
+public class RopeAlignerCommandTest extends BaseTest {
 
     @Test
     public void executeTest() {
