@@ -138,21 +138,36 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         rightDrive.set(rightVelocity);
         
         updatePeriodicData();
-    }
-    
-    public void tankDriveVelocityPid(double leftPower, double rightPower) {
+    } 
+
+    public void tankDriveVelocityPercentMax(double leftVelocityPercent, double rightVelocityPercent) {
+>>>>>>> master
         // TODO: Move parameter updates to something more consistent
         ensureSpeedModeForDrive();
         
         // Coerce powers into appropriate limits
-        leftPower = MathUtils.constrainDoubleToRobotScale(leftPower);
-        rightPower = MathUtils.constrainDoubleToRobotScale(rightPower);
+        leftVelocityPercent = MathUtils.constrainDoubleToRobotScale(leftVelocityPercent);
+        rightVelocityPercent = MathUtils.constrainDoubleToRobotScale(rightVelocityPercent);
         
         updateMotorConfig(leftDrive);
         updateMotorConfig(rightDrive);
 
-        leftDrive.set(convertPowerToVelocityTarget(leftPower));
-        rightDrive.set(convertPowerToVelocityTarget(rightPower));
+        leftDrive.set(convertPowerToVelocityTarget(leftVelocityPercent));
+        rightDrive.set(convertPowerToVelocityTarget(rightVelocityPercent));
+
+        updatePeriodicData();
+    }
+    
+    public void tankDriveVelocityInchesPerSec(double leftInchesPerSec, double rightInchesPerSec) {
+        // TODO: Move parameter updates to something more consistent
+        ensureSpeedModeForDrive();
+        
+        updateMotorConfig(leftDrive);
+        updateMotorConfig(rightDrive);
+
+        // Converting inches per second to ticks per 10ms
+        leftDrive.set(convertInchesToTicks(leftInchesPerSec)/100.0);
+        rightDrive.set(convertInchesToTicks(rightInchesPerSec)/100.0);
 
         updatePeriodicData();
     }

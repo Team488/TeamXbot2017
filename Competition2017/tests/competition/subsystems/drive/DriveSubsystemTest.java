@@ -77,5 +77,14 @@ public class DriveSubsystemTest extends DriveTestBase {
         drive.tankDrivePowerMode(0.01, -0.01);
         verifyDriveSetpoints(0.01, -0.01);
     }
+    
+    @Test
+    public void testTankDriveVelocityInchesPerSec(){
+        drive.tankDriveVelocityInchesPerSec(-100, 100);
+        
+        double leftTicksPerTenMs = drive.convertInchesToTicks(-100/100);
+        double rightTicksPerTenMs = drive.convertInchesToTicks(100/100);
+        
+        verifyDriveSetpoints(leftTicksPerTenMs, rightTicksPerTenMs);
+    }
 }
-
