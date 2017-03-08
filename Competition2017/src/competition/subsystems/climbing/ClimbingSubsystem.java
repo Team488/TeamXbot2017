@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import xbot.common.command.BaseSubsystem;
+import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.controls.actuators.XSolenoid;
 import xbot.common.injection.wpi_factories.WPIFactory;
@@ -12,7 +13,7 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
-public class ClimbingSubsystem extends BaseSubsystem {
+public class ClimbingSubsystem extends BaseSubsystem implements PeriodicDataSource {
 
     protected final DoubleProperty ascendPowerProperty;
     protected final DoubleProperty descendPowerProperty;
@@ -33,6 +34,8 @@ public class ClimbingSubsystem extends BaseSubsystem {
         
         descendPowerProperty = propManager.createPersistentProperty("Climber descend power", -0.5);
         ascendPowerProperty = propManager.createPersistentProperty("Climber ascend power", 0.5);
+        
+        climbingMotor.createTelemetryProperties("Climbing motor", propManager);
     }
 
     public void stop() {
@@ -52,5 +55,10 @@ public class ClimbingSubsystem extends BaseSubsystem {
     
     public void setBrake(boolean brakeOn) {
         brakeSolenoid.set(brakeOn);
+    }
+
+    @Override
+    public void updatePeriodicData() {
+        climbingMotor.updateTelemetryProperties();
     }
 }

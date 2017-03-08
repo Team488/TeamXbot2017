@@ -5,13 +5,14 @@ import com.ctre.CANTalon.TalonControlMode;
 import competition.subsystems.RobotSide;
 
 import xbot.common.command.BaseSubsystem;
+import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.logging.RobotAssertionManager;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
-public class AgitatorSubsystem extends BaseSubsystem {
+public class AgitatorSubsystem extends BaseSubsystem implements PeriodicDataSource {
 
     protected final XCANTalon agitatorMotor;
     private final RobotSide side;
@@ -37,6 +38,8 @@ public class AgitatorSubsystem extends BaseSubsystem {
         agitatorMotor.setProfile(0);
         agitatorMotor.setInverted(invertMotor);
         agitatorMotor.setControlMode(TalonControlMode.PercentVbus);
+        
+        this.agitatorMotor.createTelemetryProperties(side.toString(), propManager);
     }
 
     public void setAgitatorPower(double power) {
@@ -44,19 +47,25 @@ public class AgitatorSubsystem extends BaseSubsystem {
         agitatorMotor.set(power);
     }
   
-    public RobotSide getSide(){
+    public RobotSide getSide() {
         return side;
     }
 
-    public void eject(){
+    public void eject() {
         agitatorMotor.set(ejectPowerProperty.get());
     }
 
-    public void intake(){
+    public void intake() {
         agitatorMotor.set(intakePowerProperty.get());
     }
 
-    public void stop(){
+    public void stop() {
         agitatorMotor.set(0);
     }
+
+    @Override
+    public void updatePeriodicData() {
+        agitatorMotor.updateTelemetryProperties();
+    }
+    
 }

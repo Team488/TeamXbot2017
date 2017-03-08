@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
-import competition.subsystems.shooter_belt.commands.RunBeltIfWheelAtSpeedCommand;
+import competition.subsystems.shooter_belt.commands.RunShooterBeltPowerCommand;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
@@ -25,12 +25,10 @@ public class RightShootFuelCommandGroup extends CommandGroup {
                 new RunShooterWheelsForRangeCommand(
                         TypicalShootingPosition.FlushToBoiler, 
                         shooterWheelsManagerSubsystem.getRightShooter());
-        RunBeltIfWheelAtSpeedCommand runBelt = 
-                new RunBeltIfWheelAtSpeedCommand(
-                        shooterBeltsManagerSubsystem.getRightBelt(), 
-                        shooterWheelsManagerSubsystem.getRightShooter());
+        RunShooterBeltPowerCommand runBelt = 
+                new RunShooterBeltPowerCommand(shooterBeltsManagerSubsystem.getRightBelt());
         
-        this.addParallel(intake);
+        //this.addParallel(intake);
         this.addParallel(runWheel);
         this.addParallel(runBelt);
     }
