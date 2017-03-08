@@ -141,7 +141,6 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     } 
 
     public void tankDriveVelocityPercentMax(double leftVelocityPercent, double rightVelocityPercent) {
->>>>>>> master
         // TODO: Move parameter updates to something more consistent
         ensureSpeedModeForDrive();
         
