@@ -2,6 +2,7 @@ package competition.subsystems;
 
 import com.ctre.CANTalon.TalonControlMode;
 
+import competition.DeferredTelemetryLogger;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.PIDPropertyManager;
@@ -28,8 +29,9 @@ public class BaseXCANTalonPairSpeedControlledSubsystem extends BaseXCANTalonSpee
             boolean invertFollower,
             WPIFactory factory,
             PIDPropertyManager pidPropertyManager,
-            XPropertyManager propManager) {
-        super(name, masterChannel, invertMaster, invertMasterSensor, factory, pidPropertyManager, propManager);
+            XPropertyManager propManager,
+            DeferredTelemetryLogger telemetryLogger) {
+        super(name, masterChannel, invertMaster, invertMasterSensor, factory, pidPropertyManager, propManager, telemetryLogger);
         
         followerMotor = factory.getCANTalonSpeedController(followChannel);
         initializeFollowerMotorConfiguration(invertFollower);

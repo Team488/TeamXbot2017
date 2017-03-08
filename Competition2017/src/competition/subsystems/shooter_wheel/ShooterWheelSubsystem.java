@@ -1,5 +1,6 @@
 package competition.subsystems.shooter_wheel;
 
+import competition.DeferredTelemetryLogger;
 import competition.subsystems.BaseXCANTalonPairSpeedControlledSubsystem;
 import competition.subsystems.RobotSide;
 import xbot.common.injection.wpi_factories.WPIFactory;
@@ -25,7 +26,8 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
             RobotSide side,
             PIDPropertyManager pidPropertyManager,
             WPIFactory factory,
-            XPropertyManager propManager) {
+            XPropertyManager propManager,
+            DeferredTelemetryLogger telemetryLogger) {
         super(
                 side+"ShooterWheel",
                 masterChannel,
@@ -35,7 +37,8 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
                 followerInverted,
                 factory,
                 pidPropertyManager,
-                propManager);
+                propManager,
+                telemetryLogger);
         log.info("Creating");
         this.side = side;
         flushToBoilerTargetSpeed = 

@@ -12,6 +12,7 @@ public class BaseTest extends BaseWPITest {
         @Override
         protected void configure() {
             super.configure();
+            this.bind(DeferredTelemetryLogger.class).to(MockDeferredTelemetryLogger.class);
         }
     }
     

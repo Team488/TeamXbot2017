@@ -10,5 +10,6 @@ public class CompetitionModule extends RobotModule {
     protected void configure() {
         super.configure();
         this.bind(BasePoseSubsystem.class).to(PoseSubsystem.class);
+        this.bind(DeferredTelemetryLogger.class).to(DiskDeferredTelemetryLogger.class);
     }
 }

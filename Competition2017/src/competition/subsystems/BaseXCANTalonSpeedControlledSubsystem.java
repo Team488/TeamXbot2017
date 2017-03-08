@@ -2,6 +2,8 @@ package competition.subsystems;
 
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
+
+import competition.DeferredTelemetryLogger;
 import edu.wpi.first.wpilibj.Timer;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.PeriodicDataSource;
@@ -28,6 +30,8 @@ import xbot.common.properties.XPropertyManager;
  */
 public abstract class BaseXCANTalonSpeedControlledSubsystem extends BaseSubsystem implements PeriodicDataSource {
     
+    protected final String name;
+    
     protected final XCANTalon masterMotor;
     protected XCANTalon followerMotor;
        
@@ -42,6 +46,8 @@ public abstract class BaseXCANTalonSpeedControlledSubsystem extends BaseSubsyste
     private final DoubleProperty systemSpeedThresh;
     protected final PIDPropertyManager pidPropertyManager;
     protected final int masterChannel;
+    
+    protected DeferredTelemetryLogger telemetryLogger;
         
     /**
      * 
@@ -58,10 +64,13 @@ public abstract class BaseXCANTalonSpeedControlledSubsystem extends BaseSubsyste
             boolean invertMasterSensor,
             WPIFactory factory, 
             PIDPropertyManager pidPropertyManager,
-            XPropertyManager propManager){
+            XPropertyManager propManager,
+            DeferredTelemetryLogger telemetryLogger){
         super(name);
         log.info("Creating");
         
+        this.name = name;
+        this.telemetryLogger = telemetryLogger;
         this.pidPropertyManager = pidPropertyManager;
         this.masterChannel = masterChannel;
         
@@ -75,11 +84,11 @@ public abstract class BaseXCANTalonSpeedControlledSubsystem extends BaseSubsyste
         systemOutputPower = propManager.createEphemeralProperty(name + " voltage", 0);
         atSpeedProp = propManager.createEphemeralProperty("Is" + name + " at speed?", false);
         systemTalonError = propManager.createEphemeralProperty(name + " speed error", 0);
-        enablesystemLogging = propManager.createEphemeralProperty("Is " + name + " logging enabled?", false);
+        enablesystemLogging = propManager.createEphemeralProperty(name + " telemetry logging enabled", false);
         
         masterMotor = factory.getCANTalonSpeedController(masterChannel);
         initializeMasterMotorConfiguration(invertMaster, invertMasterSensor);
-        masterMotor.createTelemetryProperties(name + "  master", propManager);
+        masterMotor.createTelemetryProperties(name + " master", propManager);
     }
     
     protected void initializeMasterMotorConfiguration(boolean motorInverted, boolean motorSensorInverted) {
@@ -151,12 +160,13 @@ public abstract class BaseXCANTalonSpeedControlledSubsystem extends BaseSubsyste
         systemTalonError.set(masterMotor.getClosedLoopError());
         
         if(enablesystemLogging.get()){
-            double currentTime = Timer.getFPGATimestamp();
-            // Format: time, voltage, error, speed
-            log.info(currentTime + "," 
-                 + systemOutputPower.get() + "," 
-                 + systemTalonError.get() + ","
-                 + systemCurrentSpeed.get());
+            if(!telemetryLogger.isInitialized()) {
+                telemetryLogger.initialize(name, systemOutputPower, systemTalonError, systemCurrentSpeed);
+            }
+            telemetryLogger.collectNewDataset();
+        }
+        else if(telemetryLogger.isInitialized()) {
+            telemetryLogger.uninitialize();
         }
     }
 }

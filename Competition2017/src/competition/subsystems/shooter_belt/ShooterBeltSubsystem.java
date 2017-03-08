@@ -1,5 +1,6 @@
 package competition.subsystems.shooter_belt;
 
+import competition.DeferredTelemetryLogger;
 import competition.subsystems.BaseXCANTalonSpeedControlledSubsystem;
 import competition.subsystems.RobotSide;
 import xbot.common.injection.wpi_factories.WPIFactory;
@@ -21,7 +22,8 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
             boolean invertMasterSensor,
             WPIFactory factory, 
             PIDPropertyManager pidPropertyManager,
-            XPropertyManager propManager){
+            XPropertyManager propManager,
+            DeferredTelemetryLogger telemetryLogger){
         super(
                 side + " ShooterBelt",
                 masterChannel,
@@ -29,7 +31,8 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
                 invertMasterSensor,
                 factory,
                 pidPropertyManager,
-                propManager);
+                propManager,
+                telemetryLogger);
         this.side = side;
         
         intakePowerProperty = propManager.createPersistentProperty("ShooterBelt intake power", 0.5);

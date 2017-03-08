@@ -1,5 +1,6 @@
 package competition.subsystems.shooter_belt;
 
+import competition.DeferredTelemetryLogger;
 import competition.subsystems.RobotSide;
 import competition.subsystems.shooter_belt.ShooterBeltSubsystem;
 
@@ -18,7 +19,8 @@ public class TestShooterBeltSubsystem extends ShooterBeltSubsystem {
             boolean invertMasterSensor,
             WPIFactory factory, 
             PIDPropertyManager pidPropertyManager,
-            XPropertyManager propManager){
+            XPropertyManager propManager,
+            DeferredTelemetryLogger telemetryLogger){
         super(
                 side,
                 masterChannel,
@@ -26,7 +28,8 @@ public class TestShooterBeltSubsystem extends ShooterBeltSubsystem {
                 invertMasterSensor,
                 factory,
                 pidPropertyManager,
-                propManager);
+                propManager,
+                telemetryLogger);
     }
 
     public DoubleProperty getIntakeProp(){
