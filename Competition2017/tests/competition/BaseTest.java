@@ -1,8 +1,11 @@
 package competition;
 
+import org.junit.Ignore;
+
 import xbot.common.injection.BaseWPITest;
 import xbot.common.injection.UnitTestModule;
 
+@Ignore
 public class BaseTest extends BaseWPITest {
     
     protected class TestModule extends UnitTestModule {
