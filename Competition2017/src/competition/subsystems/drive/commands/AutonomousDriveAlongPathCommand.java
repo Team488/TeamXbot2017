@@ -71,9 +71,9 @@ public class AutonomousDriveAlongPathCommand extends BaseDriveCommand {
     @Override
     public void execute(){
         if(Timer.getFPGATimestamp()-initialCommandTime >= path.smoothLeftVelocity[indexOfTimeStep][0]){
-            driveSubsystem.tankDriveVelocityInchesPerSec(path.smoothLeftVelocity[indexOfTimeStep][1], path.smoothRightVelocity[indexOfTimeStep][1]);
-            driveSubsystem.tankDriveVelocity(path.smoothLeftVelocity[indexOfTimeStep][1],
-                    path.smoothRightVelocity[indexOfTimeStep][1]);
+            driveSubsystem.tankDriveVelocityInchesPerSec
+                  (path.smoothLeftVelocity[indexOfTimeStep][1],
+                  path.smoothRightVelocity[indexOfTimeStep][1]);
             indexOfTimeStep++;
         }
     }

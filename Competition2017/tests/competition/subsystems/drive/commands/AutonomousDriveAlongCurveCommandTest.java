@@ -16,7 +16,7 @@ public class AutonomousDriveAlongCurveCommandTest extends DriveTestBase {
     @Before
     public void setup() {
         time = injector.getInstance(MockTimer.class);
-        command = injector.getInstance(AutonomousDriveAlongCurveCommand.class);
+        command = injector.getInstance(AutonomousDriveAlongPathCommand.class);
         drive = injector.getInstance(DriveSubsystem.class);
 
         waypoints = new double[][]{
@@ -45,7 +45,6 @@ public class AutonomousDriveAlongCurveCommandTest extends DriveTestBase {
         
         verifyDriveSetpoints(drive.convertInchesToTicks(command.getPath().smoothLeftVelocity[1][1]/100),
                 drive.convertInchesToTicks(command.getPath().smoothRightVelocity[1][1]/100));
-        
     }
     /*
      * Tests to see if ending velocity becomes 0m/s
