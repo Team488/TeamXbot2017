@@ -86,7 +86,6 @@ public class AutonomousDriveAlongPathCommand extends BaseDriveCommand {
     @Override
     public void end(){
         log.info("Time taken to complete command:" + (Timer.getFPGATimestamp()-initialCommandTime)); 
-                
     }
     
     
