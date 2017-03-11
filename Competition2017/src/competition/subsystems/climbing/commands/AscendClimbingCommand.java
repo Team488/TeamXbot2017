@@ -4,10 +4,10 @@ import com.google.inject.Inject;
 
 import competition.subsystems.climbing.ClimbingSubsystem;
 
-public class AscendCommand extends BaseClimbingCommand {
+public class AscendClimbingCommand extends BaseClimbingCommand {
 
     @Inject
-    public AscendCommand(ClimbingSubsystem climbingSubsystem) {
+    public AscendClimbingCommand(ClimbingSubsystem climbingSubsystem) {
         super(climbingSubsystem);
     }
 
