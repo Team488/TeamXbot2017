@@ -95,11 +95,11 @@ public class OperatorCommandMap {
         runLeftPower.includeOnSmartDashboard("Run shooter wheel using power - left");
         runRightPower.includeOnSmartDashboard("Run shooter wheel using power - right");
         
-        oi.operatorPanelButtons.getifAvailable(8).whenPressed(leftUp);
-        oi.operatorPanelButtons.getifAvailable(9).whenPressed(leftDown);
+        oi.operatorPanelButtons.getifAvailable(9).whenPressed(leftUp);
+        oi.operatorPanelButtons.getifAvailable(8).whenPressed(leftDown);
         
-        oi.operatorPanelButtons.getifAvailable(6).whenPressed(rightUp);
-        oi.operatorPanelButtons.getifAvailable(7).whenPressed(rightDown);
+        oi.operatorPanelButtons.getifAvailable(7).whenPressed(rightUp);
+        oi.operatorPanelButtons.getifAvailable(6).whenPressed(rightDown);
     }
     
    @Inject
