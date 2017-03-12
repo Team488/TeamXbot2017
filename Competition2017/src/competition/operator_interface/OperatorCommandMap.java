@@ -9,7 +9,7 @@ import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 import xbot.common.controls.sensors.XXboxController.XboxButton;
 import xbot.common.properties.DoubleProperty;
 
-import competition.subsystems.climbing.commands.AscendCommand;
+import competition.subsystems.climbing.commands.AscendClimbingCommand;
 import competition.subsystems.climbing.commands.DescendClimbingCommand;
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.EjectAgitatorCommand;
@@ -19,6 +19,7 @@ import competition.subsystems.autonomous.DriveToBoilerWithVisionCommandGroup;
 import competition.subsystems.autonomous.selection.DisableAutonomousCommand;
 import competition.subsystems.autonomous.selection.SetupDriveToHopperThenBoilerCommand;
 import competition.subsystems.climbing.commands.RopeAlignerCommand;
+import competition.subsystems.collector.CollectorSubsystem.Power;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
 import competition.subsystems.vision.commands.RotateRobotToBoilerCommand;
@@ -30,6 +31,7 @@ import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shoot_fuel.LeftShootFuelCommandGroup;
 import competition.subsystems.shoot_fuel.RightShootFuelCommandGroup;
+import competition.subsystems.shoot_fuel.ShootFuelCommandGroup;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
 import competition.subsystems.shooter_belt.commands.RunShooterBeltPowerCommand;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
@@ -50,28 +52,25 @@ public class OperatorCommandMap {
     }
     */
     
-    // JOYSTICK
-    
     @Inject
     public void setupClimbingCommands(
             OperatorInterface oi,
-            DescendClimbingCommand descend,
-            AscendCommand ascend,
+            AscendClimbingCommand ascend,
             RopeAlignerCommand aligner)   
     {
-        oi.controller.getXboxButton(XboxButton.Y).whileHeld(descend);
         oi.controller.getXboxButton(XboxButton.X).whileHeld(ascend);
         
         oi.controller.getXboxButton(XboxButton.Start).whileHeld(aligner);
+        
+        oi.operatorPanelButtons.getifAvailable(4).whileHeld(ascend);
     }
-    
+
     @Inject
     public void setupShooterWheelCommands(
             OperatorInterface oi,
             ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem,
-            XPropertyManager propertyManager,
             LeftShootFuelCommandGroup shootLeft,
-            RightShootFuelCommandGroup shootRight) 
+            RightShootFuelCommandGroup shootRight)
     {
         RunShooterWheelUsingPowerCommand runLeftPower = new RunShooterWheelUsingPowerCommand(
                 shooterWheelsManagerSubsystem.getLeftShooter());
@@ -80,21 +79,6 @@ public class OperatorCommandMap {
         
         runLeftPower.includeOnSmartDashboard("Run shooter wheel using power - left");
         runRightPower.includeOnSmartDashboard("Run shooter wheel using power - right");
-        
-        oi.controller.getXboxButton(XboxButton.LeftTrigger).whileHeld(shootLeft);
-        oi.controller.getXboxButton(XboxButton.RightTrigger).whileHeld(shootRight);
-    }
-    
-    @Inject
-    public void setupShooterBeltCommands(
-            OperatorInterface oi,
-            ShooterBeltsManagerSubsystem shooterBeltsSubsystem)
-    {
-        // Just used to do simple tests in the pits or something - not part of normal robot operation
-        RunShooterBeltPowerCommand runBeltLeft = new RunShooterBeltPowerCommand(shooterBeltsSubsystem.getLeftBelt());
-        oi.controller.getXboxButton(XboxButton.LeftStick).whileHeld(runBeltLeft);
-        RunShooterBeltPowerCommand runBeltRight = new RunShooterBeltPowerCommand(shooterBeltsSubsystem.getRightBelt());
-        oi.controller.getXboxButton(XboxButton.RightStick).whileHeld(runBeltRight);
     }
     
    @Inject
@@ -112,16 +96,22 @@ public class OperatorCommandMap {
        oi.rightButtons.getifAvailable(1).whenPressed(shiftLow);
    }
     
-    // CONTROLLER
-    
     @Inject
     public void setupCollectorCommands(
             OperatorInterface oi,
             EjectCollectorCommand eject,
-            IntakeCollectorCommand intake)
+            IntakeCollectorCommand intakeLowPower,
+            IntakeCollectorCommand intakeHighPower
+            )
     {
-        oi.controller.getXboxButton(XboxButton.A).whileHeld(intake);
-        oi.controller.getXboxButton(XboxButton.B).whileHeld(eject);
+        intakeLowPower.setCollectorPower(Power.LOW);
+        intakeHighPower.setCollectorPower(Power.HIGH);
+        oi.controller.getXboxButton(XboxButton.A).whileHeld(intakeHighPower);
+        oi.controller.getXboxButton(XboxButton.B).whileHeld(intakeLowPower);
+        oi.controller.getXboxButton(XboxButton.Y).whileHeld(eject);
+        
+        oi.operatorPanelButtons.getifAvailable(2).whileHeld(intakeLowPower);
+        oi.operatorPanelButtons.getifAvailable(3).whileHeld(eject);
     }
 
     @Inject
@@ -143,8 +133,14 @@ public class OperatorCommandMap {
         oi.controller.getXboxButton(XboxButton.LeftBumper).whileHeld(intakeLeft);
         oi.controller.getXboxButton(XboxButton.RightBumper).whileHeld(intakeRight);
         
+        oi.controller.getXboxButton(XboxButton.LeftStick).whileHeld(ejectLeft);
+        oi.controller.getXboxButton(XboxButton.RightStick).whileHeld(ejectRight);
+        
+        oi.operatorPanelButtons.getifAvailable(9).whileHeld(intakeLeft);
+        oi.operatorPanelButtons.getifAvailable(8).whileHeld(ejectLeft);
+        oi.operatorPanelButtons.getifAvailable(7).whileHeld(intakeRight);  
+        oi.operatorPanelButtons.getifAvailable(6).whileHeld(ejectRight);  
     }
-    // OTHER
     
     @Inject
     public void setupDriveCommand(
@@ -198,5 +194,23 @@ public class OperatorCommandMap {
     {
         disableCommand.includeOnSmartDashboard("Disable Autonomous");
         driveToBoiler.includeOnSmartDashboard("Run DriveToBoiler Autonomous Command");
+    }
+    
+    @Inject
+    public void setupShooterCommandGroup(
+            OperatorInterface oi,
+            ShootFuelCommandGroup shootFuel,
+            LeftShootFuelCommandGroup shootLeftFuel,
+            RightShootFuelCommandGroup shootRightFuel,
+            LeftShootFuelCommandGroup shootLeft,
+            RightShootFuelCommandGroup shootRight)
+    {
+
+        oi.controller.getXboxButton(XboxButton.LeftTrigger).whileHeld(shootLeft);
+        oi.controller.getXboxButton(XboxButton.RightTrigger).whileHeld(shootRight);
+        
+        oi.operatorPanelButtons.getifAvailable(1).whileHeld(shootFuel);
+        oi.operatorPanelButtons.getifAvailable(10).whileHeld(shootLeftFuel);
+        oi.operatorPanelButtons.getifAvailable(11).whileHeld(shootRightFuel);
     }
 }
