@@ -27,7 +27,10 @@ public class TrimShooterWheelCommand extends BaseCommand {
     @Override
     public void initialize() {
         log.info("Initializing");
-        shooterWheelSubsystem.trimRangePower(TypicalShootingPosition.FlushToBoiler, trimAmount.get());
+        
+        double amount = trimAmount.get() * ((direction == TrimDirection.Up) ? 1 : -1); 
+        
+        shooterWheelSubsystem.trimRangePower(TypicalShootingPosition.FlushToBoiler, amount);
     }
     
     public void setTrimDirection(TrimDirection direction) {
