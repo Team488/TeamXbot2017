@@ -14,8 +14,10 @@ import xbot.common.properties.XPropertyManager;
 @Singleton
 public class CollectorSubsystem extends BaseSubsystem implements PeriodicDataSource {
 
-    protected final DoubleProperty intakePowerProperty;
     protected final DoubleProperty ejectPowerProperty;
+    
+    protected final DoubleProperty lowPowerCollector;
+    protected final DoubleProperty highPowerCollector;
     
     protected final XCANTalon collectorMotor;
     
@@ -31,18 +33,27 @@ public class CollectorSubsystem extends BaseSubsystem implements PeriodicDataSou
         collectorMotor.setInverted(true);
         
         ejectPowerProperty = propManager.createPersistentProperty("Collector eject power", -0.5);
-        intakePowerProperty = propManager.createPersistentProperty("Collector intake power", 0.5);
         
         collectorMotor.createTelemetryProperties("Collector motor", propManager);
         
+        lowPowerCollector = propManager.createPersistentProperty("Low power collector property", 0.3);
+        highPowerCollector = propManager.createPersistentProperty("High power collector property", 0.6);
+    }
+    
+    public enum Power {
+        LOW, HIGH
     }
     
     public void stop() {
         collectorMotor.set(0);
     }
     
-    public void intake() {
-        collectorMotor.set(intakePowerProperty.get());
+    public void intake(Power power) {
+        if (power == Power.HIGH) {
+            collectorMotor.set(highPowerCollector.get());
+        } else {
+            collectorMotor.set(lowPowerCollector.get());
+        }
     }
     
     public void eject() {

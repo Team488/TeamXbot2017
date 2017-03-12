@@ -2,9 +2,10 @@ package competition.subsystems.agitator;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
-import xbot.common.injection.BaseWPITest;
 
-public class AgitatorTestBase extends BaseWPITest{
+import competition.BaseTest;
+
+public class AgitatorTestBase extends BaseTest{
 
     protected AgitatorSubsystem agitator;
     
