@@ -64,7 +64,7 @@ public class ClimbingSubsystem extends BaseSubsystem implements PeriodicDataSour
     }
     
     public void setEnableSafeties(boolean isEnabled) {
-        climbingMotor.enableLimitSwitches(isEnabled, isEnabled);
+        climbingMotor.enableLimitSwitches(isEnabled, false);
     }
 
     @Override

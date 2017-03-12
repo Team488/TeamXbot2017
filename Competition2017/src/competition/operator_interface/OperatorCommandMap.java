@@ -58,6 +58,7 @@ public class OperatorCommandMap {
             RopeAlignerCommand aligner)   
     {
         oi.controller.getXboxButton(XboxButton.X).whileHeld(ascend);
+        oi.operatorPanelButtons.getifAvailable(4).whileHeld(ascend);
         
         oi.controller.getXboxButton(XboxButton.Start).whileHeld(aligner);
         oi.controller.getXboxButton(XboxButton.Back).whileHeld(ascendDangerously);
