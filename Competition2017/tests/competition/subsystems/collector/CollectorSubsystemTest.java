@@ -2,6 +2,8 @@ package competition.subsystems.collector;
 
 import org.junit.Test;
 
+import competition.subsystems.collector.CollectorSubsystem.Power;
+
 public class CollectorSubsystemTest extends CollectorTestBase {
     
    
@@ -14,9 +16,9 @@ public class CollectorSubsystemTest extends CollectorTestBase {
     
     @Test
     public void intakeTest(){
-        collect.intake();
+        collect.intake(Power.LOW);
         
-        verifyCollectSetpoints(collect.getIntakeProp().get());
+        verifyCollectSetpoints(collect.getLowIntakeProp().get());
     }
     
     @Test
