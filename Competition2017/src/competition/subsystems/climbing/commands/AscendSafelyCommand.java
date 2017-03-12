@@ -4,22 +4,19 @@ import com.google.inject.Inject;
 
 import competition.subsystems.climbing.ClimbingSubsystem;
 
-public class AscendCommand extends BaseClimbingCommand {
+public class AscendSafelyCommand extends BaseClimbingCommand {
 
     @Inject
-    public AscendCommand(ClimbingSubsystem climbingSubsystem) {
+    public AscendSafelyCommand(ClimbingSubsystem climbingSubsystem) {
         super(climbingSubsystem);
     }
 
     public void initialize() {
         log.info("Initializing");
+        climbingSubsystem.setEnableSafeties(true);
     }
 
     public void execute() {
-        if (climbingSubsystem.isLimitSwitchPressed()) {
-            climbingSubsystem.stop();
-        } else {
-            climbingSubsystem.ascend();
-        }
+        climbingSubsystem.ascend();
     }
 }

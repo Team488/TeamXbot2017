@@ -62,6 +62,10 @@ public class ClimbingSubsystem extends BaseSubsystem implements PeriodicDataSour
     public boolean isLimitSwitchPressed() {
         return climbingMotor.isForwardLimitSwitchClosed();
     }
+    
+    public void setEnableSafeties(boolean isEnabled) {
+        climbingMotor.enableLimitSwitches(isEnabled, isEnabled);
+    }
 
     @Override
     public void updatePeriodicData() {

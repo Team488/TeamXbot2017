@@ -8,8 +8,8 @@ import xbot.common.subsystems.pose.commands.ResetDistanceCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 import xbot.common.controls.sensors.XXboxController.XboxButton;
 import xbot.common.properties.DoubleProperty;
-
-import competition.subsystems.climbing.commands.AscendCommand;
+import competition.subsystems.climbing.commands.AscendDangerouslyCommand;
+import competition.subsystems.climbing.commands.AscendSafelyCommand;
 import competition.subsystems.climbing.commands.DescendClimbingCommand;
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.EjectAgitatorCommand;
@@ -53,13 +53,15 @@ public class OperatorCommandMap {
     public void setupClimbingCommands(
             OperatorInterface oi,
             DescendClimbingCommand descend,
-            AscendCommand ascend,
+            AscendSafelyCommand ascend,
+            AscendDangerouslyCommand ascendDangerously,
             RopeAlignerCommand aligner)   
     {
         oi.controller.getXboxButton(XboxButton.Y).whileHeld(descend);
         oi.controller.getXboxButton(XboxButton.X).whileHeld(ascend);
         
         oi.controller.getXboxButton(XboxButton.Start).whileHeld(aligner);
+        oi.controller.getXboxButton(XboxButton.Back).whileHeld(ascendDangerously);
     }
     
     @Inject
