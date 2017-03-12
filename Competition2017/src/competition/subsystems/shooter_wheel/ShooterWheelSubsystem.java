@@ -39,11 +39,21 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         log.info("Creating");
         this.side = side;
         flushToBoilerTargetSpeed = 
-                propManager.createPersistentProperty(side + " flush to boiler target speed", 3500);
+                propManager.createPersistentProperty(side + " flush to boiler target speed", 9000);
     }
     
     public RobotSide getSide() {
         return side;
+    }
+    
+    public void trimRangePower(TypicalShootingPosition range, double trimAmount) {
+        switch (range) {
+            case FlushToBoiler:
+                flushToBoilerTargetSpeed.set(flushToBoilerTargetSpeed.get() + trimAmount);
+                break;
+            default: 
+                // nothing to do here
+        }
     }
     
     public double translateTypicalShootingPositionToDistance(TypicalShootingPosition range) {
