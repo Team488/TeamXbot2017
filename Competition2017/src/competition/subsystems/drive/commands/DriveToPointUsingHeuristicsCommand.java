@@ -54,6 +54,20 @@ public class DriveToPointUsingHeuristicsCommand extends BaseDriveCommand {
         deltaMode = true;
     }
     
+    public void setStrictThreshold(boolean isStrict) {
+        if (isStrict) {
+            setDestinationPIDThreshold(2, true, 0.75);
+        } else {
+            setDestinationPIDThreshold(5, false, 0.2);
+        }
+    }
+    
+    private void setDestinationPIDThreshold(double error, boolean derivative, double time) {
+        destinationPid.setErrorThreshold(error);
+        destinationPid.setEnableDerivativeThreshold(derivative);
+        destinationPid.setTimeThreshold(time);
+    }
+    
     private void initializeDeltaTravel() {
         FieldPose currentPoint = poseSubsystem.getCurrentFieldPose();
         
