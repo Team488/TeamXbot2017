@@ -15,7 +15,8 @@ import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.EjectAgitatorCommand;
 import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
 import competition.subsystems.agitator.commands.StopAgitatorCommand;
-import competition.subsystems.autonomous.DriveToBoilerWithVisionCommandGroup;
+import competition.subsystems.autonomous.DriveToBoilerUsingHeuristicsWithVisionCommandGroup;
+import competition.subsystems.autonomous.DriveToBoilerWithTriangleVisionCommandGroup;
 import competition.subsystems.autonomous.selection.DisableAutonomousCommand;
 import competition.subsystems.autonomous.selection.SetupDriveToHopperThenBoilerCommand;
 import competition.subsystems.climbing.commands.RopeAlignerCommand;
@@ -172,7 +173,7 @@ public class OperatorCommandMap {
     public void setupVisionCommands(
             OperatorInterface oi,
             RotateRobotToBoilerCommand rotateCommand,
-            DriveToBoilerWithVisionCommandGroup driveToBoilerCommand,
+            DriveToBoilerUsingHeuristicsWithVisionCommandGroup driveToBoilerCommand,
             SetRobotHeadingCommand setHeadingCommand,
             RotateToHeadingCommand rotateToHeadingCommand
     )   {
