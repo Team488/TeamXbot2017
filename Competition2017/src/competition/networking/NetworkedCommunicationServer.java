@@ -88,6 +88,7 @@ public class NetworkedCommunicationServer implements OffboardCommunicationServer
         }
 
         public void stopServer() {
+            log.info("Server stopping");
             this.isRunning = false;
             serverSocket.close();
         }

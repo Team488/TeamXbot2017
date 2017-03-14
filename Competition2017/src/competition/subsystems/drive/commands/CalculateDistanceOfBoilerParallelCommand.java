@@ -37,9 +37,19 @@ public class CalculateDistanceOfBoilerParallelCommand extends BaseCommand{
     public void setParallelAngleProp(DoubleProperty prop) {
         parallelAngleSupplier = () -> prop.get();
     }
+    
+    public void setParallelAngleSupplier(DoubleSupplier valueSupplier) {
+        parallelAngleSupplier = valueSupplier;
+    }
 
     @Override
     public void initialize() {
+        log.info("Initializing");
+        
+    }
+
+    @Override
+    public void execute() {
         DetectedBoiler boiler = vision.getTrackedBoiler();
         if(boiler == null) {
             log.warn("Distance calculation failed; no tracked target!");
@@ -55,9 +65,6 @@ public class CalculateDistanceOfBoilerParallelCommand extends BaseCommand{
             log.info("Reported distance to boiler: " + distanceToBoiler + "; calculated parallel distance: " + distanceOnParallel);
         }
     }
-
-    @Override
-    public void execute() {}
     
     @Override
     public boolean isFinished(){

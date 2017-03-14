@@ -27,13 +27,15 @@ import edu.wpi.first.wpilibj.Timer;
 public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource {
     private static Logger log = Logger.getLogger(VisionSubsystem.class);
 
-    OffboardCommunicationServer server;
-    List<DetectedLiftPeg> trackedLiftPegs = Collections.synchronizedList(new ArrayList<>());
-    List<DetectedBoiler> trackedBoilers = Collections.synchronizedList(new ArrayList<>());
+    private final DoubleProperty angleOfBoilerParallel;
     
     private static final String targetSnapshotPacketType = "trackedTargetsSnapshot";
     private static final String trackedLiftPegsProperty = "trackedLiftPegs";
     private static final String trackedBoilersProperty = "trackedBoilers";
+    
+    OffboardCommunicationServer server;
+    List<DetectedLiftPeg> trackedLiftPegs = Collections.synchronizedList(new ArrayList<>());
+    List<DetectedBoiler> trackedBoilers = Collections.synchronizedList(new ArrayList<>());
 
     private volatile double lastTimePacketRecieved = -1;
     private volatile double lastPacketCounterResetTime = -1;
@@ -46,7 +48,7 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
 
     @Inject
     public VisionSubsystem(WPIFactory factory, XPropertyManager propManager, OffboardCommunicationServer server) {
-        log.info("Creating VisionSubsystem");
+        log.info("Creating");
         
         this.server = server;
         server.setNewPacketHandler(packet -> handleCommPacket(packet));
@@ -56,8 +58,13 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
         
         connectionTimeoutThreshold = propManager.createPersistentProperty("Vision connection timeout threshold", 1);
         connectionReportInterval = propManager.createPersistentProperty("Vision telemetry report interval", 20);
+        angleOfBoilerParallel = propManager.createPersistentProperty("Angle of line parallel to boiler", 248);
     }
 
+    public double getHeadingParallelToBoiler() {
+        return angleOfBoilerParallel.get();
+    }
+    
     public DetectedLiftPeg getTrackedLiftPeg() {
         return trackedLiftPegs.stream().filter(target -> target.isTracked).findFirst().orElse(null);
     }

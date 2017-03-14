@@ -54,5 +54,4 @@ public class RotateRobotToBoilerCommand extends BaseCommand {
     public void end(){
         driveSubsystem.tankDrivePowerMode(0, 0);
     }
-
 }

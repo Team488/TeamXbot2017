@@ -8,7 +8,7 @@ import competition.subsystems.drive.DriveSubsystem;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
-public class DriveInfinitelyCommand extends BaseDriveCommand{
+public class DriveInfinitelyCommand extends BaseDriveCommand {
     private double power = 0;
     private DoubleSupplier powerTargetSupplier;
 
@@ -28,6 +28,7 @@ public class DriveInfinitelyCommand extends BaseDriveCommand{
 
     @Override
     public void initialize() {
+        log.info("Initializing");
         power = powerTargetSupplier == null ? 0 : powerTargetSupplier.getAsDouble();
     }
 

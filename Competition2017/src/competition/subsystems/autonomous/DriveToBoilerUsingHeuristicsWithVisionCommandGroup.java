@@ -6,7 +6,6 @@ import competition.subsystems.drive.commands.CalculateDirectBoilerDriveDeltaComm
 import competition.subsystems.drive.commands.DriveToPointUsingHeuristicsCommand;
 import competition.subsystems.vision.commands.RotateRobotToBoilerCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 public class DriveToBoilerUsingHeuristicsWithVisionCommandGroup extends CommandGroup{

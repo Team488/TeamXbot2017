@@ -177,11 +177,11 @@ public class OperatorCommandMap {
             SetRobotHeadingCommand setHeadingCommand,
             RotateToHeadingCommand rotateToHeadingCommand
     )   {
-        oi.leftButtons.getifAvailable(7).whileHeld(rotateCommand);
-        oi.leftButtons.getifAvailable(8).whileHeld(driveToBoilerCommand);
+        oi.leftButtons.getifAvailable(2).whileHeld(rotateCommand);
+        oi.leftButtons.getifAvailable(3).whileHeld(driveToBoilerCommand);
         
         setHeadingCommand.setHeadingToApply(248);
-        oi.leftButtons.getifAvailable(9).whileHeld(setHeadingCommand);
+        setHeadingCommand.includeOnSmartDashboard("Set heading to boiler parallel (248)");
         
         rotateToHeadingCommand.setTargetHeading(248);
         oi.leftButtons.getifAvailable(10).whileHeld(rotateToHeadingCommand);
