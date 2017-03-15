@@ -11,6 +11,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
     
     private final RobotSide side;
     protected final DoubleProperty flushToBoilerTargetSpeed;
+    protected final DoubleProperty trimFlushToBoilerSpeed;
     
     public enum TypicalShootingPosition {
         FlushToBoiler
@@ -40,6 +41,8 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         this.side = side;
         flushToBoilerTargetSpeed = 
                 propManager.createPersistentProperty(side + " flush to boiler target speed", 9000);
+        trimFlushToBoilerSpeed =
+                propManager.createEphemeralProperty(side + " trim speed", 0.0);
     }
     
     public RobotSide getSide() {
@@ -49,7 +52,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
     public void trimRangePower(TypicalShootingPosition range, double trimAmount) {
         switch (range) {
             case FlushToBoiler:
-                flushToBoilerTargetSpeed.set(flushToBoilerTargetSpeed.get() + trimAmount);
+                trimFlushToBoilerSpeed.set(trimFlushToBoilerSpeed.get() + trimAmount);
                 break;
             default: 
                 // nothing to do here
@@ -73,7 +76,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         // some day we may have an actual formula here, interpolating between known points.
         // (flush to boiler, one robot width, some other range...)
         // For now, it's just this one range.
-        setTargetSpeed(flushToBoilerTargetSpeed.get());
+        setTargetSpeed(flushToBoilerTargetSpeed.get() + trimFlushToBoilerSpeed.get());
     }
 }
 
