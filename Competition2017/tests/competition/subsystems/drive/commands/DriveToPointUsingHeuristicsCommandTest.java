@@ -78,4 +78,54 @@ public class DriveToPointUsingHeuristicsCommandTest extends DriveTestBase {
         assertTrue(command.isFinished());
     }
     
+    @Test
+    public void driveStraightWithSlightAngle() {
+        pose.setCurrentHeading(90);
+        
+        command.setDeltaBasedTravel(0, 130, -10);
+        command.initialize();
+        assertFalse(command.isFinished());
+        command.execute();
+        
+        verifyDrivePositive();
+        
+        driveDeltaEncoderInches(30, 30);
+        
+        assertFalse(command.isFinished());
+        command.execute();
+        
+        verifyDrivePositive();
+        verifyDriveArcingRight(0.05);
+        
+        driveDeltaEncoderInches(50, 50);
+        
+        assertFalse(command.isFinished());
+        command.execute();
+        
+        verifyTurningRight();
+        
+        setRobotHeading(80);
+        
+        assertFalse(command.isFinished());
+        command.execute();
+        
+        verifyStopped(1e-5);
+        verifyNotTurning(.05);
+        
+        assertFalse(command.isFinished());
+        command.execute(); // after this line, error is small, but the derivative is large, and stabilization time is still needed
+        
+        verifyStopped(1e-5);
+        
+        assertFalse(command.isFinished());
+        command.execute(); // after this line, error is small, derivative is small, and stabilization has begun
+        
+        //advance time
+        timer.advanceTimeInSecondsBy(1.5);
+        assertFalse(command.isFinished());
+        command.execute();  // after this line, error is small, derivative is small, and stabilization should have completed.
+        
+        assertTrue(command.isFinished());
+    }
+    
 }

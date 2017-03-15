@@ -90,13 +90,13 @@ public abstract class DriveTestBase extends BaseTest {
         assertTrue(getRightSetpoint() < 0);
     }
     
-    public void verifyNotTurning(double minimumDifference) {
-        assertEquals(getLeftSetpoint(), getRightSetpoint(), minimumDifference);
+    public void verifyNotTurning(double maximumDifference) {
+        assertEquals(getLeftSetpoint(), getRightSetpoint(), maximumDifference);
     }
     
-    public void verifyStopped(double minimumPower) {
-        assertEquals(0, getLeftSetpoint(), minimumPower);
-        assertEquals(0, getRightSetpoint(),  minimumPower);
+    public void verifyStopped(double maximumPower) {
+        assertEquals(0, getLeftSetpoint(), maximumPower);
+        assertEquals(0, getRightSetpoint(),  maximumPower);
     }
     
     private double getLeftSetpoint() {
