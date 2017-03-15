@@ -17,6 +17,7 @@ import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
 import competition.subsystems.autonomous.selection.DisableAutonomousCommand;
 import competition.subsystems.autonomous.selection.SetupDriveToHopperThenBoilerCommand;
 import competition.subsystems.climbing.commands.RopeAlignerCommand;
+import competition.subsystems.collector.CollectorSubsystem.Power;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
@@ -48,8 +49,6 @@ public class OperatorCommandMap {
     }
     */
     
-    // JOYSTICK
-    
     @Inject
     public void setupClimbingCommands(
             OperatorInterface oi,
@@ -79,18 +78,6 @@ public class OperatorCommandMap {
         runRightPower.includeOnSmartDashboard("Run shooter wheel using power - right");
     }
     
-    @Inject
-    public void setupShooterBeltCommands(
-            OperatorInterface oi,
-            ShooterBeltsManagerSubsystem shooterBeltsSubsystem)
-    {
-        // Just used to do simple tests in the pits or something - not part of normal robot operation
-        RunShooterBeltPowerCommand runBeltLeft = new RunShooterBeltPowerCommand(shooterBeltsSubsystem.getLeftBelt());
-        oi.controller.getXboxButton(XboxButton.LeftStick).whileHeld(runBeltLeft);
-        RunShooterBeltPowerCommand runBeltRight = new RunShooterBeltPowerCommand(shooterBeltsSubsystem.getRightBelt());
-        oi.controller.getXboxButton(XboxButton.RightStick).whileHeld(runBeltRight);
-    }
-    
    @Inject
    public void setupShiftCommand(
            OperatorInterface oi,
@@ -106,18 +93,21 @@ public class OperatorCommandMap {
        oi.rightButtons.getifAvailable(1).whenPressed(shiftLow);
    }
     
-    // CONTROLLER
-    
     @Inject
     public void setupCollectorCommands(
             OperatorInterface oi,
             EjectCollectorCommand eject,
-            IntakeCollectorCommand intake)
+            IntakeCollectorCommand intakeLowPower,
+            IntakeCollectorCommand intakeHighPower
+            )
     {
-        oi.controller.getXboxButton(XboxButton.A).whileHeld(intake);
-        oi.controller.getXboxButton(XboxButton.B).whileHeld(eject);
+        intakeLowPower.setCollectorPower(Power.LOW);
+        intakeHighPower.setCollectorPower(Power.HIGH);
+        oi.controller.getXboxButton(XboxButton.A).whileHeld(intakeHighPower);
+        oi.controller.getXboxButton(XboxButton.B).whileHeld(intakeLowPower);
+        oi.controller.getXboxButton(XboxButton.Y).whileHeld(eject);
         
-        oi.operatorPanelButtons.getifAvailable(2).whileHeld(intake);
+        oi.operatorPanelButtons.getifAvailable(2).whileHeld(intakeLowPower);
         oi.operatorPanelButtons.getifAvailable(3).whileHeld(eject);
     }
 
@@ -140,12 +130,14 @@ public class OperatorCommandMap {
         oi.controller.getXboxButton(XboxButton.LeftBumper).whileHeld(intakeLeft);
         oi.controller.getXboxButton(XboxButton.RightBumper).whileHeld(intakeRight);
         
+        oi.controller.getXboxButton(XboxButton.LeftStick).whileHeld(ejectLeft);
+        oi.controller.getXboxButton(XboxButton.RightStick).whileHeld(ejectRight);
+        
         oi.operatorPanelButtons.getifAvailable(9).whileHeld(intakeLeft);
         oi.operatorPanelButtons.getifAvailable(8).whileHeld(ejectLeft);
         oi.operatorPanelButtons.getifAvailable(7).whileHeld(intakeRight);  
         oi.operatorPanelButtons.getifAvailable(6).whileHeld(ejectRight);  
     }
-    // OTHER
     
     @Inject
     public void setupDriveCommand(
