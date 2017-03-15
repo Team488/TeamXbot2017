@@ -53,6 +53,14 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         switch (range) {
             case FlushToBoiler:
                 trimFlushToBoilerSpeed.set(trimFlushToBoilerSpeed.get() + trimAmount);
+                
+                if (trimFlushToBoilerSpeed.get() > 10000) {
+                    trimFlushToBoilerSpeed.set(10000);
+                }
+                
+                if (trimFlushToBoilerSpeed.get() < -10000) {
+                    trimFlushToBoilerSpeed.set(-10000);
+                }
                 break;
             default: 
                 // nothing to do here
