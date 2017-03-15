@@ -180,8 +180,8 @@ public class OperatorCommandMap {
         oi.leftButtons.getifAvailable(2).whileHeld(rotateCommand);
         oi.leftButtons.getifAvailable(3).whileHeld(driveToBoilerCommand);
         
-        setHeadingCommand.setHeadingToApply(248);
-        setHeadingCommand.includeOnSmartDashboard("Set heading to boiler parallel (248)");
+        setHeadingCommand.setHeadingToApply(68);
+        setHeadingCommand.includeOnSmartDashboard("Set heading to boiler parallel (68)");
         
         rotateToHeadingCommand.setTargetHeading(248);
         oi.leftButtons.getifAvailable(10).whileHeld(rotateToHeadingCommand);

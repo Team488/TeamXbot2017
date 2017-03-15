@@ -1,18 +1,14 @@
 package competition.subsystems.drive.commands;
 
-import java.util.function.DoubleSupplier;
-
 import com.google.inject.Inject;
 
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.vision.DetectedBoiler;
 import competition.subsystems.vision.VisionSubsystem;
 import xbot.common.command.BaseCommand;
-import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 public class CalculateDirectBoilerDriveDeltaCommand extends BaseCommand{
-    private double angleOfLineFromRobotToBoiler;
     private PoseSubsystem pose;
     private VisionSubsystem vision;
     private DriveToPointUsingHeuristicsCommand driveCommand;
@@ -36,12 +32,12 @@ public class CalculateDirectBoilerDriveDeltaCommand extends BaseCommand{
         }
         else {
             double distanceToBoiler = boiler.distance;
-            angleOfLineFromRobotToBoiler = pose.getCurrentHeading().getValue();
-            driveCommand.setDeltaBasedTravel(0, distanceToBoiler, pose.getCurrentHeading().getValue() - 52);
+            double deltaAngle = pose.getCurrentHeading().difference(vision.getHeadingParallelToBoiler() - 90);
             
+            driveCommand.setDeltaBasedTravel(0, distanceToBoiler, deltaAngle);
+            log.info("Reported distance to boiler: " + distanceToBoiler + "; calculated delta angle: " + deltaAngle);
+
             isFinished = true;
-            
-            log.info("Reported distance to boiler: " + distanceToBoiler);
         }
     }
 

@@ -45,6 +45,9 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
     
     private DoubleProperty connectionTimeoutThreshold;
     private DoubleProperty connectionReportInterval;
+    
+    private DoubleProperty trackedBoilerXOffsetTelemetry;
+    private DoubleProperty trackedBoilerDistanceTelemetry;
 
     @Inject
     public VisionSubsystem(WPIFactory factory, XPropertyManager propManager, OffboardCommunicationServer server) {
@@ -58,7 +61,10 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
         
         connectionTimeoutThreshold = propManager.createPersistentProperty("Vision connection timeout threshold", 1);
         connectionReportInterval = propManager.createPersistentProperty("Vision telemetry report interval", 20);
-        angleOfBoilerParallel = propManager.createPersistentProperty("Angle of line parallel to boiler", 248);
+        angleOfBoilerParallel = propManager.createPersistentProperty("Angle of line parallel to boiler", 68);
+        
+        trackedBoilerXOffsetTelemetry = propManager.createEphemeralProperty("Tracked boiler X offset", 0);
+        trackedBoilerDistanceTelemetry = propManager.createEphemeralProperty("Tracked boiler distance", 0);
     }
 
     public double getHeadingParallelToBoiler() {
@@ -66,11 +72,15 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
     }
     
     public DetectedLiftPeg getTrackedLiftPeg() {
-        return trackedLiftPegs.stream().filter(target -> target.isTracked).findFirst().orElse(null);
+        synchronized (trackedLiftPegs) {
+            return trackedLiftPegs.stream().filter(target -> target != null && target.isTracked).findFirst().orElse(null);
+        }
     }
 
     public DetectedBoiler getTrackedBoiler() {
-        return trackedBoilers.stream().filter(target -> target.isTracked).findFirst().orElse(null);
+        synchronized (trackedBoilers) {
+            return trackedBoilers.stream().filter(target -> target != null && target.isTracked).findFirst().orElse(null);
+        }
     }
     
     public boolean isConnected() {
@@ -82,48 +92,52 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
         numPacketsSinceReset++;
 
         if (packet.packetType.equals(targetSnapshotPacketType)) {
-            loadJsonArray(trackedLiftPegs, packet.payload, trackedLiftPegsProperty, jsonTarget -> {
-                //CHECKSTYLE:OFF
-                if(!(
-                        jsonTarget.has("pegOffsetX")
-                        && jsonTarget.has("pegOffsetY")
-                        && jsonTarget.has("isTracked"))) {
-                        return null;
-                }
-                //CHECKSTYLE:ON
-                
-                DetectedLiftPeg newTarget = new DetectedLiftPeg();
+            synchronized(trackedLiftPegs) {
+                loadJsonArray(trackedLiftPegs, packet.payload, trackedLiftPegsProperty, jsonTarget -> {
+                    //CHECKSTYLE:OFF
+                    if(!(
+                            jsonTarget.has("pegOffsetX")
+                            && jsonTarget.has("pegOffsetY")
+                            && jsonTarget.has("isTracked"))) {
+                            return null;
+                    }
+                    //CHECKSTYLE:ON
+                    
+                    DetectedLiftPeg newTarget = new DetectedLiftPeg();
+    
+                    newTarget.pegOffsetX = jsonTarget.getDouble("pegOffsetX");
+                    newTarget.pegOffsetY = jsonTarget.getDouble("pegOffsetY");
+                    newTarget.isTracked = jsonTarget.getBoolean("isTracked");
+    
+                    return newTarget;
+                });
+            }
 
-                newTarget.pegOffsetX = jsonTarget.getDouble("pegOffsetX");
-                newTarget.pegOffsetY = jsonTarget.getDouble("pegOffsetY");
-                newTarget.isTracked = jsonTarget.getBoolean("isTracked");
-
-                return newTarget;
-            });
-
-            loadJsonArray(trackedBoilers, packet.payload, trackedBoilersProperty, jsonTarget -> {
-                //CHECKSTYLE:OFF
-                if(!(
-                        jsonTarget.has("offsetX")
-                        && jsonTarget.has("targetAngleX")
-                        && jsonTarget.has("targetAngleY")
-                        && jsonTarget.has("isTracked")
-                        && jsonTarget.has("distance"))) {
-                        return null;
-                }
-                //CHECKSTYLE:ON
-                
-                DetectedBoiler newTarget = new DetectedBoiler();
-
-                newTarget.offsetX = jsonTarget.getDouble("offsetX");
-                newTarget.targetAngleX = jsonTarget.getDouble("targetAngleX");
-                newTarget.targetAngleY = jsonTarget.getDouble("targetAngleY");
-                newTarget.isTracked = jsonTarget.getBoolean("isTracked");
-
-                newTarget.distance = jsonTarget.getDouble("distance");
-
-                return newTarget;
-            });
+            synchronized (trackedBoilers) {
+                loadJsonArray(trackedBoilers, packet.payload, trackedBoilersProperty, jsonTarget -> {
+                    //CHECKSTYLE:OFF
+                    if(!(
+                            jsonTarget.has("offsetX")
+                            && jsonTarget.has("targetAngleX")
+                            && jsonTarget.has("targetAngleY")
+                            && jsonTarget.has("isTracked")
+                            && jsonTarget.has("distance"))) {
+                            return null;
+                    }
+                    //CHECKSTYLE:ON
+                    
+                    DetectedBoiler newTarget = new DetectedBoiler();
+    
+                    newTarget.offsetX = jsonTarget.getDouble("offsetX");
+                    newTarget.targetAngleX = jsonTarget.getDouble("targetAngleX");
+                    newTarget.targetAngleY = jsonTarget.getDouble("targetAngleY");
+                    newTarget.isTracked = jsonTarget.getBoolean("isTracked");
+    
+                    newTarget.distance = jsonTarget.getDouble("distance");
+    
+                    return newTarget;
+                });
+            }
         }
     }
 
@@ -168,5 +182,9 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
             log.info("Disconnected");
             isConnected = false;
         }
+        
+        DetectedBoiler trackedBoiler = getTrackedBoiler();
+        trackedBoilerXOffsetTelemetry.set(trackedBoiler == null ? 0 : trackedBoiler.offsetX);
+        trackedBoilerDistanceTelemetry.set(trackedBoiler == null ? 0 : trackedBoiler.distance);
     }
 }
