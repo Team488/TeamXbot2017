@@ -1,5 +1,7 @@
 package competition.subsystems.autonomous.selection;
 
+import com.google.inject.Inject;
+
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
@@ -10,6 +12,7 @@ public class SetupBreakBaselineCommand extends BaseAutonomousCommandSetter {
     // distance to break baseline from a position with both back wheels on the wall
     private DoubleProperty distanceFromWallToBaseline;
 
+    @Inject
     public SetupBreakBaselineCommand(AutonomousCommandSelector autonomousCommandSelector,
             DriveForDistanceCommand driveForDistance, XPropertyManager propMan) {
         super(autonomousCommandSelector);
