@@ -18,6 +18,7 @@ import competition.subsystems.agitator.commands.StopAgitatorCommand;
 import competition.subsystems.autonomous.DriveToBoilerUsingHeuristicsWithVisionCommandGroup;
 import competition.subsystems.autonomous.DriveToBoilerWithTriangleVisionCommandGroup;
 import competition.subsystems.autonomous.selection.DisableAutonomousCommand;
+import competition.subsystems.autonomous.selection.SetupBreakBaselineCommand;
 import competition.subsystems.autonomous.selection.SetupDriveToHopperThenBoilerCommand;
 import competition.subsystems.climbing.commands.RopeAlignerCommand;
 import competition.subsystems.collector.CollectorSubsystem.Power;
@@ -191,8 +192,14 @@ public class OperatorCommandMap {
     public void setupAutonomous(
             OperatorInterface oi,
             DisableAutonomousCommand disableCommand,
-            SetupDriveToHopperThenBoilerCommand driveToBoiler)
+            SetupDriveToHopperThenBoilerCommand driveToBoiler,
+            SetupBreakBaselineCommand breakBaseLine)
     {
+        oi.leftButtons.getifAvailable(8).whenPressed(breakBaseLine);
+        oi.leftButtons.getifAvailable(9).whenPressed(driveToBoiler);
+        oi.rightButtons.getifAvailable(8).whenPressed(disableCommand);
+        
+        breakBaseLine.includeOnSmartDashboard("Break Base Line");
         disableCommand.includeOnSmartDashboard("Disable Autonomous");
         driveToBoiler.includeOnSmartDashboard("Run DriveToBoiler Autonomous Command");
     }
