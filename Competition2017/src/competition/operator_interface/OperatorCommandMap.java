@@ -10,13 +10,10 @@ import xbot.common.controls.sensors.XXboxController.XboxButton;
 import xbot.common.properties.DoubleProperty;
 
 import competition.subsystems.climbing.commands.AscendClimbingCommand;
-import competition.subsystems.climbing.commands.DescendClimbingCommand;
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.EjectAgitatorCommand;
 import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
-import competition.subsystems.agitator.commands.StopAgitatorCommand;
 import competition.subsystems.autonomous.DriveToBoilerUsingHeuristicsWithVisionCommandGroup;
-import competition.subsystems.autonomous.DriveToBoilerWithTriangleVisionCommandGroup;
 import competition.subsystems.autonomous.selection.DisableAutonomousCommand;
 import competition.subsystems.autonomous.selection.SetupBreakBaselineCommand;
 import competition.subsystems.autonomous.selection.SetupDriveToHopperThenBoilerCommand;
@@ -32,13 +29,15 @@ import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
+import competition.subsystems.shoot_fuel.LeftFeedingCommandGroup;
 import competition.subsystems.shoot_fuel.LeftShootFuelCommandGroup;
+import competition.subsystems.shoot_fuel.RightFeedingCommandGroup;
 import competition.subsystems.shoot_fuel.RightShootFuelCommandGroup;
 import competition.subsystems.shoot_fuel.ShootFuelCommandGroup;
-import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
-import competition.subsystems.shooter_belt.commands.RunShooterBeltPowerCommand;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
+import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelUsingPowerCommand;
+import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
 
 @Singleton
 public class OperatorCommandMap {
@@ -79,6 +78,19 @@ public class OperatorCommandMap {
                 shooterWheelsManagerSubsystem.getLeftShooter());
         RunShooterWheelUsingPowerCommand runRightPower = new RunShooterWheelUsingPowerCommand(
                 shooterWheelsManagerSubsystem.getRightShooter());
+        
+        RunShooterWheelsForRangeCommand runLeftWheel = 
+                new RunShooterWheelsForRangeCommand(
+                        TypicalShootingPosition.FlushToBoiler,
+                        shooterWheelsManagerSubsystem.getLeftShooter());
+        
+        RunShooterWheelsForRangeCommand runRightWheel = 
+                new RunShooterWheelsForRangeCommand(
+                        TypicalShootingPosition.FlushToBoiler,
+                        shooterWheelsManagerSubsystem.getRightShooter());
+        
+        oi.controller.getXboxButton(XboxButton.LeftTrigger).whileHeld(runLeftWheel);
+        oi.controller.getXboxButton(XboxButton.RightTrigger).whileHeld(runRightWheel);
         
         runLeftPower.includeOnSmartDashboard("Run shooter wheel using power - left");
         runRightPower.includeOnSmartDashboard("Run shooter wheel using power - right");
@@ -133,8 +145,6 @@ public class OperatorCommandMap {
         ejectLeft.includeOnSmartDashboard("Left Agitator Eject");
         ejectRight.includeOnSmartDashboard("Right Agitator Eject");
         
-        oi.controller.getXboxButton(XboxButton.LeftBumper).whileHeld(intakeLeft);
-        oi.controller.getXboxButton(XboxButton.RightBumper).whileHeld(intakeRight);
         
         oi.controller.getXboxButton(XboxButton.LeftStick).whileHeld(ejectLeft);
         oi.controller.getXboxButton(XboxButton.RightStick).whileHeld(ejectRight);
@@ -216,13 +226,19 @@ public class OperatorCommandMap {
             RightShootFuelCommandGroup shootRightFuel,
             LeftShootFuelCommandGroup shootLeft,
             RightShootFuelCommandGroup shootRight)
-    {
-
-        oi.controller.getXboxButton(XboxButton.LeftTrigger).whileHeld(shootLeft);
-        oi.controller.getXboxButton(XboxButton.RightTrigger).whileHeld(shootRight);
-        
+    {        
         oi.operatorPanelButtons.getifAvailable(1).whileHeld(shootFuel);
         oi.operatorPanelButtons.getifAvailable(10).whileHeld(shootLeftFuel);
         oi.operatorPanelButtons.getifAvailable(11).whileHeld(shootRightFuel);
+    }
+    
+    @Inject
+    public void setupFeedingCommandGroup(
+            OperatorInterface oi,
+            LeftFeedingCommandGroup feedLeft,
+            RightFeedingCommandGroup feedRight) {
+
+        oi.controller.getXboxButton(XboxButton.LeftBumper).whileHeld(feedLeft);
+        oi.controller.getXboxButton(XboxButton.RightBumper).whileHeld(feedRight);
     }
 }
