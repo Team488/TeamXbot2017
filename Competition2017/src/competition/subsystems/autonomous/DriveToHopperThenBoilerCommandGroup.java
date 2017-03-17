@@ -25,6 +25,7 @@ public class DriveToHopperThenBoilerCommandGroup extends CommandGroup {
         distanceBackFromHopperToTurningPoint = propManager
                 .createPersistentProperty("Distance Back From Hopper To Turning Point", -43.25);
 
+        
         // drive to hopper from wall
         DriveToHopperCommandGroup driveToHopper = driveToHopperCommandGroupProvider.get();
         this.addSequential(driveToHopper);

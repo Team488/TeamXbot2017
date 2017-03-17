@@ -3,26 +3,29 @@ package competition.subsystems.autonomous.selection;
 import com.google.inject.Inject;
 
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
+import competition.subsystems.pose.PoseSubsystem;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 public class SetupBreakBaselineCommand extends BaseAutonomousCommandSetter {
 
     public final DriveForDistanceCommand breakBaselineAuto;
-    // distance to break baseline from a position with both back wheels on the wall
-    private DoubleProperty distanceFromWallToBaseline;
-
+    private PoseSubsystem poseSubsystem;
+    
     @Inject
-    public SetupBreakBaselineCommand(AutonomousCommandSelector autonomousCommandSelector,
-            DriveForDistanceCommand driveForDistance, XPropertyManager propMan) {
+    public SetupBreakBaselineCommand(
+            AutonomousCommandSelector autonomousCommandSelector,
+            DriveForDistanceCommand driveForDistance,
+            PoseSubsystem poseSubsystem,
+            XPropertyManager propMan) {
         super(autonomousCommandSelector);
-        distanceFromWallToBaseline = propMan.createPersistentProperty("distance from wall to break baseline in inches", 96);
         this.breakBaselineAuto = driveForDistance;
-        breakBaselineAuto.setDeltaDistance(distanceFromWallToBaseline);
+        this.poseSubsystem = poseSubsystem;
     }
 
     @Override
     public void initialize() {
+        breakBaselineAuto.setDeltaDistance(poseSubsystem.getDistanceFromWallToBaseline());
         this.autonomousCommandSelector.setCurrentAutonomousCommand(breakBaselineAuto);
     }
 
