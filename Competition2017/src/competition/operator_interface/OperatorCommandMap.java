@@ -15,6 +15,7 @@ import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.EjectAgitatorCommand;
 import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
 import competition.subsystems.autonomous.selection.DisableAutonomousCommand;
+import competition.subsystems.autonomous.selection.SetupBreakBaselineCommand;
 import competition.subsystems.autonomous.selection.SetupDriveToHopperThenBoilerCommand;
 import competition.subsystems.climbing.commands.RopeAlignerCommand;
 import competition.subsystems.collector.CollectorSubsystem.Power;
@@ -86,7 +87,7 @@ public class OperatorCommandMap {
            ShiftGearCommand shiftLow, 
            ShiftGearCommand shiftHigh)
    {
-       shiftLow.setGear(Gear.LOW_GEAR);
+       shiftLow.setGear(Gear.LOW_GEAR); 
        shiftHigh.setGear(Gear.HIGH_GEAR);
        shiftLow.includeOnSmartDashboard("Shift low");
        shiftHigh.includeOnSmartDashboard("Shift high");
@@ -171,8 +172,14 @@ public class OperatorCommandMap {
     public void setupAutonomous(
             OperatorInterface oi,
             DisableAutonomousCommand disableCommand,
-            SetupDriveToHopperThenBoilerCommand driveToBoiler)
+            SetupDriveToHopperThenBoilerCommand driveToBoiler,
+            SetupBreakBaselineCommand breakBaseLine)
     {
+        oi.leftButtons.getifAvailable(8).whenPressed(breakBaseLine);
+        oi.leftButtons.getifAvailable(9).whenPressed(driveToBoiler);
+        oi.rightButtons.getifAvailable(8).whenPressed(disableCommand);
+        
+        breakBaseLine.includeOnSmartDashboard("Break Base Line");
         disableCommand.includeOnSmartDashboard("Disable Autonomous");
         driveToBoiler.includeOnSmartDashboard("Run DriveToBoiler Autonomous Command");
     }
