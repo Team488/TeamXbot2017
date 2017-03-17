@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 import xbot.common.command.BaseCommand;
 
 public abstract class BaseAutonomousCommandSetter extends BaseCommand {
-    final AutonomousCommandSelector autonomousCommandSelector;
+    protected final AutonomousCommandSelector autonomousCommandSelector;
     
     @Inject
     public BaseAutonomousCommandSetter(AutonomousCommandSelector autonomousCommandSelector) {
