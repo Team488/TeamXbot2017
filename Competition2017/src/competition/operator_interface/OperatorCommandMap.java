@@ -14,6 +14,9 @@ import competition.subsystems.climbing.commands.DescendClimbingCommand;
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.EjectAgitatorCommand;
 import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
+import competition.subsystems.agitator.commands.StopAgitatorCommand;
+import competition.subsystems.autonomous.DriveToBoilerUsingHeuristicsWithVisionCommandGroup;
+import competition.subsystems.autonomous.DriveToBoilerWithTriangleVisionCommandGroup;
 import competition.subsystems.autonomous.selection.DisableAutonomousCommand;
 import competition.subsystems.autonomous.selection.SetupBreakBaselineCommand;
 import competition.subsystems.autonomous.selection.SetupDriveToHopperThenBoilerCommand;
@@ -21,6 +24,7 @@ import competition.subsystems.climbing.commands.RopeAlignerCommand;
 import competition.subsystems.collector.CollectorSubsystem.Power;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
+import competition.subsystems.vision.commands.RotateRobotToBoilerCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.DriveToPointUsingHeuristicsCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
@@ -166,6 +170,24 @@ public class OperatorCommandMap {
         driveUsingHeuristics.includeOnSmartDashboard();
     }
     
+    @Inject
+    public void setupVisionCommands(
+            OperatorInterface oi,
+            RotateRobotToBoilerCommand rotateCommand,
+            DriveToBoilerUsingHeuristicsWithVisionCommandGroup driveToBoilerCommand,
+            SetRobotHeadingCommand setHeadingCommand,
+            RotateToHeadingCommand rotateToHeadingCommand
+    )   {
+        oi.leftButtons.getifAvailable(2).whileHeld(rotateCommand);
+        oi.leftButtons.getifAvailable(3).whileHeld(driveToBoilerCommand);
+        
+        setHeadingCommand.setHeadingToApply(68);
+        setHeadingCommand.includeOnSmartDashboard("Set heading to boiler parallel (68)");
+        
+        rotateToHeadingCommand.setTargetHeading(248);
+        oi.leftButtons.getifAvailable(10).whileHeld(rotateToHeadingCommand);
+    }
+
     @Inject
     public void setupAutonomous(
             OperatorInterface oi,
