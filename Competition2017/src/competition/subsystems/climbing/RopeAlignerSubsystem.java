@@ -19,7 +19,7 @@ public class RopeAlignerSubsystem extends BaseSubsystem {
     public RopeAlignerSubsystem(WPIFactory factory, XPropertyManager propManager) {
         log.info("Creating");
         this.intakeMotor = factory.getCANTalonSpeedController(27);
-        this.intakeMotor.setInverted(true);
+        this.intakeMotor.setInverted(false);
         this.powerToMotor = propManager.createPersistentProperty("Rope aligner motor power", 0.1);
     }
     

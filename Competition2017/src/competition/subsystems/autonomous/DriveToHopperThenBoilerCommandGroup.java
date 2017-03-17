@@ -7,6 +7,7 @@ import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
+import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
 public class DriveToHopperThenBoilerCommandGroup extends CommandGroup {
     private DoubleProperty distanceFromTurningPointToBoiler;
