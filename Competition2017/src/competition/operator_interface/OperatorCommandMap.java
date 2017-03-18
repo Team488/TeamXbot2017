@@ -67,7 +67,7 @@ public class OperatorCommandMap {
         
         oi.controller.getXboxButton(XboxButton.Start).whileHeld(aligner);
         
-        oi.operatorPanelButtons.getifAvailable(4).whileHeld(ascend);
+        //oi.operatorPanelButtons.getifAvailable(4).whileHeld(ascend);
     }
 
     @Inject
@@ -128,8 +128,8 @@ public class OperatorCommandMap {
         oi.controller.getXboxButton(XboxButton.B).whileHeld(intakeLowPower);
         oi.controller.getXboxButton(XboxButton.Y).whileHeld(eject);
         
-        oi.operatorPanelButtons.getifAvailable(2).whileHeld(intakeLowPower);
-        oi.operatorPanelButtons.getifAvailable(3).whileHeld(eject);
+        //oi.operatorPanelButtons.getifAvailable(2).whileHeld(intakeLowPower);
+        //oi.operatorPanelButtons.getifAvailable(3).whileHeld(eject);
     }
 
     @Inject
@@ -154,10 +154,10 @@ public class OperatorCommandMap {
         oi.controller.getXboxButton(XboxButton.LeftStick).whileHeld(unjamLeft);
         oi.controller.getXboxButton(XboxButton.RightStick).whileHeld(unjamRight);
         
-        oi.operatorPanelButtons.getifAvailable(9).whileHeld(intakeLeft);
-        oi.operatorPanelButtons.getifAvailable(8).whileHeld(ejectLeft);
-        oi.operatorPanelButtons.getifAvailable(7).whileHeld(intakeRight);  
-        oi.operatorPanelButtons.getifAvailable(6).whileHeld(ejectRight);  
+        //oi.operatorPanelButtons.getifAvailable(9).whileHeld(intakeLeft);
+        //oi.operatorPanelButtons.getifAvailable(8).whileHeld(ejectLeft);
+        //oi.operatorPanelButtons.getifAvailable(7).whileHeld(intakeRight);  
+        //oi.operatorPanelButtons.getifAvailable(6).whileHeld(ejectRight);  
     }
     
     @Inject
@@ -235,9 +235,9 @@ public class OperatorCommandMap {
             LeftShootFuelCommandGroup shootLeft,
             RightShootFuelCommandGroup shootRight)
     {        
-        oi.operatorPanelButtons.getifAvailable(1).whileHeld(shootFuel);
-        oi.operatorPanelButtons.getifAvailable(10).whileHeld(shootLeftFuel);
-        oi.operatorPanelButtons.getifAvailable(11).whileHeld(shootRightFuel);
+        //oi.operatorPanelButtons.getifAvailable(1).whileHeld(shootFuel);
+        //oi.operatorPanelButtons.getifAvailable(10).whileHeld(shootLeftFuel);
+        //oi.operatorPanelButtons.getifAvailable(11).whileHeld(shootRightFuel);
     }
     
     @Inject
