@@ -55,7 +55,7 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         
         breakBaselineAuto = driveForDistanceProvider.get();
         breakBaselineAuto.setDeltaDistance(poseSubsystem.getDistanceFromWallToBaseline());
-        
+        this.addSequential(breakBaselineAuto, poseSubsystem.getBreakBaselineMaximumTime());
     }
     
     public void setAlliance(Alliance color) {
