@@ -38,9 +38,12 @@ import competition.subsystems.shoot_fuel.ShootFuelCommandGroup;
 import competition.subsystems.shoot_fuel.UnjamLeftCommandGroup;
 import competition.subsystems.shoot_fuel.UnjamRightCommandGroup;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
+import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelUsingPowerCommand;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
+import competition.subsystems.shooter_wheel.commands.TrimShooterWheelCommand;
+import competition.subsystems.shooter_wheel.commands.TrimShooterWheelCommand.TrimDirection;
 
 @Singleton
 public class OperatorCommandMap {
@@ -75,12 +78,27 @@ public class OperatorCommandMap {
             OperatorInterface oi,
             ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem,
             LeftShootFuelCommandGroup shootLeft,
-            RightShootFuelCommandGroup shootRight)
+            RightShootFuelCommandGroup shootRight,
+            XPropertyManager propMan
+            )
     {
+        ShooterWheelSubsystem leftWheel = shooterWheelsManagerSubsystem.getLeftShooter();
+        ShooterWheelSubsystem rightWheel = shooterWheelsManagerSubsystem.getRightShooter();
+        
         RunShooterWheelUsingPowerCommand runLeftPower = new RunShooterWheelUsingPowerCommand(
-                shooterWheelsManagerSubsystem.getLeftShooter());
+                leftWheel);
         RunShooterWheelUsingPowerCommand runRightPower = new RunShooterWheelUsingPowerCommand(
-                shooterWheelsManagerSubsystem.getRightShooter());
+                rightWheel);
+        
+        TrimShooterWheelCommand leftUp = new TrimShooterWheelCommand(leftWheel, propMan);
+        leftUp.setTrimDirection(TrimDirection.Up);
+        TrimShooterWheelCommand rightUp = new TrimShooterWheelCommand(rightWheel, propMan);
+        rightUp.setTrimDirection(TrimDirection.Up);
+        
+        TrimShooterWheelCommand leftDown = new TrimShooterWheelCommand(leftWheel, propMan);
+        leftUp.setTrimDirection(TrimDirection.Down);
+        TrimShooterWheelCommand rightDown = new TrimShooterWheelCommand(rightWheel, propMan);
+        rightUp.setTrimDirection(TrimDirection.Down);
         
         RunShooterWheelsForRangeCommand runLeftWheel = 
                 new RunShooterWheelsForRangeCommand(
@@ -97,6 +115,12 @@ public class OperatorCommandMap {
         
         runLeftPower.includeOnSmartDashboard("Run shooter wheel using power - left");
         runRightPower.includeOnSmartDashboard("Run shooter wheel using power - right");
+        
+        oi.operatorPanelButtons.getifAvailable(9).whenPressed(leftUp);
+        oi.operatorPanelButtons.getifAvailable(8).whenPressed(leftDown);
+        
+        oi.operatorPanelButtons.getifAvailable(7).whenPressed(rightUp);
+        oi.operatorPanelButtons.getifAvailable(6).whenPressed(rightDown);
     }
     
    @Inject
