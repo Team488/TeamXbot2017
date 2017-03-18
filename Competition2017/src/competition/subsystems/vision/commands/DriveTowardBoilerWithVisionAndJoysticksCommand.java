@@ -30,7 +30,7 @@ public class DriveTowardBoilerWithVisionAndJoysticksCommand extends BaseCommand 
         this.visionSubsystem = visionSubsystem;
         this.driveSubsystem = driveSubsystem;
         
-        rotationPid = pidFactory.createPIDManager("Robot vision rotation", 0.9, 0, 0, 0, 1, -1, 0.002, 0.002, 0);
+        rotationPid = pidFactory.createPIDManager("Robot vision rotation while driving", 0.9, 0, 0, 0, 1, -1, 0.002, 0.002, 0);
         
         this.requires(this.driveSubsystem);
     }
