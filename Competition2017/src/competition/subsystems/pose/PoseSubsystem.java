@@ -7,6 +7,7 @@ import competition.subsystems.drive.DriveSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import xbot.common.injection.wpi_factories.WPIFactory;
+import xbot.common.math.ContiguousHeading;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
@@ -20,6 +21,8 @@ public class PoseSubsystem extends BasePoseSubsystem {
     public static final double BLUE_ALLIANCE_HEADING_TO_FACE_HOPPER = 180.0;
     
     private final DoubleProperty distanceToWallFromBaseline;
+    private final DoubleProperty headingFacingBlueBoiler;
+    private final DoubleProperty headingFacingRedBoiler;
         
     @Inject
     public PoseSubsystem(WPIFactory factory, XPropertyManager propManager, DriveSubsystem drive) {
@@ -27,6 +30,8 @@ public class PoseSubsystem extends BasePoseSubsystem {
         this.drive = drive;
         
         distanceToWallFromBaseline = propManager.createPersistentProperty("Distance to wall from baseline", 96.0);
+        headingFacingBlueBoiler = propManager.createPersistentProperty("Heading facing blue boiler", -135);
+        headingFacingRedBoiler = propManager.createPersistentProperty("Heading facing red boiler", -45);
     }
 
     @Override
@@ -41,6 +46,17 @@ public class PoseSubsystem extends BasePoseSubsystem {
     
     public Alliance getAllianceColor() {
         return DriverStation.getInstance().getAlliance();
+    }
+    
+    public ContiguousHeading getHeadingFacingBoiler() {
+        Alliance allianceColor = getAllianceColor();
+        
+        if(allianceColor == Alliance.Blue) {
+            return new ContiguousHeading(headingFacingBlueBoiler.get());
+        }
+        else { // Red is the default alliance if data is unavailable
+            return new ContiguousHeading(headingFacingRedBoiler.get());
+        }
     }
     
     public double getDistanceFromWallToBaseline() {

@@ -7,6 +7,7 @@ import competition.subsystems.drive.commands.CalculateDistanceOfBoilerParallelCo
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.DriveInfinitelyCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
+import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.vision.VisionSubsystem;
 import competition.subsystems.vision.commands.RotateRobotToBoilerCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -14,19 +15,18 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 public class DriveToBoilerWithTriangleVisionCommandGroup extends CommandGroup{
-    private final DoubleProperty angleToTurnTowardsBoiler;
     private final DoubleProperty boilerApproachPower;
 
     @Inject
     public DriveToBoilerWithTriangleVisionCommandGroup(
             XPropertyManager propMan,
             VisionSubsystem visionSubsystem,
+            PoseSubsystem poseSubsystem,
             Provider<RotateToHeadingCommand> rotateToHeadingProvider,
             DriveForDistanceCommand driveAlongParallel,
             Provider<RotateRobotToBoilerCommand> rotateRobotToBoilerProvider,
             CalculateDistanceOfBoilerParallelCommand calculateParallelDistance,
             DriveInfinitelyCommand infinitelyDriveToBoiler){    
-        angleToTurnTowardsBoiler = propMan.createPersistentProperty("Vision boiler scan start angle", 70);
         boilerApproachPower = propMan.createPersistentProperty("Vision boiler approach power", 0.3);
         
         // TODO: Rotate 180 when necessary to ensure we drive forward
@@ -38,16 +38,16 @@ public class DriveToBoilerWithTriangleVisionCommandGroup extends CommandGroup{
         
         this.addSequential(rotateRobotToBoiler1);
         
-        calculateParallelDistance.setParallelAngleSupplier(() -> visionSubsystem.getHeadingParallelToBoiler());
+        calculateParallelDistance.setParallelAngleSupplier(() -> poseSubsystem.getHeadingFacingBoiler().shiftValue(90).getValue());
         calculateParallelDistance.setChildDistanceCommand(driveAlongParallel);
         this.addSequential(calculateParallelDistance);
 
-        rotateParallelToBoiler.setTargetHeadingSupplier(() -> visionSubsystem.getHeadingParallelToBoiler());
+        rotateParallelToBoiler.setTargetHeadingSupplier(() -> poseSubsystem.getHeadingFacingBoiler().shiftValue(90).getValue());
         this.addSequential(rotateParallelToBoiler);
 
         this.addSequential(driveAlongParallel);
 
-        rotateToTurnTowardsBoilerCommand.setTargetHeadingSupplier(() -> angleToTurnTowardsBoiler.get() + visionSubsystem.getHeadingParallelToBoiler());
+        rotateToTurnTowardsBoilerCommand.setTargetHeadingSupplier(() -> poseSubsystem.getHeadingFacingBoiler().getValue());
         this.addSequential(rotateToTurnTowardsBoilerCommand);
         
         this.addSequential(rotateRobotToBoiler2);

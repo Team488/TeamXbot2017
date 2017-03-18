@@ -22,6 +22,7 @@ import competition.subsystems.climbing.commands.RopeAlignerCommand;
 import competition.subsystems.collector.CollectorSubsystem.Power;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
+import competition.subsystems.vision.commands.DriveTowardBoilerWithVisionAndJoysticksCommand;
 import competition.subsystems.vision.commands.RotateRobotToBoilerCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.DriveToPointUsingHeuristicsCommand;
@@ -185,18 +186,21 @@ public class OperatorCommandMap {
     public void setupVisionCommands(
             OperatorInterface oi,
             RotateRobotToBoilerCommand rotateCommand,
+            DriveTowardBoilerWithVisionAndJoysticksCommand driverControlledBoilerApproachCommand,
             DriveToBoilerUsingHeuristicsWithVisionCommandGroup driveToBoilerCommand,
-            SetRobotHeadingCommand setHeadingCommand,
+            SetRobotHeadingCommand setBlueHeadingCommand,
+            SetRobotHeadingCommand setRedHeadingCommand,
             RotateToHeadingCommand rotateToHeadingCommand
     )   {
         oi.leftButtons.getifAvailable(2).whileHeld(rotateCommand);
-        oi.leftButtons.getifAvailable(3).whileHeld(driveToBoilerCommand);
-        
-        setHeadingCommand.setHeadingToApply(68);
-        setHeadingCommand.includeOnSmartDashboard("Set heading to boiler parallel (68)");
-        
-        rotateToHeadingCommand.setTargetHeading(248);
-        oi.leftButtons.getifAvailable(10).whileHeld(rotateToHeadingCommand);
+        oi.leftButtons.getifAvailable(3).whileHeld(driverControlledBoilerApproachCommand);
+        oi.leftButtons.getifAvailable(10).whileHeld(driveToBoilerCommand);
+
+        setBlueHeadingCommand.setHeadingToApply(-135);
+        setBlueHeadingCommand.includeOnSmartDashboard("Set heading to blue boiler orientation (-135)");
+
+        setRedHeadingCommand.setHeadingToApply(-45);
+        setRedHeadingCommand.includeOnSmartDashboard("Set heading to red boiler orientation (-45)");
     }
 
     @Inject

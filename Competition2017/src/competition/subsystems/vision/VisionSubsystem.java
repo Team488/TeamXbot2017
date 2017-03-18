@@ -26,8 +26,6 @@ import edu.wpi.first.wpilibj.Timer;
 @Singleton
 public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource {
     private static Logger log = Logger.getLogger(VisionSubsystem.class);
-
-    private final DoubleProperty angleOfBoilerParallel;
     
     private static final String targetSnapshotPacketType = "trackedTargetsSnapshot";
     private static final String trackedLiftPegsProperty = "trackedLiftPegs";
@@ -61,14 +59,9 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
         
         connectionTimeoutThreshold = propManager.createPersistentProperty("Vision connection timeout threshold", 1);
         connectionReportInterval = propManager.createPersistentProperty("Vision telemetry report interval", 20);
-        angleOfBoilerParallel = propManager.createPersistentProperty("Angle of line parallel to boiler", 68);
         
         trackedBoilerXOffsetTelemetry = propManager.createEphemeralProperty("Tracked boiler X offset", 0);
         trackedBoilerDistanceTelemetry = propManager.createEphemeralProperty("Tracked boiler distance", 0);
-    }
-
-    public double getHeadingParallelToBoiler() {
-        return angleOfBoilerParallel.get();
     }
     
     public DetectedLiftPeg getTrackedLiftPeg() {

@@ -32,7 +32,7 @@ public class CalculateDirectBoilerDriveDeltaCommand extends BaseCommand{
         }
         else {
             double distanceToBoiler = boiler.distance;
-            double deltaAngle = pose.getCurrentHeading().difference(vision.getHeadingParallelToBoiler() - 90);
+            double deltaAngle = pose.getCurrentHeading().difference(pose.getHeadingFacingBoiler());
             
             driveCommand.setDeltaBasedTravel(0, distanceToBoiler, deltaAngle);
             log.info("Reported distance to boiler: " + distanceToBoiler + "; calculated delta angle: " + deltaAngle);
