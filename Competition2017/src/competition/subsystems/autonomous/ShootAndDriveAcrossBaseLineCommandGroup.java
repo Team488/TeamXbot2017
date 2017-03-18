@@ -41,7 +41,7 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         // Default to Red alliance, this can be changed later in setAlliance()
         this.setInitialHeading.setHeadingToApply(redAllianceStartingHeading.get());        
         
-        distanceToBackUp = propManager.createPersistentProperty("Distance to back up after shooting", -6);
+        distanceToBackUp = propManager.createPersistentProperty("Reverse distance for shoot then baseline", -6);
         
         shootFuel = shootFuelCommandGroup;
         this.addSequential(shootFuel);
