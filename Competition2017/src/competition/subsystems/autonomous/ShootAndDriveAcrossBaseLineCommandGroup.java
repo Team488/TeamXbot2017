@@ -49,6 +49,8 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         driveBackABit = driveForDistanceProvider.get();
         driveBackABit.setDeltaDistance(distanceToBackUp);
         
+        this.addSequential(driveBackABit, 0.25);
+        
         //aim away from driver station (towards baseline)
         rotateToBaseline.setTargetHeading(90);
         this.addSequential(rotateToBaseline);
