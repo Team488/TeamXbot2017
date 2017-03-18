@@ -33,11 +33,13 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         PoseSubsystem poseSubsystem,
         ShootFuelForNSecondsCommandGroup shootFuelCommandGroup){
         
-        this.setInitialHeading = setHeading;
-        this.addSequential(setInitialHeading);
-        
         redAllianceStartingHeading =  propManager.createPersistentProperty("Red shooting starting heading", -5);
         blueAllianceStartingHeading = propManager.createPersistentProperty("Blue shooting starting heading", -175);
+        
+        this.setInitialHeading = setHeading;
+        this.addSequential(setInitialHeading);
+        // Default to Red alliance, this can be changed later in setAlliance()
+        this.setInitialHeading.setHeadingToApply(redAllianceStartingHeading.get());        
         
         distanceToBackUp = propManager.createPersistentProperty("Distance to back up after shooting", -6);
         
@@ -54,7 +56,8 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         breakBaselineAuto = driveForDistanceProvider.get();
         breakBaselineAuto.setDeltaDistance(poseSubsystem.getDistanceFromWallToBaseline());
         
-     }
+    }
+    
     public void setAlliance(Alliance color) {
         if (color == Alliance.Red) {
             setInitialHeading.setHeadingToApply(redAllianceStartingHeading.get());
@@ -63,8 +66,3 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         }
     }
 }
-
-
-
-
-
