@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.pose.PoseSubsystem;
-import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 public class SetupBreakBaselineCommand extends BaseAutonomousCommandSetter {
@@ -25,6 +24,7 @@ public class SetupBreakBaselineCommand extends BaseAutonomousCommandSetter {
 
     @Override
     public void initialize() {
+        log.info("Initializing");
         breakBaselineAuto.setDeltaDistance(poseSubsystem.getDistanceFromWallToBaseline());
         this.autonomousCommandSelector.setCurrentAutonomousCommand(breakBaselineAuto);
     }
