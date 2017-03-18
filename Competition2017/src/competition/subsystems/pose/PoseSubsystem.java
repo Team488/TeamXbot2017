@@ -23,6 +23,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
     private final DoubleProperty distanceToWallFromBaseline;
     private final DoubleProperty headingFacingBlueBoiler;
     private final DoubleProperty headingFacingRedBoiler;
+    private final DoubleProperty breakBaselineMaxTime;
         
     @Inject
     public PoseSubsystem(WPIFactory factory, XPropertyManager propManager, DriveSubsystem drive) {
@@ -32,6 +33,8 @@ public class PoseSubsystem extends BasePoseSubsystem {
         distanceToWallFromBaseline = propManager.createPersistentProperty("Distance to wall from baseline", 96.0);
         headingFacingBlueBoiler = propManager.createPersistentProperty("Heading facing blue boiler", -135);
         headingFacingRedBoiler = propManager.createPersistentProperty("Heading facing red boiler", -45);
+        
+        breakBaselineMaxTime = propManager.createPersistentProperty("Break baseline maximum time", 3.0);
     }
 
     @Override
@@ -61,6 +64,10 @@ public class PoseSubsystem extends BasePoseSubsystem {
     
     public double getDistanceFromWallToBaseline() {
         return distanceToWallFromBaseline.get();
+    }
+    
+    public double getBreakBaselineMaximumTime() {
+        return breakBaselineMaxTime.get();
     }
     
 }

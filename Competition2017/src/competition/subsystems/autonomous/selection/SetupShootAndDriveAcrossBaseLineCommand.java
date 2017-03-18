@@ -25,6 +25,7 @@ public class SetupShootAndDriveAcrossBaseLineCommand extends BaseAutonomousComma
         log.info("Initializing");
         log.info("Setting alliance to " + pose.getAllianceColor() + " alliance");
         auto.setAlliance(pose.getAllianceColor());
+        this.autonomousCommandSelector.setCurrentAutonomousCommand(auto);
     }
 
 }
