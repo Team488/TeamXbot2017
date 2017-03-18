@@ -35,6 +35,8 @@ import competition.subsystems.shoot_fuel.LeftShootFuelCommandGroup;
 import competition.subsystems.shoot_fuel.RightFeedingCommandGroup;
 import competition.subsystems.shoot_fuel.RightShootFuelCommandGroup;
 import competition.subsystems.shoot_fuel.ShootFuelCommandGroup;
+import competition.subsystems.shoot_fuel.UnjamLeftCommandGroup;
+import competition.subsystems.shoot_fuel.UnjamRightCommandGroup;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelUsingPowerCommand;
@@ -133,7 +135,9 @@ public class OperatorCommandMap {
     @Inject
     public void setupAgitatorCommands(
             OperatorInterface oi,
-            AgitatorsManagerSubsystem agitatorManagerSubsystem)
+            AgitatorsManagerSubsystem agitatorManagerSubsystem,
+            UnjamLeftCommandGroup unjamLeft,
+            UnjamRightCommandGroup unjamRight)
     {
         IntakeAgitatorCommand intakeLeft = new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator());
         IntakeAgitatorCommand intakeRight = new IntakeAgitatorCommand(agitatorManagerSubsystem.getRightAgitator());
@@ -147,8 +151,8 @@ public class OperatorCommandMap {
         ejectRight.includeOnSmartDashboard("Right Agitator Eject");
         
         
-        oi.controller.getXboxButton(XboxButton.LeftStick).whileHeld(ejectLeft);
-        oi.controller.getXboxButton(XboxButton.RightStick).whileHeld(ejectRight);
+        oi.controller.getXboxButton(XboxButton.LeftStick).whileHeld(unjamLeft);
+        oi.controller.getXboxButton(XboxButton.RightStick).whileHeld(unjamRight);
         
         oi.operatorPanelButtons.getifAvailable(9).whileHeld(intakeLeft);
         oi.operatorPanelButtons.getifAvailable(8).whileHeld(ejectLeft);
