@@ -3,10 +3,12 @@ package competition.subsystems.autonomous;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import competition.subsystems.collector.commands.StopCollectorCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.shoot_fuel.ShootFuelForNSecondsCommandGroup;
+import competition.subsystems.shoot_fuel.StopAllShootingCommandGroup;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import xbot.common.properties.DoubleProperty;
@@ -31,7 +33,8 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         Provider <DriveForDistanceCommand> driveForDistanceProvider,
         RotateToHeadingCommand rotateToBaseline,
         PoseSubsystem poseSubsystem,
-        ShootFuelForNSecondsCommandGroup shootFuelCommandGroup){
+        ShootFuelForNSecondsCommandGroup shootFuelCommandGroup,
+        StopAllShootingCommandGroup stopFiring) {
         
         redAllianceStartingHeading =  propManager.createPersistentProperty("Red shooting starting heading", -5);
         blueAllianceStartingHeading = propManager.createPersistentProperty("Blue shooting starting heading", -175);
@@ -50,6 +53,7 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         driveBackABit.setDeltaDistance(distanceToBackUp);
         
         this.addSequential(driveBackABit, 0.25);
+        this.addParallel(stopFiring, 0.25);
         
         //aim away from driver station (towards baseline)
         rotateToBaseline.setTargetHeading(90);
