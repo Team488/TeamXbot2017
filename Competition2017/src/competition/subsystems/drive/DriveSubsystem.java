@@ -64,9 +64,9 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         leftDrive.createTelemetryProperties("Left primary", propManager);
         leftDriveFollower.createTelemetryProperties("Left follower", propManager);
         
-        this.rightDrive = factory.getCANTalonSpeedController(21);
+        this.rightDrive = factory.getCANTalonSpeedController(20);
         this.rightDrive.reverseSensor(true);
-        this.rightDriveFollower = factory.getCANTalonSpeedController(20);
+        this.rightDriveFollower = factory.getCANTalonSpeedController(21);
         configMotorTeam(rightDrive, rightDriveFollower);
         rightDrive.createTelemetryProperties("Right primary", propManager);
         rightDriveFollower.createTelemetryProperties("Right follower", propManager);
