@@ -221,6 +221,7 @@ public class OperatorCommandMap {
             RotateToHeadingCommand rotateToHeadingCommand
     )   {
         oi.leftButtons.getifAvailable(2).whileHeld(rotateCommand);
+        driverControlledBoilerApproachCommand.setControlJoystick(oi.leftJoystick);
         oi.leftButtons.getifAvailable(3).whileHeld(driverControlledBoilerApproachCommand);
         oi.leftButtons.getifAvailable(10).whileHeld(driveToBoilerCommand);
 
