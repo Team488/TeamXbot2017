@@ -57,7 +57,7 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         
         //aim away from driver station (towards baseline)
         rotateToBaseline.setTargetHeading(90);
-        this.addSequential(rotateToBaseline);
+        this.addSequential(rotateToBaseline, 1.2);
         
         breakBaselineAuto = driveForDistanceProvider.get();
         breakBaselineAuto.setDeltaDistance(poseSubsystem.getDistanceFromWallToBaseline());
