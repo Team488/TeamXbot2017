@@ -19,6 +19,7 @@ import json.JSONObject;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.PeriodicDataSource;
 import xbot.common.injection.wpi_factories.WPIFactory;
+import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 import edu.wpi.first.wpilibj.Timer;
@@ -46,6 +47,8 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
     
     private DoubleProperty trackedBoilerXOffsetTelemetry;
     private DoubleProperty trackedBoilerDistanceTelemetry;
+    
+    private BooleanProperty isGettingJetsonData;
 
     @Inject
     public VisionSubsystem(WPIFactory factory, XPropertyManager propManager, OffboardCommunicationServer server) {
@@ -62,6 +65,8 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
         
         trackedBoilerXOffsetTelemetry = propManager.createEphemeralProperty("Tracked boiler X offset", 0);
         trackedBoilerDistanceTelemetry = propManager.createEphemeralProperty("Tracked boiler distance", 0);
+        
+        isGettingJetsonData = propManager.createEphemeralProperty("Is getting Jetson data", false);
     }
     
     public DetectedLiftPeg getTrackedLiftPeg() {
@@ -158,6 +163,7 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
             if(!isConnected) {
                 log.info("Connected");
                 isConnected = true;
+                isGettingJetsonData.set(true);
             }
             
             double timeSinceLastLog = Timer.getFPGATimestamp() - lastPacketCounterResetTime;
@@ -174,6 +180,7 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
             trackedLiftPegs.clear();
             log.info("Disconnected");
             isConnected = false;
+            isGettingJetsonData.set(false);
         }
         
         DetectedBoiler trackedBoiler = getTrackedBoiler();
