@@ -17,12 +17,14 @@ import xbot.common.logging.RobotAssertionManager;
 public class OperatorInterface {
     public XJoystick leftJoystick;
     public XJoystick rightJoystick;
+    public XJoystick operatorPanelJoystick;
     
     public XXboxController controller;
   
     public JoystickButtonManager leftButtons;
     public JoystickButtonManager rightButtons;
-
+    public JoystickButtonManager operatorPanelButtons;
+    
     @Inject
     public OperatorInterface(WPIFactory factory, RobotAssertionManager assertionManager) {
         controller = factory.getXboxController(0);
@@ -32,7 +34,11 @@ public class OperatorInterface {
      
         leftJoystick.setYInversion(true);
         rightJoystick.setYInversion(true);
-        leftButtons = new JoystickButtonManager(8, factory, assertionManager, leftJoystick);
-        rightButtons = new JoystickButtonManager(8, factory, assertionManager, rightJoystick);
+        
+        leftButtons = new JoystickButtonManager(12, factory, assertionManager, leftJoystick);
+        rightButtons = new JoystickButtonManager(12, factory, assertionManager, rightJoystick);
+        
+        operatorPanelJoystick = factory.getJoystick(3);
+        operatorPanelButtons = new JoystickButtonManager(11, factory, assertionManager, operatorPanelJoystick);
     }
 }

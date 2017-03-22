@@ -14,8 +14,8 @@ public class TestCollectorSubsystem extends CollectorSubsystem {
         super(factory, propManager);
     }
  
-    public DoubleProperty getIntakeProp(){
-        return intakePowerProperty;
+    public DoubleProperty getLowIntakeProp() {
+        return lowPowerCollector;
     }
     
     public DoubleProperty getEjectProp(){

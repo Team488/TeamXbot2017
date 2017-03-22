@@ -1,5 +1,7 @@
 package competition.subsystems.drive.commands;
 
+import java.util.function.DoubleSupplier;
+
 import com.google.inject.Inject;
 import xbot.common.logging.RobotAssertionManager;
 import xbot.common.math.ContiguousHeading;
@@ -11,10 +13,10 @@ import competition.subsystems.pose.PoseSubsystem;
 
 public class RotateToHeadingCommand extends BaseDriveCommand {
     
-    private final PoseSubsystem poseSubsystem;
-    ContiguousHeading targetHeading;
-    ContiguousHeading currentHeading;
-    DoubleProperty targetHeadingProp;
+    protected final PoseSubsystem poseSubsystem;
+    protected ContiguousHeading targetHeading;
+    
+    protected DoubleSupplier targetHeadingSupplier;
     
     public final double defaultPValue = 1 / 80d;
     
@@ -41,12 +43,15 @@ public class RotateToHeadingCommand extends BaseDriveCommand {
     }
 
     public void setTargetHeading(double heading) {
-        targetHeading = new ContiguousHeading(heading);
-        log.info("Setting target heading to " + heading);
+        targetHeadingSupplier = () -> heading;
     }
     
     public void setTargetHeadingProp(DoubleProperty heading){
-        targetHeadingProp = heading;
+        targetHeadingSupplier = () -> heading.get();
+    }
+    
+    public void setTargetHeadingSupplier(DoubleSupplier headingSupplier) {
+        targetHeadingSupplier = headingSupplier;
     }
     
     public void reset(){
@@ -56,30 +61,37 @@ public class RotateToHeadingCommand extends BaseDriveCommand {
     
     @Override
     public void initialize() {
-        log.info("Initializing RotateToHeadingCommand");
-        if(targetHeadingProp != null){
-            targetHeading = new ContiguousHeading(targetHeadingProp.get());
-            log.info("Setting target heading to " + targetHeadingProp.get());
+        if(targetHeadingSupplier == null) {
+            log.error("RotateToHeadingCommand initialized without a heading setpoint!");
+            targetHeading = null;
+            return;
         }
+        
+        double currentTarget = targetHeadingSupplier.getAsDouble();
+        targetHeading = new ContiguousHeading(currentTarget);
+        
+        log.info("Initializing RotateToHeadingCommand with target " + currentTarget + " (" + targetHeading + ")");
         reset();
     }
 
     @Override
     public void execute() {
-        double errorInDegrees =  poseSubsystem.getCurrentHeading().difference(targetHeading);
-        double rotationalPower = headingDrivePid.calculate(0, errorInDegrees);
-
-        driveSubsystem.tankDrivePowerMode(rotationalPower, -rotationalPower);
+        if(targetHeading != null) {
+            double errorInDegrees =  poseSubsystem.getCurrentHeading().difference(targetHeading);
+            double rotationalPower = headingDrivePid.calculate(0, errorInDegrees);
+    
+            driveSubsystem.tankDrivePowerMode(rotationalPower, -rotationalPower);
+        }
     }
     
     @Override
     public boolean isFinished() {
-        return headingDrivePid.isOnTarget();
+        return targetHeading != null && headingDrivePid.isOnTarget();
     }
     
     @Override 
     public void end(){
-        log.info("Ending. Current Heading is " + currentHeading + " and Target Heading was" 
-                +targetHeading);
+        log.info("Ending. Current Heading is " + poseSubsystem.getCurrentHeading() + " and Target Heading was" 
+                + targetHeading);
     }
 }

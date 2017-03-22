@@ -55,7 +55,7 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         leftDriveEncoderTicksProp = propManager.createEphemeralProperty("Left drive encoder ticks", 0);
         rightDriveEncoderTicksProp = propManager.createEphemeralProperty("Right drive encoder ticks", 0);
         
-        ticksPerInch = propManager.createPersistentProperty("Ticks per inch", 25.33);
+        ticksPerInch = propManager.createPersistentProperty("Ticks per inch", 214.48);
         
         this.leftDrive = factory.getCANTalonSpeedController(34);
         this.leftDrive.setInverted(true);
@@ -64,9 +64,9 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         leftDrive.createTelemetryProperties("Left primary", propManager);
         leftDriveFollower.createTelemetryProperties("Left follower", propManager);
         
-        this.rightDrive = factory.getCANTalonSpeedController(21);
+        this.rightDrive = factory.getCANTalonSpeedController(20);
         this.rightDrive.reverseSensor(true);
-        this.rightDriveFollower = factory.getCANTalonSpeedController(20);
+        this.rightDriveFollower = factory.getCANTalonSpeedController(21);
         configMotorTeam(rightDrive, rightDriveFollower);
         rightDrive.createTelemetryProperties("Right primary", propManager);
         rightDriveFollower.createTelemetryProperties("Right follower", propManager);
