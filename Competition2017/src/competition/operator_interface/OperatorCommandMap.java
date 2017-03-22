@@ -116,11 +116,11 @@ public class OperatorCommandMap {
         runLeftPower.includeOnSmartDashboard("Run shooter wheel using power - left");
         runRightPower.includeOnSmartDashboard("Run shooter wheel using power - right");
         
-        oi.operatorPanelButtons.getifAvailable(9).whenPressed(leftUp);
-        oi.operatorPanelButtons.getifAvailable(8).whenPressed(leftDown);
+        oi.operatorPanelButtons.getIfAvailable(9).whenPressed(leftUp);
+        oi.operatorPanelButtons.getIfAvailable(8).whenPressed(leftDown);
         
-        oi.operatorPanelButtons.getifAvailable(7).whenPressed(rightUp);
-        oi.operatorPanelButtons.getifAvailable(6).whenPressed(rightDown);
+        oi.operatorPanelButtons.getIfAvailable(7).whenPressed(rightUp);
+        oi.operatorPanelButtons.getIfAvailable(6).whenPressed(rightDown);
     }
     
    @Inject
@@ -134,8 +134,8 @@ public class OperatorCommandMap {
        shiftLow.includeOnSmartDashboard("Shift low");
        shiftHigh.includeOnSmartDashboard("Shift high");
        
-       oi.leftButtons.getifAvailable(1).whenPressed(shiftHigh);
-       oi.rightButtons.getifAvailable(1).whenPressed(shiftLow);
+       oi.leftButtons.getIfAvailable(1).whenPressed(shiftHigh);
+       oi.rightButtons.getIfAvailable(1).whenPressed(shiftLow);
    }
     
     @Inject
@@ -220,10 +220,10 @@ public class OperatorCommandMap {
             SetRobotHeadingCommand setRedHeadingCommand,
             RotateToHeadingCommand rotateToHeadingCommand
     )   {
-        oi.leftButtons.getifAvailable(2).whileHeld(rotateCommand);
+        oi.leftButtons.getIfAvailable(2).whileHeld(rotateCommand);
         driverControlledBoilerApproachCommand.setControlJoystick(oi.leftJoystick);
-        oi.leftButtons.getifAvailable(3).whileHeld(driverControlledBoilerApproachCommand);
-        oi.leftButtons.getifAvailable(10).whileHeld(driveToBoilerCommand);
+        oi.leftButtons.getIfAvailable(3).whileHeld(driverControlledBoilerApproachCommand);
+        oi.leftButtons.getIfAvailable(10).whileHeld(driveToBoilerCommand);
 
         setBlueHeadingCommand.setHeadingToApply(-135);
         setBlueHeadingCommand.includeOnSmartDashboard("Set heading to blue boiler orientation (-135)");
@@ -240,10 +240,10 @@ public class OperatorCommandMap {
             SetupDriveToHopperThenBoilerCommand driveToBoiler,
             SetupBreakBaselineCommand breakBaseLine)
     {
-        oi.leftButtons.getifAvailable(8).whenPressed(breakBaseLine);
-        oi.leftButtons.getifAvailable(9).whenPressed(driveToBoiler);
-        oi.rightButtons.getifAvailable(8).whenPressed(disableCommand);
-        oi.rightButtons.getifAvailable(9).whenPressed(shootThenBaseline);
+        oi.leftButtons.getIfAvailable(8).whenPressed(breakBaseLine);
+        oi.leftButtons.getIfAvailable(9).whenPressed(driveToBoiler);
+        oi.rightButtons.getIfAvailable(8).whenPressed(disableCommand);
+        oi.rightButtons.getIfAvailable(9).whenPressed(shootThenBaseline);
         
         breakBaseLine.includeOnSmartDashboard("Break Base Line");
         disableCommand.includeOnSmartDashboard("Disable Autonomous");
