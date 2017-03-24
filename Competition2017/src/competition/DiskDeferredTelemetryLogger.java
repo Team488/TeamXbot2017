@@ -19,22 +19,24 @@ public class DiskDeferredTelemetryLogger implements DeferredTelemetryLogger {
     private static double flushInterval = 5;
     
     private Logger log;
+    private String name;
     
-    PrintWriter out;
+    private PrintWriter out;
     private DoubleProperty[] properties;
     private double lastFlushTime = 0;
+    
+    private boolean lastLoggedInitError = false;
     
     @Override
     public void initialize(String name, DoubleProperty... properties) {
         name = (name == null ? "unnamed" : name).replaceAll("\\W", "-");
+        this.name = name;
         log = Logger.getLogger("DiskDeferredTelemetryLogger " + name);
         
         try {
-            File dataFolder = new File(baseTelemetryFileName);
-            dataFolder.createNewFile();
-            
             String dataFileName = baseTelemetryFileName + name + ".csv";
             File dataFile = new File(dataFileName);
+            dataFile.mkdirs();
             dataFile.delete();
             
             out = new PrintWriter(
@@ -48,10 +50,15 @@ public class DiskDeferredTelemetryLogger implements DeferredTelemetryLogger {
                     .collect(Collectors.joining(","));
             out.println(row);
             
+            log.info("Initialized telemetry logger " + name + " (file " + dataFileName + ")");
+            lastLoggedInitError = false;
         } catch (IOException e) {
-            log.error("Error while opening output file: " + e.getMessage());
-            log.error(e.getStackTrace());
+            if(!lastLoggedInitError) {
+                log.error("Error while opening output file: " + e.getMessage());
+                log.error(e.getStackTrace());
+            }
             out = null;
+            lastLoggedInitError = true;
         }
         
         this.properties = properties.clone();
@@ -84,6 +91,7 @@ public class DiskDeferredTelemetryLogger implements DeferredTelemetryLogger {
         if(out != null) {
             out.flush();
             out = null;
+            log.info("Uninitialized logger " + name);
         }
     }
 

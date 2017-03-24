@@ -151,6 +151,10 @@ public abstract class BaseXCANTalonSpeedControlledSubsystem extends BaseSubsyste
     public double getTargetSpeed() {
         return systemTargetSpeed.get();
     }
+    
+    public DeferredTelemetryLogger getTelemetryLogger() {
+        return telemetryLogger;
+    }
 
     public void updatePeriodicData() {
         masterMotor.updateTelemetryProperties();        

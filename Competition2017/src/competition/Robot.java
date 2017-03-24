@@ -36,6 +36,10 @@ public class Robot extends BaseRobot {
         this.registerPeriodicDataSource(this.injector.getInstance(ShooterBeltsManagerSubsystem.class).getRightBelt());
         this.registerPeriodicDataSource(this.injector.getInstance(PoseSubsystem.class));
         this.registerPeriodicDataSource(this.injector.getInstance(VisionSubsystem.class));
+        this.registerPeriodicDataSource(this.injector.getInstance(ShooterWheelsManagerSubsystem.class).getLeftShooter().getTelemetryLogger());
+        this.registerPeriodicDataSource(this.injector.getInstance(ShooterWheelsManagerSubsystem.class).getRightShooter().getTelemetryLogger());
+        this.registerPeriodicDataSource(this.injector.getInstance(ShooterBeltsManagerSubsystem.class).getLeftBelt().getTelemetryLogger());
+        this.registerPeriodicDataSource(this.injector.getInstance(ShooterBeltsManagerSubsystem.class).getRightBelt().getTelemetryLogger());
 
     }
     
