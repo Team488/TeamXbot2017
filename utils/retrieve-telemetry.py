@@ -10,6 +10,8 @@ import os
 import argparse
 import glob
 
+remote_data_folder = "/home/lvuser/488-telemetry/"
+
 parser = argparse.ArgumentParser(description='Retrieve and chart telemetry data.')
 parser.add_argument('target',
                     help='The IP address or DNS name of the target to connect to')
@@ -25,16 +27,17 @@ if args.local:
 else:
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh_client.connect(args.target, username='lvuser', password='')
+    ssh_client.connect(args.target, username='admin', password='')
 
     sftp_client = ssh_client.open_sftp()
-    files = sftp_client.listdir("/home/lvuser/488-telemetry/")
+    files = sftp_client.listdir(remote_data_folder)
 
 for file_name in files:
     if args.local:
         remote_file = open(file_name, 'r')
     else:
-        remote_file = sftp_client.open(file_name)
+        print(file_name)
+        remote_file = sftp_client.open(remote_data_folder + file_name)
 
     try:
         source_data = [line.rstrip().split(",") for line in remote_file]

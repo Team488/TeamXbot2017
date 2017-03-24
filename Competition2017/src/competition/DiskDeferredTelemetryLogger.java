@@ -51,11 +51,11 @@ public class DiskDeferredTelemetryLogger implements DeferredTelemetryLogger {
             out.println(row);
             
             log.info("Initialized telemetry logger " + name + " (file " + dataFileName + ")");
+
             lastLoggedInitError = false;
         } catch (IOException e) {
             if(!lastLoggedInitError) {
-                log.error("Error while opening output file: " + e.getMessage());
-                log.error(e.getStackTrace());
+                log.error("Error while opening output file", e);
             }
             out = null;
             lastLoggedInitError = true;
