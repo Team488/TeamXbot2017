@@ -28,11 +28,10 @@ public class PoseSubsystem extends BasePoseSubsystem {
     private final DoubleProperty headingFacingRedBoiler;
     private final DoubleProperty distanceBetweenDistanceSensorsProp;
     private final DoubleProperty breakBaselineMaxTime;
-    
+    private final DoubleProperty idealShootingRange;
     private final DoubleProperty leftLidarDistance;
     private final DoubleProperty rightLidarDistance;
-    
-    private final DistanceSensorPair frontLidars;
+    protected final DistanceSensorPair frontLidars;
 
         
     @Inject
@@ -48,8 +47,8 @@ public class PoseSubsystem extends BasePoseSubsystem {
         headingFacingRedBoiler = propManager.createPersistentProperty("Heading facing red boiler", -45);
         distanceBetweenDistanceSensorsProp = propManager.createPersistentProperty("Distance between distance sensors", 20);
         breakBaselineMaxTime = propManager.createPersistentProperty("Break baseline maximum time", 3.0);
-        
-        leftLidarDistance = propManager.createEphemeralProperty("Left lidar distance", 0);
+        idealShootingRange = propManager.createPersistentProperty("Ideal shooting range", 18.0);
+        leftLidarDistance = propManager.createEphemeralProperty("Left lidar distance", 0);      
         rightLidarDistance = propManager.createEphemeralProperty("Right lidar distance", 0);
     }
 
@@ -103,11 +102,19 @@ public class PoseSubsystem extends BasePoseSubsystem {
         return breakBaselineMaxTime.get();
     }
     
+    public double getIdealShootingRange() {
+        return idealShootingRange.get();
+    }
+    
+    public DistanceSensorPair getLidar() {
+        return frontLidars;
+    }
+    
     @Override
     public void updatePeriodicData() {
-        leftLidarDistance.set(frontLidars.getSensorA().getDistance());
-        rightLidarDistance.set(frontLidars.getSensorB().getDistance());
         super.updatePeriodicData();
+        leftLidarDistance.set(frontLidars.getSensorA().getDistance());      
+        rightLidarDistance.set(frontLidars.getSensorB().getDistance());
     }
     
 }

@@ -26,6 +26,7 @@ import competition.subsystems.vision.commands.DriveTowardBoilerWithVisionAndJoys
 import competition.subsystems.vision.commands.RotateRobotToBoilerCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.DriveToPointUsingHeuristicsCommand;
+import competition.subsystems.drive.commands.DriveToShootingRangeCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
@@ -186,10 +187,12 @@ public class OperatorCommandMap {
     
     @Inject
     public void setupDriveCommand(
+            OperatorInterface oi,
             DriveForDistanceCommand driveForDistance, 
             ResetDistanceCommand resetDisplacement,
             RotateToHeadingCommand rotateToHeading,
             SetRobotHeadingCommand setHeading,
+            DriveToShootingRangeCommand driveToShootingRange,
             XPropertyManager propManager,
             TankDriveWithGamePadCommand gamepad,
             DriveToPointUsingHeuristicsCommand driveUsingHeuristics)
@@ -208,6 +211,8 @@ public class OperatorCommandMap {
         
         driveUsingHeuristics.setDeltaBasedTravel(60, 60, 90);
         driveUsingHeuristics.includeOnSmartDashboard();
+        
+        oi.rightButtons.getIfAvailable(2).whileHeld(driveToShootingRange);
     }
     
     @Inject
