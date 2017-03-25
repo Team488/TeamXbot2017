@@ -7,6 +7,7 @@ import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.pose.commands.ResetDistanceCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 import xbot.common.controls.sensors.XXboxController.XboxButton;
+import xbot.common.math.PIDFactory;
 import xbot.common.properties.DoubleProperty;
 
 import competition.subsystems.climbing.commands.AscendClimbingCommand;
@@ -43,6 +44,7 @@ import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelUsingPowerCommand;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
+import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeVirtualThrottleCommand;
 import competition.subsystems.shooter_wheel.commands.TrimShooterWheelCommand;
 import competition.subsystems.shooter_wheel.commands.TrimShooterWheelCommand.TrimDirection;
 
@@ -80,7 +82,8 @@ public class OperatorCommandMap {
             ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem,
             LeftShootFuelCommandGroup shootLeft,
             RightShootFuelCommandGroup shootRight,
-            XPropertyManager propMan
+            XPropertyManager propMan,
+            PIDFactory pidFactory
             )
     {
         ShooterWheelSubsystem leftWheel = shooterWheelsManagerSubsystem.getLeftShooter();
@@ -122,6 +125,19 @@ public class OperatorCommandMap {
         
         oi.operatorPanelButtons.getIfAvailable(7).whenPressed(rightUp);
         oi.operatorPanelButtons.getIfAvailable(6).whenPressed(rightDown);
+        
+        RunShooterWheelsForRangeVirtualThrottleCommand runVirtualThrottleLeft = new RunShooterWheelsForRangeVirtualThrottleCommand(
+                TypicalShootingPosition.FlushToBoiler,
+                shooterWheelsManagerSubsystem.getLeftShooter(),
+                pidFactory
+                );
+        RunShooterWheelsForRangeVirtualThrottleCommand runVirtualThrottleRight = new RunShooterWheelsForRangeVirtualThrottleCommand(
+                TypicalShootingPosition.FlushToBoiler,
+                shooterWheelsManagerSubsystem.getRightShooter(),
+                pidFactory
+                );
+        runVirtualThrottleLeft.includeOnSmartDashboard("Run shooter wheel using virtual throttle - left");
+        runVirtualThrottleRight.includeOnSmartDashboard("Run shooter wheel using virtual throttle - right");
     }
     
    @Inject

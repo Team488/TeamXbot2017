@@ -5,17 +5,16 @@ import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootin
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 
 public class RunShooterWheelsForRangeCommand extends BaseShooterWheelCommand {
-
-    ShooterWheelsManagerSubsystem wheelsManager;
-    double range;
+    
+    final double range;
     
     public RunShooterWheelsForRangeCommand(TypicalShootingPosition range, ShooterWheelSubsystem shooterWheelSubsystem) {
-        super("RunShooterWheelsForRangeCommand"+range, shooterWheelSubsystem);
+        super("RunShooterWheelsForRangeCommand: " + range, shooterWheelSubsystem);
         this.range = shooterWheelSubsystem.translateTypicalShootingPositionToDistance(range);
     }
     
     public RunShooterWheelsForRangeCommand(double rangeInInches, ShooterWheelSubsystem shooterWheelSubsystem) {
-        super("RunShooterWheelsForRangeCommand", shooterWheelSubsystem);
+        super("RunShooterWheelsForRangeCommand: " + rangeInInches, shooterWheelSubsystem);
         this.range = rangeInInches;
     }
 

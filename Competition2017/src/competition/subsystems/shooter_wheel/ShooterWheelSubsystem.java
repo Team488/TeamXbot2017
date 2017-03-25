@@ -76,6 +76,13 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         }
     }
     
+    public double getTargetSpeedForRange(double rangeInInches) {
+        // TODO: convert from rangeInInches to target speeds (pending task)
+        // For now everything uses the same flushToBoilerTargetSpeed regardless
+        
+        return flushToBoilerTargetSpeed.get() + trimFlushToBoilerSpeed.get();
+    }
+    
     /**
      * Set the ShooterWheel for any robot range.
      * @param rangeInInches Inches between the front bumper and the boiler wall
@@ -84,7 +91,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         // some day we may have an actual formula here, interpolating between known points.
         // (flush to boiler, one robot width, some other range...)
         // For now, it's just this one range.
-        setTargetSpeed(flushToBoilerTargetSpeed.get() + trimFlushToBoilerSpeed.get());
+        setTargetSpeed(getTargetSpeedForRange(rangeInInches));
     }
 }
 
