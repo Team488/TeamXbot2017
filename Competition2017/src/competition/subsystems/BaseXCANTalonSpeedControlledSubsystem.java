@@ -139,6 +139,10 @@ public abstract class BaseXCANTalonSpeedControlledSubsystem extends BaseSubsyste
         return Math.abs(getSpeed() - systemTargetSpeed.get()) <= systemSpeedThresh.get();
     }
     
+    public boolean isAtTracerSpeed(){
+        return Math.abs(getSpeed()/2 - systemTargetSpeed.get()/2) <= systemSpeedThresh.get()/2;
+    }
+    
     public double getTargetSpeed() {
         return systemTargetSpeed.get();
     }
