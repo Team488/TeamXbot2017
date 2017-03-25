@@ -40,7 +40,6 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
                 "LeftShooter", .5, 0, 10, .099);
         rightPIDValues = pidFactory.createPIDPropertyManager(
                 "RightShooter", .5, 0, 10, .099);
-                
         createLeftAndRightShooter(factory, propManager, pidFactory);
     }
     
