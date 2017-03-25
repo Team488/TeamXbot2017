@@ -30,6 +30,7 @@ import competition.subsystems.drive.commands.DriveToPointUsingHeuristicsCommand;
 import competition.subsystems.drive.commands.DriveToShootingRangeCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
+import competition.subsystems.drive.commands.TogglePrecisionMode;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shoot_fuel.LeftFeedingCommandGroup;
@@ -208,11 +209,13 @@ public class OperatorCommandMap {
             ResetDistanceCommand resetDisplacement,
             RotateToHeadingCommand rotateToHeading,
             SetRobotHeadingCommand setHeading,
+            TogglePrecisionMode toggle,
             DriveToShootingRangeCommand driveToShootingRange,
             XPropertyManager propManager,
             TankDriveWithGamePadCommand gamepad,
             DriveToPointUsingHeuristicsCommand driveUsingHeuristics)
     {
+        oi.rightButtons.getIfAvailable(3).whenPressed(toggle);
         DoubleProperty deltaDistance = propManager.createPersistentProperty("Drive for distance test distance", 20);
         resetDisplacement.includeOnSmartDashboard();
         driveForDistance.setDeltaDistance(deltaDistance);

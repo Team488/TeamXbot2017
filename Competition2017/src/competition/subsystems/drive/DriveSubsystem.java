@@ -12,6 +12,7 @@ import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.MathUtils;
+import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
@@ -22,6 +23,9 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     public final XCANTalon leftDriveFollower;
     public final XCANTalon rightDrive;
     public final XCANTalon rightDriveFollower;
+    
+    public BooleanProperty precisionMode;
+    public DoubleProperty precisionFactor;
     
     private final DoubleProperty encoderCodesProperty;
     private final DoubleProperty maxSpeedProperty;
@@ -42,7 +46,10 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     @Inject
     public DriveSubsystem(WPIFactory factory, XPropertyManager propManager, ShiftSubsystem shift) {
         log.info("Creating");
-
+        
+        this.precisionMode = propManager.createPersistentProperty("Precision Mode", false);
+        this.precisionFactor = propManager.createPersistentProperty("Precision Mode Factor", 2);
+        
         // TODO: Update these defaults. The current values are blind guesses.
         encoderCodesProperty = propManager.createPersistentProperty("Drive encoder codes per rev", 512);
         maxSpeedProperty = propManager.createPersistentProperty("Max drive motor speed (rotations per second)", 5);
@@ -168,6 +175,11 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         // Coerce powers into appropriate limits
         leftPower = MathUtils.constrainDoubleToRobotScale(leftPower);
         rightPower = MathUtils.constrainDoubleToRobotScale(rightPower);
+        
+        if(precisionMode.get()){
+            leftPower/=precisionFactor.get();
+            rightPower/=precisionFactor.get();
+        }
        
         leftDrive.set(leftPower);
         rightDrive.set(rightPower);
@@ -196,6 +208,10 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     
     public double convertInchesToTicks(double inches) {
         return inches * getTicksPerInch();
+    }
+    
+    public void togglePrecisionMode(){
+        precisionMode.set(!precisionMode.get());
     }
     
     /**
