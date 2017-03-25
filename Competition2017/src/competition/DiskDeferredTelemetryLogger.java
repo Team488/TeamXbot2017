@@ -11,6 +11,8 @@ import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 
+import com.google.inject.Inject;
+
 import edu.wpi.first.wpilibj.Timer;
 import xbot.common.properties.DoubleProperty;
 

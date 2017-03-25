@@ -1,6 +1,7 @@
 package competition.subsystems.shooter_belt;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import competition.DeferredTelemetryLogger;
@@ -31,7 +32,11 @@ public class ShooterBeltsManagerSubsystem extends BaseSubsystem {
         protected final int rightMotorIndex = 24;
 
         @Inject
-        public ShooterBeltsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory, DeferredTelemetryLogger telemetryLogger) {
+        public ShooterBeltsManagerSubsystem(
+                WPIFactory factory,
+                XPropertyManager propManager,
+                PIDFactory pidFactory,
+                Provider<DeferredTelemetryLogger> telemetryLogger) {
             log.info("Creating");
             leftPIDValues = pidFactory.createPIDPropertyManager("LeftBelt", 0, 0, 0, 0);
             rightPIDValues = pidFactory.createPIDPropertyManager("RightBelt", 0, 0, 0, 0);
@@ -39,7 +44,10 @@ public class ShooterBeltsManagerSubsystem extends BaseSubsystem {
             createLeftAndRightBelts(factory, propManager, telemetryLogger);
         }
         
-        protected void createLeftAndRightBelts(WPIFactory factory, XPropertyManager propManager, DeferredTelemetryLogger telemetryLogger) {
+        protected void createLeftAndRightBelts(
+                WPIFactory factory,
+                XPropertyManager propManager,
+                Provider<DeferredTelemetryLogger> telemetryLogger) {
             leftBelt = new ShooterBeltSubsystem(
                     RobotSide.Left,
                     leftMotorIndex,
@@ -48,7 +56,7 @@ public class ShooterBeltsManagerSubsystem extends BaseSubsystem {
                     factory, 
                     leftPIDValues,
                     propManager,
-                    telemetryLogger);
+                    telemetryLogger.get());
             
             rightBelt = new ShooterBeltSubsystem(
                     RobotSide.Right,
@@ -58,7 +66,7 @@ public class ShooterBeltsManagerSubsystem extends BaseSubsystem {
                     factory, 
                     rightPIDValues,
                     propManager,
-                    telemetryLogger);
+                    telemetryLogger.get());
         }
 
         public ShooterBeltSubsystem getLeftBelt() {

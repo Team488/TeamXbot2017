@@ -1,6 +1,7 @@
 package competition.subsystems.shooter_wheel;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import competition.DeferredTelemetryLogger;
@@ -34,7 +35,11 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
     protected final boolean rightFollowerInverted = false;
     
     @Inject
-    public ShooterWheelsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory, DeferredTelemetryLogger telemetryLogger) {
+    public ShooterWheelsManagerSubsystem(
+            WPIFactory factory,
+            XPropertyManager propManager,
+            PIDFactory pidFactory,
+            Provider<DeferredTelemetryLogger> telemetryLogger) {
         log.info("Creating");
         
         leftPIDValues = pidFactory.createPIDPropertyManager(
@@ -45,7 +50,11 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
         createLeftAndRightShooter(factory, propManager, pidFactory, telemetryLogger);
     }
     
-    protected void createLeftAndRightShooter(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory, DeferredTelemetryLogger telemetryLogger) {
+    protected void createLeftAndRightShooter(
+            WPIFactory factory,
+            XPropertyManager propManager,
+            PIDFactory pidFactory,
+            Provider<DeferredTelemetryLogger> telemetryLogger) {
         leftShooter = new ShooterWheelSubsystem(
                 leftMotorMasterIndex,
                 leftMotorFollowerIndex,
@@ -56,7 +65,7 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
                 leftPIDValues,
                 factory,
                 propManager,
-                telemetryLogger);
+                telemetryLogger.get());
         
         rightShooter = new ShooterWheelSubsystem(
                 rightMotorMasterIndex,
@@ -68,7 +77,7 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
                 rightPIDValues,
                 factory,
                 propManager,
-                telemetryLogger);
+                telemetryLogger.get());
     }
     
     public ShooterWheelSubsystem getLeftShooter() {
