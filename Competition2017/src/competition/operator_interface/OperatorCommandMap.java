@@ -7,6 +7,7 @@ import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.pose.commands.ResetDistanceCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 import xbot.common.controls.sensors.XXboxController.XboxButton;
+import xbot.common.math.PIDFactory;
 import xbot.common.properties.DoubleProperty;
 
 import competition.subsystems.climbing.commands.AscendClimbingCommand;
@@ -26,6 +27,7 @@ import competition.subsystems.vision.commands.DriveTowardBoilerWithVisionAndJoys
 import competition.subsystems.vision.commands.RotateRobotToBoilerCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.DriveToPointUsingHeuristicsCommand;
+import competition.subsystems.drive.commands.DriveToShootingRangeCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
@@ -42,6 +44,7 @@ import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelUsingPowerCommand;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
+import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeVirtualThrottleCommand;
 import competition.subsystems.shooter_wheel.commands.TrimShooterWheelCommand;
 import competition.subsystems.shooter_wheel.commands.TrimShooterWheelCommand.TrimDirection;
 
@@ -79,7 +82,8 @@ public class OperatorCommandMap {
             ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem,
             LeftShootFuelCommandGroup shootLeft,
             RightShootFuelCommandGroup shootRight,
-            XPropertyManager propMan
+            XPropertyManager propMan,
+            PIDFactory pidFactory
             )
     {
         ShooterWheelSubsystem leftWheel = shooterWheelsManagerSubsystem.getLeftShooter();
@@ -121,6 +125,19 @@ public class OperatorCommandMap {
         
         oi.operatorPanelButtons.getIfAvailable(7).whenPressed(rightUp);
         oi.operatorPanelButtons.getIfAvailable(6).whenPressed(rightDown);
+        
+        RunShooterWheelsForRangeVirtualThrottleCommand runVirtualThrottleLeft = new RunShooterWheelsForRangeVirtualThrottleCommand(
+                TypicalShootingPosition.FlushToBoiler,
+                shooterWheelsManagerSubsystem.getLeftShooter(),
+                pidFactory
+                );
+        RunShooterWheelsForRangeVirtualThrottleCommand runVirtualThrottleRight = new RunShooterWheelsForRangeVirtualThrottleCommand(
+                TypicalShootingPosition.FlushToBoiler,
+                shooterWheelsManagerSubsystem.getRightShooter(),
+                pidFactory
+                );
+        runVirtualThrottleLeft.includeOnSmartDashboard("Run shooter wheel using virtual throttle - left");
+        runVirtualThrottleRight.includeOnSmartDashboard("Run shooter wheel using virtual throttle - right");
     }
     
    @Inject
@@ -186,10 +203,12 @@ public class OperatorCommandMap {
     
     @Inject
     public void setupDriveCommand(
+            OperatorInterface oi,
             DriveForDistanceCommand driveForDistance, 
             ResetDistanceCommand resetDisplacement,
             RotateToHeadingCommand rotateToHeading,
             SetRobotHeadingCommand setHeading,
+            DriveToShootingRangeCommand driveToShootingRange,
             XPropertyManager propManager,
             TankDriveWithGamePadCommand gamepad,
             DriveToPointUsingHeuristicsCommand driveUsingHeuristics)
@@ -208,6 +227,8 @@ public class OperatorCommandMap {
         
         driveUsingHeuristics.setDeltaBasedTravel(60, 60, 90);
         driveUsingHeuristics.includeOnSmartDashboard();
+        
+        oi.rightButtons.getIfAvailable(2).whileHeld(driveToShootingRange);
     }
     
     @Inject
