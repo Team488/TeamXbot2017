@@ -5,7 +5,6 @@ import com.google.inject.Singleton;
 
 import competition.subsystems.climbing.ClimbingSubsystem;
 import competition.subsystems.climbing.RopeAlignerSubsystem;
-import competition.subsystems.climbing.commands.RopeAlignerCommand;
 import competition.subsystems.climbing.commands.StopAligningCommand;
 import competition.subsystems.climbing.commands.StopClimbingCommand;
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;

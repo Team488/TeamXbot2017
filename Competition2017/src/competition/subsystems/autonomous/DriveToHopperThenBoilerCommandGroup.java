@@ -7,6 +7,7 @@ import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
+import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
 public class DriveToHopperThenBoilerCommandGroup extends CommandGroup {
     private DoubleProperty distanceFromTurningPointToBoiler;
@@ -24,6 +25,7 @@ public class DriveToHopperThenBoilerCommandGroup extends CommandGroup {
         distanceBackFromHopperToTurningPoint = propManager
                 .createPersistentProperty("Distance Back From Hopper To Turning Point", -43.25);
 
+        
         // drive to hopper from wall
         DriveToHopperCommandGroup driveToHopper = driveToHopperCommandGroupProvider.get();
         this.addSequential(driveToHopper);
