@@ -7,6 +7,8 @@ import competition.subsystems.collector.commands.StopCollectorCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.pose.PoseSubsystem;
+import competition.subsystems.shift.ShiftSubsystem.Gear;
+import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shoot_fuel.ShootFuelForNSecondsCommandGroup;
 import competition.subsystems.shoot_fuel.StopAllShootingCommandGroup;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -34,10 +36,14 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         RotateToHeadingCommand rotateToBaseline,
         PoseSubsystem poseSubsystem,
         ShootFuelForNSecondsCommandGroup shootFuelCommandGroup,
-        StopAllShootingCommandGroup stopFiring) {
+        StopAllShootingCommandGroup stopFiring,
+        ShiftGearCommand shiftCommand) {
         
         redAllianceStartingHeading =  propManager.createPersistentProperty("Red shooting starting heading", -5);
         blueAllianceStartingHeading = propManager.createPersistentProperty("Blue shooting starting heading", -175);
+        
+        shiftCommand.setGear(Gear.HIGH_GEAR);
+        this.addSequential(shiftCommand, 0.1);
         
         this.setInitialHeading = setHeading;
         this.addSequential(setInitialHeading);
@@ -59,6 +65,7 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         rotateToBaseline.setTargetHeading(90);
         this.addSequential(rotateToBaseline, 1.2);
         
+        // Maybe here we change it to high gear?
         breakBaselineAuto = driveForDistanceProvider.get();
         breakBaselineAuto.setDeltaDistance(poseSubsystem.getDistanceFromWallToBaseline());
         this.addSequential(breakBaselineAuto, poseSubsystem.getBreakBaselineMaximumTime());
