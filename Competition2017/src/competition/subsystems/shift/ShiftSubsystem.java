@@ -21,7 +21,7 @@ public class ShiftSubsystem extends BaseSubsystem {
     public ShiftSubsystem(WPIFactory factory) {
         log.info("Creating");
     
-        this.solenoid = factory.getSolenoid(0);
+        this.solenoid = factory.getSolenoid(1);
         gear = Gear.LOW_GEAR;
     }
     

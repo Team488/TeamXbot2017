@@ -11,6 +11,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
     
     private final RobotSide side;
     protected final DoubleProperty flushToBoilerTargetSpeed;
+    protected final DoubleProperty trimFlushToBoilerSpeed;
     
     public enum TypicalShootingPosition {
         FlushToBoiler
@@ -39,11 +40,31 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         log.info("Creating");
         this.side = side;
         flushToBoilerTargetSpeed = 
-                propManager.createPersistentProperty(side + " flush to boiler target speed", 3500);
+                propManager.createPersistentProperty(side + " flush to boiler target speed", 9000);
+        trimFlushToBoilerSpeed =
+                propManager.createEphemeralProperty(side + " trim speed", 0.0);
     }
     
     public RobotSide getSide() {
         return side;
+    }
+    
+    public void trimRangePower(TypicalShootingPosition range, double trimAmount) {
+        switch (range) {
+            case FlushToBoiler:
+                trimFlushToBoilerSpeed.set(trimFlushToBoilerSpeed.get() + trimAmount);
+                
+                if (trimFlushToBoilerSpeed.get() > 10000) {
+                    trimFlushToBoilerSpeed.set(10000);
+                }
+                
+                if (trimFlushToBoilerSpeed.get() < -10000) {
+                    trimFlushToBoilerSpeed.set(-10000);
+                }
+                break;
+            default: 
+                // nothing to do here
+        }
     }
     
     public double translateTypicalShootingPositionToDistance(TypicalShootingPosition range) {
@@ -63,7 +84,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         // some day we may have an actual formula here, interpolating between known points.
         // (flush to boiler, one robot width, some other range...)
         // For now, it's just this one range.
-        setTargetSpeed(flushToBoilerTargetSpeed.get());
+        setTargetSpeed(flushToBoilerTargetSpeed.get() + trimFlushToBoilerSpeed.get());
     }
 }
 

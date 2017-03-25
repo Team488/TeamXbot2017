@@ -6,6 +6,7 @@ import competition.subsystems.SubsystemDefaultCommandMap;
 import competition.subsystems.autonomous.selection.AutonomousCommandSelector;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
+import competition.subsystems.vision.VisionSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
 import xbot.common.command.BaseRobot;
@@ -34,6 +35,8 @@ public class Robot extends BaseRobot {
         this.registerPeriodicDataSource(this.injector.getInstance(ShooterBeltsManagerSubsystem.class).getLeftBelt());
         this.registerPeriodicDataSource(this.injector.getInstance(ShooterBeltsManagerSubsystem.class).getRightBelt());
         this.registerPeriodicDataSource(this.injector.getInstance(PoseSubsystem.class));
+        this.registerPeriodicDataSource(this.injector.getInstance(VisionSubsystem.class));
+
     }
     
     @Override
