@@ -57,7 +57,7 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
         setTargetSpeed(beltIntakeTargetSpeed.get());
     }
     
-    public void intakeUsingTracerSpeed(){
+    public void intakeUsingTracerPower(){
         setPower(intakeTracerPowerProperty.get());
     }
     
