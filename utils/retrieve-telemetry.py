@@ -1,4 +1,6 @@
 '''
+Requires Python 3. Run the following commands to install dependencies:
+
 pip install pypiwin32
 pip install xlwings
 pip install paramiko
@@ -53,4 +55,5 @@ for file_name in files:
     chart = excel.Chart()
     chart.chart_type = 'xy_scatter_lines'
     chart.top = 100
+    chart.left = 300
     chart.set_source_data(book.sheets[sheet_name].range("A1").expand())
