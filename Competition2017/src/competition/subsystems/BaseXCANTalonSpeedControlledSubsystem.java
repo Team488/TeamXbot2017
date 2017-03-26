@@ -81,7 +81,7 @@ public abstract class BaseXCANTalonSpeedControlledSubsystem extends BaseSubsyste
         systemSpeedThresh = propManager.createPersistentProperty(name + " nominal speed thresh (TPD)", 1);
         systemCurrentSpeed = propManager.createEphemeralProperty(name + " current speed (TPD)", 0);
         systemTargetSpeed = propManager.createEphemeralProperty(name + " goal speed (TPD)", 0);
-        systemOutputPower = propManager.createEphemeralProperty(name + " voltage", 0);
+        systemOutputPower = propManager.createEphemeralProperty(name + " voltage percentage", 0);
         atSpeedProp = propManager.createEphemeralProperty("Is" + name + " at speed?", false);
         systemTalonError = propManager.createEphemeralProperty(name + " speed error", 0);
         enablesystemLogging = propManager.createEphemeralProperty(name + " telemetry logging enabled", false);
@@ -165,7 +165,7 @@ public abstract class BaseXCANTalonSpeedControlledSubsystem extends BaseSubsyste
         
         if(enablesystemLogging.get()){
             if(!telemetryLogger.isInitialized()) {
-                telemetryLogger.initialize(name, systemOutputPower, systemTalonError, systemCurrentSpeed);
+                telemetryLogger.initialize(name, systemOutputPower, systemTalonError, systemCurrentSpeed, systemTargetSpeed);
             }
             telemetryLogger.collectNewDataset();
         }

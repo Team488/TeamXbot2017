@@ -53,7 +53,7 @@ for file_name in files:
 
     book.sheets[sheet_name].range("A1").value = chartable_data
     chart = excel.Chart()
-    chart.chart_type = 'xy_scatter_lines'
+    chart.chart_type = 'xy_scatter_lines_no_markers'
     chart.top = 100
     chart.left = 300
     chart.set_source_data(book.sheets[sheet_name].range("A1").expand())
