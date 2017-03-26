@@ -1,6 +1,7 @@
 package competition.subsystems.shooter_wheel;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import competition.DeferredTelemetryLogger;
@@ -14,7 +15,11 @@ import xbot.common.properties.XPropertyManager;
 public class TestShooterWheelsManagerSubsystem extends ShooterWheelsManagerSubsystem {
 
     @Inject
-    public TestShooterWheelsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory, DeferredTelemetryLogger telemetryLogger) {
+    public TestShooterWheelsManagerSubsystem(
+            WPIFactory factory,
+            XPropertyManager propManager,
+            PIDFactory pidFactory,
+            Provider<DeferredTelemetryLogger> telemetryLogger) {
         super(factory, propManager, pidFactory, telemetryLogger);
     }
     
@@ -23,7 +28,7 @@ public class TestShooterWheelsManagerSubsystem extends ShooterWheelsManagerSubsy
             WPIFactory factory,
             XPropertyManager propManager,
             PIDFactory pidFactory,
-            DeferredTelemetryLogger telemetryLogger) {        
+            Provider<DeferredTelemetryLogger> telemetryLogger) {        
         leftShooter = new TestShooterWheelSubsystem(
                 leftMotorMasterIndex,
                 leftMotorFollowerIndex,
@@ -34,7 +39,7 @@ public class TestShooterWheelsManagerSubsystem extends ShooterWheelsManagerSubsy
                 leftPIDValues,
                 factory,
                 propManager,
-                telemetryLogger);
+                telemetryLogger.get());
         
         rightShooter = new TestShooterWheelSubsystem(
                 rightMotorMasterIndex,
@@ -46,6 +51,6 @@ public class TestShooterWheelsManagerSubsystem extends ShooterWheelsManagerSubsy
                 rightPIDValues,
                 factory,
                 propManager,
-                telemetryLogger);
+                telemetryLogger.get());
     }
 }

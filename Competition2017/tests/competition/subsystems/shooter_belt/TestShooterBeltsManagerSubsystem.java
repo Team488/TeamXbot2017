@@ -1,6 +1,7 @@
 package competition.subsystems.shooter_belt;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import competition.DeferredTelemetryLogger;
 import competition.subsystems.RobotSide;
@@ -13,12 +14,12 @@ import xbot.common.properties.XPropertyManager;
 public class TestShooterBeltsManagerSubsystem extends ShooterBeltsManagerSubsystem {
 
     @Inject
-    public TestShooterBeltsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory, DeferredTelemetryLogger telemetryLogger){
+    public TestShooterBeltsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory, Provider<DeferredTelemetryLogger> telemetryLogger){
         super(factory, propManager, pidFactory, telemetryLogger);
     }
     
     @Override
-    protected void createLeftAndRightBelts(WPIFactory factory, XPropertyManager propManager, DeferredTelemetryLogger telemetryLogger) {        
+    protected void createLeftAndRightBelts(WPIFactory factory, XPropertyManager propManager, Provider<DeferredTelemetryLogger> telemetryLogger) {        
         leftBelt = new TestShooterBeltSubsystem(
                 RobotSide.Left,
                 leftMotorIndex,
@@ -27,7 +28,7 @@ public class TestShooterBeltsManagerSubsystem extends ShooterBeltsManagerSubsyst
                 factory, 
                 leftPIDValues,
                 propManager,
-                telemetryLogger);
+                telemetryLogger.get());
         
         rightBelt = new TestShooterBeltSubsystem(
                 RobotSide.Right,
@@ -37,6 +38,6 @@ public class TestShooterBeltsManagerSubsystem extends ShooterBeltsManagerSubsyst
                 factory, 
                 rightPIDValues,
                 propManager,
-                telemetryLogger);
+                telemetryLogger.get());
     }
 }
