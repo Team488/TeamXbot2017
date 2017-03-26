@@ -13,6 +13,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
     private final RobotSide side;
     protected final DoubleProperty flushToBoilerTargetSpeed;
     protected final DoubleProperty trimFlushToBoilerSpeed;
+    protected final DoubleProperty wheelSpeedThresholdPercentage;
     
     public enum TypicalShootingPosition {
         FlushToBoiler
@@ -30,7 +31,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
             XPropertyManager propManager,
             DeferredTelemetryLogger telemetryLogger) {
         super(
-                side+"ShooterWheel",
+                side + "ShooterWheel",
                 masterChannel,
                 followerChannel,
                 masterInverted,
@@ -46,6 +47,8 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
                 propManager.createPersistentProperty(side + " flush to boiler target speed", 9000);
         trimFlushToBoilerSpeed =
                 propManager.createEphemeralProperty(side + " trim speed", 0.0);
+        wheelSpeedThresholdPercentage = 
+                propManager.createPersistentProperty("Wheel speed threshold percentage for feeding", 0.75);
     }
     
     public RobotSide getSide() {
@@ -95,6 +98,10 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         // (flush to boiler, one robot width, some other range...)
         // For now, it's just this one range.
         setTargetSpeed(getTargetSpeedForRange(rangeInInches));
+    }
+    
+    public boolean isWheelAtSpeed() {
+        return super.getSpeed() >= super.getTargetSpeed() * wheelSpeedThresholdPercentage.get();
     }
 }
 

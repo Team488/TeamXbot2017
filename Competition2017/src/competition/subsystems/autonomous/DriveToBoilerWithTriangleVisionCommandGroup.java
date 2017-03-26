@@ -8,13 +8,15 @@ import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.DriveInfinitelyCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.pose.PoseSubsystem;
+import competition.subsystems.shift.ShiftSubsystem.Gear;
+import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.vision.VisionSubsystem;
 import competition.subsystems.vision.commands.RotateRobotToBoilerCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
-public class DriveToBoilerWithTriangleVisionCommandGroup extends CommandGroup{
+public class DriveToBoilerWithTriangleVisionCommandGroup extends CommandGroup {
     private final DoubleProperty boilerApproachPower;
 
     @Inject
@@ -26,7 +28,8 @@ public class DriveToBoilerWithTriangleVisionCommandGroup extends CommandGroup{
             DriveForDistanceCommand driveAlongParallel,
             Provider<RotateRobotToBoilerCommand> rotateRobotToBoilerProvider,
             CalculateDistanceOfBoilerParallelCommand calculateParallelDistance,
-            DriveInfinitelyCommand infinitelyDriveToBoiler){    
+            DriveInfinitelyCommand infinitelyDriveToBoiler,
+            ShiftGearCommand shiftCommand){    
         boilerApproachPower = propMan.createPersistentProperty("Vision boiler approach power", 0.3);
         
         // TODO: Rotate 180 when necessary to ensure we drive forward
@@ -35,6 +38,9 @@ public class DriveToBoilerWithTriangleVisionCommandGroup extends CommandGroup{
         RotateRobotToBoilerCommand rotateRobotToBoiler2 = rotateRobotToBoilerProvider.get();
         RotateToHeadingCommand rotateParallelToBoiler = rotateToHeadingProvider.get();
         RotateToHeadingCommand rotateToTurnTowardsBoilerCommand = rotateToHeadingProvider.get();
+        
+        shiftCommand.setGear(Gear.LOW_GEAR);
+        this.addSequential(shiftCommand, 0.1);
         
         this.addSequential(rotateRobotToBoiler1);
         

@@ -3,7 +3,6 @@ package competition.subsystems.agitator;
 import com.ctre.CANTalon.TalonControlMode;
 
 import competition.subsystems.RobotSide;
-
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
@@ -17,7 +16,7 @@ public class AgitatorSubsystem extends BaseSubsystem implements PeriodicDataSour
     protected final XCANTalon agitatorMotor;
     private final RobotSide side;
     protected final DoubleProperty intakePowerProperty;
-    protected final DoubleProperty ejectPowerProperty;    
+    protected final DoubleProperty ejectPowerProperty;
 
     public AgitatorSubsystem(
             int motor,

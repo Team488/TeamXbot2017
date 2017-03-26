@@ -19,7 +19,7 @@ public class RunBeltIfWheelAtSpeedCommand extends BaseShooterBeltCommand {
 
     @Override
     public void execute() {
-        if(shooterWheelSubsystem.isAtSpeed()){
+        if(shooterWheelSubsystem.isWheelAtSpeed()) {
             shooterBeltSubsystem.intakeUsingSpeed();
         } else {
             shooterBeltSubsystem.setPower(0);
