@@ -14,6 +14,7 @@ import competition.subsystems.climbing.commands.AscendClimbingCommand;
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.EjectAgitatorCommand;
 import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
+import competition.subsystems.agitator.commands.RunIntakeAgitatorIfWheelAtSpeedCommand;
 import competition.subsystems.autonomous.DriveToBoilerUsingHeuristicsWithVisionCommandGroup;
 import competition.subsystems.autonomous.selection.DisableAutonomousCommand;
 import competition.subsystems.autonomous.selection.SetupBreakBaselineCommand;
@@ -30,6 +31,7 @@ import competition.subsystems.drive.commands.DriveToPointUsingHeuristicsCommand;
 import competition.subsystems.drive.commands.DriveToShootingRangeCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
+import competition.subsystems.drive.commands.TogglePrecisionMode;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shoot_fuel.LeftFeedingCommandGroup;
@@ -39,6 +41,8 @@ import competition.subsystems.shoot_fuel.RightShootFuelCommandGroup;
 import competition.subsystems.shoot_fuel.ShootFuelCommandGroup;
 import competition.subsystems.shoot_fuel.UnjamLeftCommandGroup;
 import competition.subsystems.shoot_fuel.UnjamRightCommandGroup;
+import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
+import competition.subsystems.shooter_belt.commands.RunBeltIfWheelAtSpeedCommand;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
@@ -202,17 +206,39 @@ public class OperatorCommandMap {
     }
     
     @Inject
+    public void setUpWaitForWheelCommands(
+            AgitatorsManagerSubsystem agitatorManagerSubsystem,
+            ShooterBeltsManagerSubsystem shooterBeltsManagerSubsystem,
+            ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem) {
+            RunIntakeAgitatorIfWheelAtSpeedCommand leftIntakeCommand = 
+                    new RunIntakeAgitatorIfWheelAtSpeedCommand(agitatorManagerSubsystem.getLeftAgitator(), shooterWheelsManagerSubsystem.getLeftShooter());
+            RunIntakeAgitatorIfWheelAtSpeedCommand rightIntakeCommand = 
+                    new RunIntakeAgitatorIfWheelAtSpeedCommand(agitatorManagerSubsystem.getRightAgitator(), shooterWheelsManagerSubsystem.getRightShooter());
+            RunBeltIfWheelAtSpeedCommand leftBeltCommand = 
+                    new RunBeltIfWheelAtSpeedCommand(shooterBeltsManagerSubsystem.getLeftBelt(), shooterWheelsManagerSubsystem.getLeftShooter());
+            RunBeltIfWheelAtSpeedCommand rightBeltCommand = 
+                    new RunBeltIfWheelAtSpeedCommand(shooterBeltsManagerSubsystem.getRightBelt(), shooterWheelsManagerSubsystem.getRightShooter());
+            
+            leftIntakeCommand.includeOnSmartDashboard("Left Agitator Intake With A Min Wheel Speed");
+            rightIntakeCommand.includeOnSmartDashboard("Right Agitator Intake With A Min Wheel Speed");
+            leftBeltCommand.includeOnSmartDashboard("Left Belt With A Min Wheel Speed");
+            rightBeltCommand.includeOnSmartDashboard("Right Belt With A Min Wheel Speed");
+    }
+    
+    @Inject
     public void setupDriveCommand(
             OperatorInterface oi,
             DriveForDistanceCommand driveForDistance, 
             ResetDistanceCommand resetDisplacement,
             RotateToHeadingCommand rotateToHeading,
             SetRobotHeadingCommand setHeading,
+            TogglePrecisionMode toggle,
             DriveToShootingRangeCommand driveToShootingRange,
             XPropertyManager propManager,
             TankDriveWithGamePadCommand gamepad,
             DriveToPointUsingHeuristicsCommand driveUsingHeuristics)
     {
+        oi.rightButtons.getIfAvailable(3).whenPressed(toggle);
         DoubleProperty deltaDistance = propManager.createPersistentProperty("Drive for distance test distance", 20);
         resetDisplacement.includeOnSmartDashboard();
         driveForDistance.setDeltaDistance(deltaDistance);

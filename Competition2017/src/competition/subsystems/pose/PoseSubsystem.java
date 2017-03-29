@@ -40,7 +40,6 @@ public class PoseSubsystem extends BasePoseSubsystem {
         this.drive = drive;
         
         frontLidars = factory.getMultiplexedLidarPair(Port.kOnboard, (byte)0, (byte)1);
-        frontLidars.start();
         
         distanceToWallFromBaseline = propManager.createPersistentProperty("Distance to wall from baseline", 96.0);
         headingFacingBlueBoiler = propManager.createPersistentProperty("Heading facing blue boiler", -135);
@@ -113,6 +112,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
     @Override
     public void updatePeriodicData() {
         super.updatePeriodicData();
+        frontLidars.update();
         leftLidarDistance.set(frontLidars.getSensorA().getDistance());      
         rightLidarDistance.set(frontLidars.getSensorB().getDistance());
     }
