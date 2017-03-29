@@ -267,8 +267,8 @@ public class OperatorCommandMap {
             SetRobotHeadingCommand setRedHeadingCommand,
             RotateToHeadingCommand rotateToHeadingCommand
     )   {
-        oi.leftButtons.getIfAvailable(2).whileHeld(rotateCommand);
-        driverControlledBoilerApproachCommand.setControlJoystick(oi.leftJoystick);
+        oi.rightButtons.getIfAvailable(3).whileHeld(rotateCommand);
+        driverControlledBoilerApproachCommand.setControlJoystick(oi.rightJoystick);
         oi.leftButtons.getIfAvailable(3).whileHeld(driverControlledBoilerApproachCommand);
         oi.leftButtons.getIfAvailable(10).whileHeld(driveToBoilerCommand);
 
