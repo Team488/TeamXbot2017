@@ -27,5 +27,5 @@ public class AgitatorSubsystemTest extends AgitatorTestBase{
         agitator.stop();
         verifyAgitatorSetpoints(0);
     }
-
+    
 }

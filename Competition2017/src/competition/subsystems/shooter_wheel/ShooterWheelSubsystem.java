@@ -67,6 +67,14 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         }
     }
     
+    public double getMotorPower(){
+        return super.getPower();
+    }
+    
+    public double getMotorSpeed(){
+        return masterMotor.getSpeed();
+    }
+    
     public double translateTypicalShootingPositionToDistance(TypicalShootingPosition range) {
         switch (range) {
             case FlushToBoiler:

@@ -62,6 +62,10 @@ public class AgitatorSubsystem extends BaseSubsystem implements PeriodicDataSour
     public void stop() {
         agitatorMotor.set(0);
     }
+    
+    public double getMotorCurrent(){
+        return agitatorMotor.getOutputCurrent();
+    }
 
     @Override
     public void updatePeriodicData() {
