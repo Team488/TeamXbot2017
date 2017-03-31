@@ -45,6 +45,10 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
     private DoubleProperty connectionTimeoutThreshold;
     private DoubleProperty connectionReportInterval;
     
+    private DetectedBoiler sustainedBoiler = null;
+    private double sustainedBoilerTime = 0;
+    private DoubleProperty boilerSustainLengthProp;
+    
     private DoubleProperty trackedBoilerXOffsetTelemetry;
     private DoubleProperty trackedBoilerDistanceTelemetry;
     
@@ -67,6 +71,7 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
         trackedBoilerDistanceTelemetry = propManager.createEphemeralProperty("Tracked boiler distance", 0);
         
         isGettingJetsonData = propManager.createEphemeralProperty("Is getting Jetson data", false);
+        boilerSustainLengthProp = propManager.createEphemeralProperty("Tracked boiler sustain length", 0.1);
     }
     
     public DetectedLiftPeg getTrackedLiftPeg() {
@@ -78,6 +83,20 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
     public DetectedBoiler getTrackedBoiler() {
         synchronized (trackedBoilers) {
             return trackedBoilers.stream().filter(target -> target != null && target.isTracked).findFirst().orElse(null);
+        }
+    }
+    
+    public DetectedBoiler getSustainedTrackedBoiler() {
+        DetectedBoiler trackedBoiler = getTrackedBoiler();
+        if(trackedBoiler != null) {
+            return trackedBoiler;
+        }
+        
+        if(sustainedBoiler != null && Timer.getFPGATimestamp() - sustainedBoilerTime < boilerSustainLengthProp.get()) {
+            return sustainedBoiler;
+        }
+        else {
+            return sustainedBoiler = null;
         }
     }
     
@@ -136,6 +155,10 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
                     return newTarget;
                 });
             }
+            
+
+            sustainedBoiler = getTrackedBoiler();
+            sustainedBoilerTime = Timer.getFPGATimestamp();
         }
     }
 

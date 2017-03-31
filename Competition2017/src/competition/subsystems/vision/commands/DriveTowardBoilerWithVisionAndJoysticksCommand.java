@@ -50,7 +50,7 @@ public class DriveTowardBoilerWithVisionAndJoysticksCommand extends BaseCommand 
 
     @Override
     public void execute() {
-        DetectedBoiler target = visionSubsystem.getTrackedBoiler();
+        DetectedBoiler target = visionSubsystem.getSustainedTrackedBoiler();
         
         rotationPid.setIMask(target == null);
         double rotatePower = rotationPid.calculate(target == null ? 0 : target.offsetX, 0);
