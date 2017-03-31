@@ -20,7 +20,7 @@ public class RightShootFuelCommandGroup extends CommandGroup {
             ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem,
             ShooterBeltsManagerSubsystem shooterBeltsManagerSubsystem) {
         IntakeAgitatorCommand intake =
-                new IntakeAgitatorCommand(agitatorsManagerSubsystem.getRightAgitator());
+                new IntakeAgitatorCommand(agitatorsManagerSubsystem.getRightAgitator(), propManager);
         RunShooterWheelsForRangeCommand runWheel = 
                 new RunShooterWheelsForRangeCommand(
                         TypicalShootingPosition.FlushToBoiler, 
