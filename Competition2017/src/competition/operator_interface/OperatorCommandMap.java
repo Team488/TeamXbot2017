@@ -176,12 +176,13 @@ public class OperatorCommandMap {
     @Inject
     public void setupAgitatorCommands(
             OperatorInterface oi,
+            XPropertyManager propManager,
             AgitatorsManagerSubsystem agitatorManagerSubsystem,
             UnjamLeftCommandGroup unjamLeft,
             UnjamRightCommandGroup unjamRight)
     {
-        IntakeAgitatorCommand intakeLeft = new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator());
-        IntakeAgitatorCommand intakeRight = new IntakeAgitatorCommand(agitatorManagerSubsystem.getRightAgitator());
+        IntakeAgitatorCommand intakeLeft = new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator(), propManager);
+        IntakeAgitatorCommand intakeRight = new IntakeAgitatorCommand(agitatorManagerSubsystem.getRightAgitator(), propManager);
         EjectAgitatorCommand ejectLeft = new EjectAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator());
         EjectAgitatorCommand ejectRight = new EjectAgitatorCommand(agitatorManagerSubsystem.getRightAgitator());
         

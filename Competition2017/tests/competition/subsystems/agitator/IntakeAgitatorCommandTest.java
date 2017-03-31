@@ -3,18 +3,18 @@ package competition.subsystems.agitator;
 import org.junit.Before;
 import org.junit.Test;
 
-import competition.subsystems.agitator.commands.UnjamAgitatorCommand;
+import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
 import edu.wpi.first.wpilibj.MockTimer;
 import xbot.common.controls.actuators.MockCANTalon;
 
-public class UnjamAgitatorCommandTest extends AgitatorTestBase{
-    private UnjamAgitatorCommand command;
+public class IntakeAgitatorCommandTest extends AgitatorTestBase{
+    private IntakeAgitatorCommand command;
     private MockTimer timer;
     
     @Before
     public void setUp(){
         super.setUp();
-        command = new UnjamAgitatorCommand(agitator, propertyManager);
+        command = new IntakeAgitatorCommand(agitator, propertyManager);
         timer = injector.getInstance(MockTimer.class);
     }
     

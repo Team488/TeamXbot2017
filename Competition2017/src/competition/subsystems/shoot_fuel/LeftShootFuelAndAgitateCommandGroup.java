@@ -14,7 +14,7 @@ public class LeftShootFuelAndAgitateCommandGroup extends CommandGroup {
             AgitatorsManagerSubsystem agitatorsManagerSubsystem,
             LeftShootFuelCommandGroup shootLeft) {
         
-        IntakeAgitatorCommand intake = new IntakeAgitatorCommand(agitatorsManagerSubsystem.getLeftAgitator());
+        IntakeAgitatorCommand intake = new IntakeAgitatorCommand(agitatorsManagerSubsystem.getLeftAgitator(), propManager);
         
         this.addParallel(intake);
         this.addParallel(shootLeft);
