@@ -8,6 +8,7 @@ import xbot.common.command.BaseSubsystem;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.PIDFactory;
 import xbot.common.math.PIDPropertyManager;
+import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
@@ -24,13 +25,13 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
     protected final PIDPropertyManager leftPIDValues;
     protected final PIDPropertyManager rightPIDValues;
     
-    protected final boolean leftMasterInverted = true;
-    protected final boolean leftMasterEncoderInverted = false;
-    protected final boolean leftFollowerInverted = false;
+    protected final BooleanProperty leftMasterInverted;
+    protected final BooleanProperty leftMasterEncoderInverted;
+    protected final BooleanProperty leftFollowerInverted;
     
-    protected final boolean rightMasterInverted = false;
-    protected final boolean rightMasterEncoderInverted = false;
-    protected final boolean rightFollowerInverted = false;
+    protected final BooleanProperty rightMasterInverted;
+    protected final BooleanProperty rightMasterEncoderInverted;
+    protected final BooleanProperty rightFollowerInverted;
     
     @Inject
     public ShooterWheelsManagerSubsystem(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory) {
@@ -40,6 +41,15 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
                 "LeftShooter", .5, 0, 10, .099);
         rightPIDValues = pidFactory.createPIDPropertyManager(
                 "RightShooter", .5, 0, 10, .099);
+
+        leftMasterInverted = propManager.createPersistentProperty("Left shooter master inverted", true);
+        leftMasterEncoderInverted = propManager.createPersistentProperty("Left shooter master encoder inverted", false);
+        leftFollowerInverted = propManager.createPersistentProperty("Left shooter follower inverted", false);
+
+        rightMasterInverted = propManager.createPersistentProperty("Right shooter master inverted", false);
+        rightMasterEncoderInverted = propManager.createPersistentProperty("Right shooter master encoder inverted", false);
+        rightFollowerInverted = propManager.createPersistentProperty("Right shooter follower inverted", false);
+
         createLeftAndRightShooter(factory, propManager, pidFactory);
     }
     
@@ -47,9 +57,9 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
         leftShooter = new ShooterWheelSubsystem(
                 leftMotorMasterIndex,
                 leftMotorFollowerIndex,
-                leftMasterInverted,
-                leftMasterEncoderInverted,
-                leftFollowerInverted,
+                leftMasterInverted.get(),
+                leftMasterEncoderInverted.get(),
+                leftFollowerInverted.get(),
                 RobotSide.Left,
                 leftPIDValues,
                 factory,
@@ -58,9 +68,9 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
         rightShooter = new ShooterWheelSubsystem(
                 rightMotorMasterIndex,
                 rightMotorFollowerIndex,
-                rightMasterInverted,
-                rightMasterEncoderInverted,
-                rightFollowerInverted,
+                rightMasterInverted.get(),
+                rightMasterEncoderInverted.get(),
+                rightFollowerInverted.get(),
                 RobotSide.Right,
                 rightPIDValues,
                 factory,
