@@ -51,7 +51,6 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
         rightFollowerInverted = propManager.createPersistentProperty("Right shooter follower inverted", false);
 
         createLeftAndRightShooter(factory, propManager, pidFactory);
-
     }
     
     protected void createLeftAndRightShooter(WPIFactory factory, XPropertyManager propManager, PIDFactory pidFactory) {
