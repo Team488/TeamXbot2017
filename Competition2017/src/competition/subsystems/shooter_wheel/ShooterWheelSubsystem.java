@@ -47,7 +47,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         trimFlushToBoilerSpeed =
                 propManager.createEphemeralProperty(side + " trim speed", 0.0);
         wheelSpeedThresholdPercentage = 
-                propManager.createPersistentProperty("Wheel speed threshold percentage for feeding", 0.75);
+                propManager.createPersistentProperty(side + " on target threshold percentage", 0.05);
         isShooterAtSpeed = 
                 propManager.createPersistentProperty("Is " + side + "Shooter wheel at speed?", false);
     }
@@ -102,12 +102,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
     }
     
     public boolean isWheelAtSpeed() {
-        // Speed is in native units and can be negative
-        double currentSpeed = Math.abs(super.getSpeed());
-        if (currentSpeed <= 1) {
-            return false;
-        }
-        return currentSpeed >= super.getTargetSpeed() * wheelSpeedThresholdPercentage.get();
+        return Math.abs(getSpeed() - getTargetSpeed()) <= getTargetSpeed() * wheelSpeedThresholdPercentage.get();
     }
     
     @Override

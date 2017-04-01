@@ -8,11 +8,14 @@ import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootin
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import xbot.common.properties.XPropertyManager;
 
 public class LeftShootFuelCommandGroup extends CommandGroup {
     
     @Inject
-    public LeftShootFuelCommandGroup(ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem,
+    public LeftShootFuelCommandGroup(
+            XPropertyManager propMan,
+            ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem,
             ShooterBeltsManagerSubsystem shooterBeltsManagerSubsystem) {
         RunShooterWheelsForRangeCommand runWheel =
                 new RunShooterWheelsForRangeCommand(
@@ -20,7 +23,9 @@ public class LeftShootFuelCommandGroup extends CommandGroup {
                         shooterWheelsManagerSubsystem.getLeftShooter());
 
         RunBeltIfWheelAtSpeedCommand runBelt =
-                new RunBeltIfWheelAtSpeedCommand(shooterBeltsManagerSubsystem.getLeftBelt(),
+                new RunBeltIfWheelAtSpeedCommand(
+                        propMan,
+                        shooterBeltsManagerSubsystem.getLeftBelt(),
                         shooterWheelsManagerSubsystem.getLeftShooter());
 
         this.addParallel(runWheel);

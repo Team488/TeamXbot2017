@@ -208,6 +208,7 @@ public class OperatorCommandMap {
     
     @Inject
     public void setUpWaitForWheelCommands(
+            XPropertyManager propMan,
             AgitatorsManagerSubsystem agitatorManagerSubsystem,
             ShooterBeltsManagerSubsystem shooterBeltsManagerSubsystem,
             ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem) {
@@ -216,9 +217,9 @@ public class OperatorCommandMap {
             RunIntakeAgitatorIfWheelAtSpeedCommand rightIntakeCommand = 
                     new RunIntakeAgitatorIfWheelAtSpeedCommand(agitatorManagerSubsystem.getRightAgitator(), shooterWheelsManagerSubsystem.getRightShooter());
             RunBeltIfWheelAtSpeedCommand leftBeltCommand = 
-                    new RunBeltIfWheelAtSpeedCommand(shooterBeltsManagerSubsystem.getLeftBelt(), shooterWheelsManagerSubsystem.getLeftShooter());
+                    new RunBeltIfWheelAtSpeedCommand(propMan, shooterBeltsManagerSubsystem.getLeftBelt(), shooterWheelsManagerSubsystem.getLeftShooter());
             RunBeltIfWheelAtSpeedCommand rightBeltCommand = 
-                    new RunBeltIfWheelAtSpeedCommand(shooterBeltsManagerSubsystem.getRightBelt(), shooterWheelsManagerSubsystem.getRightShooter());
+                    new RunBeltIfWheelAtSpeedCommand(propMan, shooterBeltsManagerSubsystem.getRightBelt(), shooterWheelsManagerSubsystem.getRightShooter());
             
             leftIntakeCommand.includeOnSmartDashboard("Left Agitator Intake With A Min Wheel Speed");
             rightIntakeCommand.includeOnSmartDashboard("Right Agitator Intake With A Min Wheel Speed");

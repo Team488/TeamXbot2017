@@ -2,14 +2,18 @@ package competition.subsystems.shooter_belt.commands;
 
 import competition.subsystems.shooter_belt.ShooterBeltSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
+import xbot.common.properties.DoubleProperty;
+import xbot.common.properties.XPropertyManager;
     
 public class RunBeltIfWheelAtSpeedCommand extends BaseShooterBeltCommand {
     
     protected final ShooterWheelSubsystem shooterWheelSubsystem;
+    protected final DoubleProperty minShooterSpeedForFeeding;
 
-    public RunBeltIfWheelAtSpeedCommand(ShooterBeltSubsystem shooterBeltSubsystem, ShooterWheelSubsystem shooterWheelSubsystem) {
+    public RunBeltIfWheelAtSpeedCommand(XPropertyManager propMan, ShooterBeltSubsystem shooterBeltSubsystem, ShooterWheelSubsystem shooterWheelSubsystem) {
         super(shooterBeltSubsystem);
         this.shooterWheelSubsystem = shooterWheelSubsystem;
+        minShooterSpeedForFeeding = propMan.createPersistentProperty("Minimum shooter speed for ball feed", 100);
     }
     
     @Override
@@ -19,7 +23,7 @@ public class RunBeltIfWheelAtSpeedCommand extends BaseShooterBeltCommand {
 
     @Override
     public void execute() {
-        if(shooterWheelSubsystem.isWheelAtSpeed()) {
+        if(Math.abs(shooterWheelSubsystem.getTargetSpeed()) >= minShooterSpeedForFeeding.get() && shooterWheelSubsystem.isWheelAtSpeed()) {
             shooterBeltSubsystem.intakeUsingSpeed();
         } else {
             shooterBeltSubsystem.setPower(0);
