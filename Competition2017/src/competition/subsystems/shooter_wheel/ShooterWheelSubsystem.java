@@ -102,7 +102,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
     }
     
     public boolean isWheelAtSpeed() {
-        return Math.abs(getSpeed() - getTargetSpeed()) <= getTargetSpeed() * wheelSpeedThresholdPercentage.get();
+        return Math.abs(getSpeed() - getTargetSpeed()) <= Math.abs(getTargetSpeed()) * wheelSpeedThresholdPercentage.get();
     }
     
     @Override
