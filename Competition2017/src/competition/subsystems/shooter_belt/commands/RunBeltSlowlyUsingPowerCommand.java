@@ -17,7 +17,7 @@ public class RunBeltSlowlyUsingPowerCommand extends BaseShooterBeltCommand {
     @Override
     public void execute() {
         if (shooterWheelSubsystem.isWheelAtSpeed()) {
-            shooterBeltSubsystem.intakeUsingTracerPower();
+            shooterBeltSubsystem.intakeUsingTracerSpeed();
         } else {
             shooterBeltSubsystem.setPower(0);
         }

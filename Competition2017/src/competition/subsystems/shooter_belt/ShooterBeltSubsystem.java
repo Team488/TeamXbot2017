@@ -10,6 +10,7 @@ import xbot.common.properties.XPropertyManager;
 public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem {
 
     private final RobotSide side;
+    
     protected final DoubleProperty intakePowerProperty;
     protected final DoubleProperty intakeTracerPowerProperty;
     protected final DoubleProperty ejectPowerProperty;
@@ -25,7 +26,7 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
             PIDPropertyManager pidPropertyManager,
             XPropertyManager propManager){
         super(
-                side + " ShooterBelt",
+                side + "ShooterBelt",
                 masterChannel,
                 invertMaster,
                 invertMasterSensor,
@@ -35,7 +36,7 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
         this.side = side;
         
         intakePowerProperty = propManager.createPersistentProperty("ShooterBelt intake power", 0.5);
-        intakeTracerPowerProperty = propManager.createPersistentProperty("ShooterBelt intake tracer power", 0.25);
+        intakeTracerPowerProperty = propManager.createPersistentProperty("ShooterBelt intake tracer power", 0.5);
         ejectPowerProperty = propManager.createPersistentProperty("ShooterBelt eject power", -0.5);
         beltIntakeTargetSpeed = propManager.createPersistentProperty("ShooterBelt intake speed", 100);
         beltIntakeTracerTargetSpeed = propManager.createPersistentProperty("ShooterBelt intake speed", 50);
@@ -61,7 +62,7 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
         setPower(intakeTracerPowerProperty.get());
     }
     
-    public void intakeTracerUsingSpeed(){
+    public void intakeUsingTracerSpeed(){
         setTargetSpeed(beltIntakeTracerTargetSpeed.get());
     }
     

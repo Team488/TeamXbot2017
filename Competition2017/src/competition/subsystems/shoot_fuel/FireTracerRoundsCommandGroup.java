@@ -1,7 +1,5 @@
 package competition.subsystems.shoot_fuel;
 
-import com.google.inject.Inject;
-
 import competition.subsystems.RobotSide;
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
@@ -11,11 +9,9 @@ import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class FireTracerRoundsCommandGroup extends CommandGroup {
-
-    private RobotSide side;
     
-    @Inject
-    public FireTracerRoundsCommandGroup(ShooterBeltsManagerSubsystem shooterBeltsManagerSubsystem,
+    public FireTracerRoundsCommandGroup(RobotSide side,
+            ShooterBeltsManagerSubsystem shooterBeltsManagerSubsystem,
             RunBeltSlowlyUsingPowerCommand runBeltSlowlyUsingPowerCommand,
             AgitatorsManagerSubsystem agitatorsManagerSubsystem,
             ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem) {
@@ -29,9 +25,5 @@ public class FireTracerRoundsCommandGroup extends CommandGroup {
         
         this.addParallel(runTracerPower);
         this.addParallel(runAgitator);
-    }
-    
-    public void setSide(RobotSide side) {
-        this.side = side;
     }
 }

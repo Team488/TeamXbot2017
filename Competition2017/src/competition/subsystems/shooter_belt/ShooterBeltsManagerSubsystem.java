@@ -35,7 +35,7 @@ public class ShooterBeltsManagerSubsystem extends BaseSubsystem {
         leftPIDValues = pidFactory.createPIDPropertyManager("LeftBelt", 0, 0, 0, 0);
         rightPIDValues = pidFactory.createPIDPropertyManager("RightBelt", 0, 0, 0, 0);
             
-        createLeftAndRightBelts(factory, propManager); 
+        createLeftAndRightBelts(factory, propManager);
     }
         
     protected void createLeftAndRightBelts(WPIFactory factory, XPropertyManager propManager) {
@@ -55,7 +55,7 @@ public class ShooterBeltsManagerSubsystem extends BaseSubsystem {
                 invertRightSensor,
                 factory, 
                 rightPIDValues,
-                propManager); 
+                propManager);
     }
 
     public ShooterBeltSubsystem getLeftBelt() {
