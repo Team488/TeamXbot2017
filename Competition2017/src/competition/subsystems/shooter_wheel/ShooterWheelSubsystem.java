@@ -4,6 +4,7 @@ import competition.subsystems.BaseXCANTalonPairSpeedControlledSubsystem;
 import competition.subsystems.RobotSide;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.PIDPropertyManager;
+import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
@@ -13,6 +14,7 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
     protected final DoubleProperty flushToBoilerTargetSpeed;
     protected final DoubleProperty trimFlushToBoilerSpeed;
     protected final DoubleProperty wheelSpeedThresholdPercentage;
+    protected final BooleanProperty isShooterAtSpeed;
     
     public enum TypicalShootingPosition {
         FlushToBoiler
@@ -46,6 +48,8 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
                 propManager.createEphemeralProperty(side + " trim speed", 0.0);
         wheelSpeedThresholdPercentage = 
                 propManager.createPersistentProperty("Wheel speed threshold percentage for feeding", 0.75);
+        isShooterAtSpeed = 
+                propManager.createPersistentProperty("Is " + side + "Shooter wheel at speed?", false);
     }
     
     public RobotSide getSide() {
@@ -106,7 +110,18 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
     }
     
     public boolean isWheelAtSpeed() {
-        return super.getSpeed() >= super.getTargetSpeed() * wheelSpeedThresholdPercentage.get();
+        // Speed is in native units and can be negative
+        double currentSpeed = Math.abs(super.getSpeed());
+        if (currentSpeed <= 1) {
+            return false;
+        }
+        return currentSpeed >= super.getTargetSpeed() * wheelSpeedThresholdPercentage.get();
+    }
+    
+    @Override
+    public void updatePeriodicData() {
+        super.updatePeriodicData();
+        isShooterAtSpeed.set(isWheelAtSpeed());
     }
 }
 
