@@ -7,7 +7,7 @@ import competition.subsystems.drive.DriveSubsystem;
 
 public class TankDriveWithJoysticksCommand extends BaseDriveCommand {
     
-    final OperatorInterface oi;
+    private final OperatorInterface oi;
     
     @Inject
     public TankDriveWithJoysticksCommand(OperatorInterface oi, DriveSubsystem driveSubsystem) {

@@ -5,18 +5,24 @@ import static org.junit.Assert.assertTrue;
 
 import competition.BaseTest;
 import competition.subsystems.pose.PoseSubsystem;
+import edu.wpi.first.wpilibj.MockTimer;
 import xbot.common.controls.actuators.MockCANTalon;
 
 public abstract class DriveTestBase extends BaseTest {
     
     protected DriveSubsystem drive;
     protected PoseSubsystem pose;
+    protected MockTimer mockTimer;
     
     public void setUp() {        
         super.setUp();
         
         drive = injector.getInstance(DriveSubsystem.class);
         pose = injector.getInstance(PoseSubsystem.class);
+        mockTimer = injector.getInstance(MockTimer.class);
+        
+        mockTimer.advanceTimeInSecondsBy(10);
+        pose.updatePeriodicData();
     }
     
     /**
@@ -72,12 +78,12 @@ public abstract class DriveTestBase extends BaseTest {
     
     public void verifyDriveArcingLeft(double minimumDifference) {
         assertTrue((getRightSetpoint() - getLeftSetpoint()) > minimumDifference);
-        assertTrue(((MockCANTalon)drive.leftDrive).getSetpoint() > 0);
+        assertTrue(((MockCANTalon)drive.leftDrive).getSetpoint() >= 0);
     }
     
     public void verifyDriveArcingRight(double minimumDifference) {
         assertTrue((getLeftSetpoint() - getRightSetpoint()) > minimumDifference);
-        assertTrue(((MockCANTalon)drive.rightDrive).getSetpoint() > 0);
+        assertTrue(((MockCANTalon)drive.rightDrive).getSetpoint() >= 0);
     }
     
     public void verifyTurningLeft() {

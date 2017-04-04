@@ -3,18 +3,19 @@ package competition.subsystems.shoot_fuel;
 import com.google.inject.Inject;
 
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;
-import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
+import competition.subsystems.agitator.commands.RunIntakeAgitatorIfWheelAtSpeedCommand;
+import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import xbot.common.properties.XPropertyManager;
 
 public class LeftShootFuelAndAgitateCommandGroup extends CommandGroup {
     
     @Inject
-    public LeftShootFuelAndAgitateCommandGroup(XPropertyManager propManager, 
-            AgitatorsManagerSubsystem agitatorsManagerSubsystem,
-            LeftShootFuelCommandGroup shootLeft) {
+    public LeftShootFuelAndAgitateCommandGroup(AgitatorsManagerSubsystem agitatorsManagerSubsystem,
+            LeftShootFuelCommandGroup shootLeft,
+            ShooterWheelsManagerSubsystem shooterBeltsManagerSubsystem) {
         
-        IntakeAgitatorCommand intake = new IntakeAgitatorCommand(agitatorsManagerSubsystem.getLeftAgitator());
+        RunIntakeAgitatorIfWheelAtSpeedCommand intake = new RunIntakeAgitatorIfWheelAtSpeedCommand(agitatorsManagerSubsystem.getLeftAgitator(),
+                shooterBeltsManagerSubsystem.getLeftShooter());
         
         this.addParallel(intake);
         this.addParallel(shootLeft);

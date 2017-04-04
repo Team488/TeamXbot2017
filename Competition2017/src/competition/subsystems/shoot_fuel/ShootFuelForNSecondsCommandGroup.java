@@ -11,7 +11,7 @@ public class ShootFuelForNSecondsCommandGroup extends CommandGroup {
     
     @Inject
     public ShootFuelForNSecondsCommandGroup(XPropertyManager propManager, 
-            EndtoEndShootingCommandGroup shootFuel) {
+            EndToEndShootingCommandGroup shootFuel) {
         nSeconds = propManager.createPersistentProperty("Autonomous shoot fuel duration", 10);
         this.addParallel(shootFuel, nSeconds.get());
     }
