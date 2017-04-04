@@ -66,7 +66,7 @@ public class ShooterBeltsManagerSubsystem extends BaseSubsystem {
         return rightBelt;
     }
         
-    public ShooterBeltSubsystem getBeltWithRobotSide(RobotSide side) {
+    public ShooterBeltSubsystem getBeltForRobotSide(RobotSide side) {
         if (side == RobotSide.Right) {
             return rightBelt;   
         }
