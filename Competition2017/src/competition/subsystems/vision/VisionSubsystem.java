@@ -18,6 +18,7 @@ import json.JSONArray;
 import json.JSONObject;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.PeriodicDataSource;
+import xbot.common.controls.actuators.XDigitalOutput;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
@@ -55,6 +56,8 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
     private DoubleProperty intrinsicCameraHorizontalOffset;
     
     private BooleanProperty isGettingJetsonData;
+    
+    private XDigitalOutput trackedBoilerDigitalOut;
 
     @Inject
     public VisionSubsystem(WPIFactory factory, XPropertyManager propManager, OffboardCommunicationServer server) {
@@ -76,6 +79,8 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
         boilerSustainLengthProp = propManager.createEphemeralProperty("Tracked boiler sustain length", 0.1);
         
         intrinsicCameraHorizontalOffset = propManager.createPersistentProperty("Intrinsic horizontal camera offset", 0);
+    
+        trackedBoilerDigitalOut = factory.getDigitalOutput(0);
     }
     
     public DetectedLiftPeg getTrackedLiftPeg() {
@@ -189,6 +194,7 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
         if(timeSinceLastPacket > 0 && timeSinceLastPacket <= connectionTimeoutThreshold.get()) {
             if(!isConnected) {
                 log.info("Connected");
+                
                 isConnected = true;
                 isGettingJetsonData.set(true);
             }
@@ -206,11 +212,13 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
             trackedBoilers.clear();
             trackedLiftPegs.clear();
             log.info("Disconnected");
+            
             isConnected = false;
             isGettingJetsonData.set(false);
         }
         
-        DetectedBoiler trackedBoiler = getTrackedBoiler();
+        DetectedBoiler trackedBoiler = getTrackedBoiler();        
+        trackedBoilerDigitalOut.set(isConnected && trackedBoiler != null);
         trackedBoilerXOffsetTelemetry.set(trackedBoiler == null ? 0 : trackedBoiler.offsetX);
         trackedBoilerDistanceTelemetry.set(trackedBoiler == null ? 0 : trackedBoiler.distance);
     }
