@@ -1,13 +1,15 @@
 package competition.subsystems.shooter_belt.commands;
 
-import competition.subsystems.hybrid.commands.BaseShooterBeltAndWheelCommand;
 import competition.subsystems.shooter_belt.ShooterBeltSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
 
-public class RunBeltTracerPowerMode extends BaseShooterBeltAndWheelCommand {
+public class RunBeltTracerPowerMode extends BaseShooterBeltCommand {
 
+    private ShooterWheelSubsystem shooterWheelSubsystem;
+    
     public RunBeltTracerPowerMode(ShooterBeltSubsystem shooterBeltSubsystem, ShooterWheelSubsystem shooterWheelSubsystem) {
-        super(shooterBeltSubsystem, shooterWheelSubsystem);
+        super(shooterBeltSubsystem);
+        this.shooterWheelSubsystem = shooterWheelSubsystem;
     }
     
     @Override
