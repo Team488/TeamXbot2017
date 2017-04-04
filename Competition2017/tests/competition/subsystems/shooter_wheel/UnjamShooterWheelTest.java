@@ -5,7 +5,8 @@ import org.junit.Before;
 import competition.subsystems.shooter_wheel.commands.UnjamShooterWheelCommand;
 import static org.junit.Assert.assertTrue;
 
-public class UnjamShooterWheelTest extends ShooterWheelTestBase{
+public class UnjamShooterWheelTest extends ShooterWheelTestBase {
+    
     private UnjamShooterWheelCommand command;
     
     @Before
