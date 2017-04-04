@@ -8,7 +8,6 @@ public class RunBeltTracerSpeedModeCommand extends BaseShooterBeltAndWheelComman
     
     public RunBeltTracerSpeedModeCommand(ShooterBeltSubsystem shooterBeltSubsystem, ShooterWheelSubsystem shooterWheelSubsystem) {
         super(shooterBeltSubsystem, shooterWheelSubsystem);
-        this.requires(shooterBeltSubsystem);
     }
     
     @Override

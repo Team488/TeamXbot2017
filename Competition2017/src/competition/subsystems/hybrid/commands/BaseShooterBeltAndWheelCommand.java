@@ -13,6 +13,5 @@ public abstract class BaseShooterBeltAndWheelCommand extends BaseCommand {
         this.shooterBeltSubsystem = shooterBeltSubsystem;
         this.shooterWheelSubsystem = shooterWheelSubsystem;
         this.requires(shooterBeltSubsystem);
-        this.requires(shooterWheelSubsystem);
     }
 }
