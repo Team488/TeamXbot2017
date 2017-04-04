@@ -218,7 +218,9 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
         }
         
         DetectedBoiler trackedBoiler = getSustainedTrackedBoiler();
-        trackedBoilerDigitalOut.set(isConnected && trackedBoiler != null);
+        // The recieving Arduino has a pull-up resistor configured, so we use
+        // "low" to represent a detected boiler.
+        trackedBoilerDigitalOut.set(!isConnected || trackedBoiler == null);
         trackedBoilerXOffsetTelemetry.set(trackedBoiler == null ? 0 : trackedBoiler.offsetX);
         trackedBoilerDistanceTelemetry.set(trackedBoiler == null ? 0 : trackedBoiler.distance);
     }
