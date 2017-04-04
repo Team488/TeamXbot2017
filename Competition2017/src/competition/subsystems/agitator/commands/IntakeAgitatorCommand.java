@@ -18,7 +18,7 @@ public class IntakeAgitatorCommand extends BaseAgitatorCommand {
         super(agitatorSubsystem);
         this.agitatorSubsystem = agitatorSubsystem;
         motorCurrentThreshold = propManager
-                .createPersistentProperty(" threshold for agitator motor current before unjamming", 10);
+                .createPersistentProperty("Threshold for agitator motor current before unjamming", 10);
         unjamTimeInterval = propManager.createPersistentProperty(" time interval for unjamming agitator", 13);
     }
     
