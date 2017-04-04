@@ -73,4 +73,11 @@ public class ShooterWheelsManagerSubsystem extends BaseSubsystem {
     public ShooterWheelSubsystem getRightShooter() {
         return rightShooter;
     }
+    
+    public ShooterWheelSubsystem getShooterWheelWithRobotSide(RobotSide side) {
+        if (side == RobotSide.Right) {
+            return rightShooter;
+        }
+        return leftShooter;
+    }
 }

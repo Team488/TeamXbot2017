@@ -1,13 +1,12 @@
 package competition.subsystems.shooter_belt.commands;
 
 import competition.subsystems.shooter_belt.ShooterBeltSubsystem;
-import xbot.common.command.BaseCommand;
+import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
 
 public class RunBeltSlowlyCommand extends BaseShooterBeltCommand {
-    protected final ShooterBeltSubsystem shooterBeltSubsystem;
     
-    public RunBeltSlowlyCommand(ShooterBeltSubsystem shooterBeltSubsystem) {
-        this.shooterBeltSubsystem = shooterBeltSubsystem; 
+    public RunBeltSlowlyCommand(ShooterBeltSubsystem shooterBeltSubsystem, ShooterWheelSubsystem shooterWheelSubsystem) {
+        super(shooterBeltSubsystem, shooterWheelSubsystem);
         this.requires(shooterBeltSubsystem);
     }
     
@@ -18,7 +17,7 @@ public class RunBeltSlowlyCommand extends BaseShooterBeltCommand {
 
     @Override
     public void execute() {
-        if(shooterBeltSubsystem.isAtSpeed()){
+        if(shooterWheelSubsystem.isAtSpeed()){
             shooterBeltSubsystem.intakeTracerUsingSpeed();
         } else {
             shooterBeltSubsystem.setPower(0);
