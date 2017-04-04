@@ -52,6 +52,8 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
     private DoubleProperty trackedBoilerXOffsetTelemetry;
     private DoubleProperty trackedBoilerDistanceTelemetry;
     
+    private DoubleProperty intrinsicCameraHorizontalOffset;
+    
     private BooleanProperty isGettingJetsonData;
 
     @Inject
@@ -72,6 +74,8 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
         
         isGettingJetsonData = propManager.createEphemeralProperty("Is getting Jetson data", false);
         boilerSustainLengthProp = propManager.createEphemeralProperty("Tracked boiler sustain length", 0.1);
+        
+        intrinsicCameraHorizontalOffset = propManager.createPersistentProperty("Intrinsic horizontal camera offset", 0);
     }
     
     public DetectedLiftPeg getTrackedLiftPeg() {
@@ -122,7 +126,7 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
                     
                     DetectedLiftPeg newTarget = new DetectedLiftPeg();
     
-                    newTarget.pegOffsetX = jsonTarget.getDouble("pegOffsetX");
+                    newTarget.pegOffsetX = intrinsicCameraHorizontalOffset.get() + jsonTarget.getDouble("pegOffsetX");
                     newTarget.pegOffsetY = jsonTarget.getDouble("pegOffsetY");
                     newTarget.isTracked = jsonTarget.getBoolean("isTracked");
     
@@ -145,7 +149,7 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
                     
                     DetectedBoiler newTarget = new DetectedBoiler();
     
-                    newTarget.offsetX = jsonTarget.getDouble("offsetX");
+                    newTarget.offsetX = intrinsicCameraHorizontalOffset.get() + jsonTarget.getDouble("offsetX");
                     newTarget.targetAngleX = jsonTarget.getDouble("targetAngleX");
                     newTarget.targetAngleY = jsonTarget.getDouble("targetAngleY");
                     newTarget.isTracked = jsonTarget.getBoolean("isTracked");
