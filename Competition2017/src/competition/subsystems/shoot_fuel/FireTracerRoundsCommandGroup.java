@@ -4,7 +4,7 @@ import competition.subsystems.RobotSide;
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
-import competition.subsystems.shooter_belt.commands.RunBeltSlowlyUsingPowerCommand;
+import competition.subsystems.shooter_belt.commands.RunBeltTracerPowerMode;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -12,12 +12,12 @@ public class FireTracerRoundsCommandGroup extends CommandGroup {
     
     public FireTracerRoundsCommandGroup(RobotSide side,
             ShooterBeltsManagerSubsystem shooterBeltsManagerSubsystem,
-            RunBeltSlowlyUsingPowerCommand runBeltSlowlyUsingPowerCommand,
+            RunBeltTracerPowerMode runBeltSlowlyUsingPowerCommand,
             AgitatorsManagerSubsystem agitatorsManagerSubsystem,
             ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem) {
 
-        RunBeltSlowlyUsingPowerCommand runTracerPower =
-                new RunBeltSlowlyUsingPowerCommand(shooterBeltsManagerSubsystem.getBeltWithRobotSide(side), 
+        RunBeltTracerPowerMode runTracerPower =
+                new RunBeltTracerPowerMode(shooterBeltsManagerSubsystem.getBeltWithRobotSide(side), 
                         shooterWheelsManagerSubsystem.getShooterWheelWithRobotSide(side));
         
         IntakeAgitatorCommand runAgitator = 

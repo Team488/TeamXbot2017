@@ -4,9 +4,9 @@ import competition.subsystems.hybrid.commands.BaseShooterBeltAndWheelCommand;
 import competition.subsystems.shooter_belt.ShooterBeltSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
 
-public class RunBeltSlowlyUsingPowerCommand extends BaseShooterBeltAndWheelCommand {
+public class RunBeltTracerPowerMode extends BaseShooterBeltAndWheelCommand {
 
-    public RunBeltSlowlyUsingPowerCommand(ShooterBeltSubsystem shooterBeltSubsystem, ShooterWheelSubsystem shooterWheelSubsystem) {
+    public RunBeltTracerPowerMode(ShooterBeltSubsystem shooterBeltSubsystem, ShooterWheelSubsystem shooterWheelSubsystem) {
         super(shooterBeltSubsystem, shooterWheelSubsystem);
     }
     
@@ -18,7 +18,7 @@ public class RunBeltSlowlyUsingPowerCommand extends BaseShooterBeltAndWheelComma
     @Override
     public void execute() {
         if (shooterWheelSubsystem.isWheelAtSpeed()) {
-            shooterBeltSubsystem.intakeUsingTracerSpeed();
+            shooterBeltSubsystem.intakeUsingTracerPower();
         } else {
             shooterBeltSubsystem.setPower(0);
         }
