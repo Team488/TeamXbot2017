@@ -217,7 +217,7 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
             isGettingJetsonData.set(false);
         }
         
-        DetectedBoiler trackedBoiler = getTrackedBoiler();        
+        DetectedBoiler trackedBoiler = getSustainedTrackedBoiler();
         trackedBoilerDigitalOut.set(isConnected && trackedBoiler != null);
         trackedBoilerXOffsetTelemetry.set(trackedBoiler == null ? 0 : trackedBoiler.offsetX);
         trackedBoilerDistanceTelemetry.set(trackedBoiler == null ? 0 : trackedBoiler.distance);
