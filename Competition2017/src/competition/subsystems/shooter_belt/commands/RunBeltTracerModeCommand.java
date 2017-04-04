@@ -3,9 +3,9 @@ package competition.subsystems.shooter_belt.commands;
 import competition.subsystems.shooter_belt.ShooterBeltSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
 
-public class RunBeltSlowlyCommand extends BaseShooterBeltCommand {
+public class RunBeltTracerModeCommand extends BaseShooterBeltCommand {
     
-    public RunBeltSlowlyCommand(ShooterBeltSubsystem shooterBeltSubsystem, ShooterWheelSubsystem shooterWheelSubsystem) {
+    public RunBeltTracerModeCommand(ShooterBeltSubsystem shooterBeltSubsystem, ShooterWheelSubsystem shooterWheelSubsystem) {
         super(shooterBeltSubsystem, shooterWheelSubsystem);
         this.requires(shooterBeltSubsystem);
     }
