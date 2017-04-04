@@ -1,7 +1,6 @@
 package competition.subsystems.shooter_wheel.commands;
 
-import com.google.inject.Inject;
-
+import competition.subsystems.RobotSide;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
@@ -10,16 +9,15 @@ public class UnjamShooterWheelCommand extends BaseShooterWheelCommand {
 
     private DoubleProperty threshold;
 
-    @Inject
-    public UnjamShooterWheelCommand(ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem, XPropertyManager propMan) {
-        super(shooterWheelsManagerSubsystem.getLeftShooter());
+    public UnjamShooterWheelCommand(RobotSide side, ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem, XPropertyManager propMan) {
+        super(shooterWheelsManagerSubsystem.getShooterForRobotSide(side));
         
         threshold = propMan.createPersistentProperty("threshold for jammed motor speed", 0.01);
     }
 
     @Override
     public void initialize() {
-        
+        log.info("Initializing");
     }
 
     @Override
