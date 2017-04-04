@@ -24,7 +24,7 @@ public class RunBeltIfWheelAtSpeedCommand extends BaseShooterBeltCommand {
     @Override
     public void execute() {
         if(Math.abs(shooterWheelSubsystem.getTargetSpeed()) >= minShooterSpeedForFeeding.get() && shooterWheelSubsystem.isWheelAtSpeed()) {
-            shooterBeltSubsystem.intakeUsingSpeed();
+            shooterBeltSubsystem.intakeUsingPower();
         } else {
             shooterBeltSubsystem.setPower(0);
         }
