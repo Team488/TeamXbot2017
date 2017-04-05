@@ -70,5 +70,4 @@ public class AgitatorSubsystem extends BaseSubsystem implements PeriodicDataSour
     public void updatePeriodicData() {
         agitatorMotor.updateTelemetryProperties();
     }
-    
 }
