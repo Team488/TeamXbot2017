@@ -6,6 +6,7 @@ import com.google.inject.Singleton;
 import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.pose.commands.ResetDistanceCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
+import xbot.common.command.SmartDashboardCommandPutter;
 import xbot.common.controls.sensors.XXboxController.XboxButton;
 import xbot.common.math.PIDFactory;
 import xbot.common.properties.DoubleProperty;
@@ -325,7 +326,8 @@ public class OperatorCommandMap {
             RightFeedingCommandGroup feedRight,
             ShooterBeltsManagerSubsystem shooterBeltsManagerSubsystem,
             AgitatorsManagerSubsystem agitatorsManagerSubsystem,
-            ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem
+            ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem,
+            SmartDashboardCommandPutter commandPutter
             ) {
 
         oi.controller.getXboxButton(XboxButton.LeftBumper).whileHeld(feedLeft);
@@ -343,7 +345,9 @@ public class OperatorCommandMap {
                 shooterBeltsManagerSubsystem, runBeltTracerPowerModeRight, agitatorsManagerSubsystem,
                 shooterWheelsManagerSubsystem);
 
-        oi.controller.getXboxButton(XboxButton.LeftStick).whileHeld(tracerLeft);
-        oi.controller.getXboxButton(XboxButton.RightStick).whileHeld(tracerRight);
+        commandPutter.addCommandToSmartDashboard("Fire tracer left",tracerLeft);
+        commandPutter.addCommandToSmartDashboard("Fire tracer right",tracerRight);
+        
+        // TODO: Find out how Andy would like to control these, potentially one command that fires both left/right?
     }
 }
