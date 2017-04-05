@@ -20,14 +20,21 @@ public class StopAllShootingCommandGroup extends CommandGroup {
             ShooterBeltsManagerSubsystem beltsManager,
             ShooterWheelsManagerSubsystem wheelsManager) {
         
+        this(stopCollector, agitatorsManager, beltsManager, wheelsManager, false);
+    }
+    
+    public StopAllShootingCommandGroup(
+            StopCollectorCommand stopCollector,
+            AgitatorsManagerSubsystem agitatorsManager,
+            ShooterBeltsManagerSubsystem beltsManager,
+            ShooterWheelsManagerSubsystem wheelsManager,
+            boolean sustainShooterWheels) {
+        
         StopAgitatorCommand stopLeftAgitator = new StopAgitatorCommand(agitatorsManager.getLeftAgitator());
         StopAgitatorCommand stopRightAgitator = new StopAgitatorCommand(agitatorsManager.getRightAgitator());
         
         StopBeltCommand stopLeftBelt = new StopBeltCommand(beltsManager.getLeftBelt());
         StopBeltCommand stopRightBelt = new StopBeltCommand(beltsManager.getRightBelt());
-        
-        StopShooterCommand stopLeftWheel = new StopShooterCommand(wheelsManager.getLeftShooter());
-        StopShooterCommand stopRightWheel = new StopShooterCommand(wheelsManager.getRightShooter());
         
         this.addParallel(stopCollector, 0.2);
         
@@ -37,7 +44,12 @@ public class StopAllShootingCommandGroup extends CommandGroup {
         this.addParallel(stopLeftBelt, 0.2);
         this.addParallel(stopRightBelt, 0.2);
         
-        this.addParallel(stopLeftWheel, 0.2);
-        this.addParallel(stopRightWheel, 0.2);
+        if(!sustainShooterWheels) {
+            StopShooterCommand stopLeftWheel = new StopShooterCommand(wheelsManager.getLeftShooter());
+            StopShooterCommand stopRightWheel = new StopShooterCommand(wheelsManager.getRightShooter());
+            
+            this.addParallel(stopLeftWheel, 0.2);
+            this.addParallel(stopRightWheel, 0.2);
+        }
     }
 }

@@ -3,7 +3,6 @@ package competition.subsystems.autonomous;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import competition.subsystems.collector.commands.StopCollectorCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.pose.PoseSubsystem;
@@ -26,8 +25,9 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
     
     private SetRobotHeadingCommand setInitialHeading;
     private ShootFuelForNSecondsCommandGroup shootFuel;
-    private DriveForDistanceCommand breakBaselineAuto;
+    protected DriveForDistanceCommand driveAcrossBaseline;
     private DriveForDistanceCommand driveBackABit;
+    protected StopAllShootingCommandGroup stopFiring;
     
     @Inject
     public ShootAndDriveAcrossBaseLineCommandGroup(XPropertyManager propManager,
@@ -59,6 +59,7 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         driveBackABit.setDeltaDistance(distanceToBackUp);
         
         this.addSequential(driveBackABit, 0.25);
+        this.stopFiring = stopFiring;
         this.addParallel(stopFiring, 0.25);
         
         //aim away from driver station (towards baseline)
@@ -66,9 +67,9 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         this.addSequential(rotateToBaseline, 1.2);
         
         // Maybe here we change it to high gear?
-        breakBaselineAuto = driveForDistanceProvider.get();
-        breakBaselineAuto.setDeltaDistance(poseSubsystem.getDistanceFromWallToBaseline());
-        this.addSequential(breakBaselineAuto, poseSubsystem.getBreakBaselineMaximumTime());
+        driveAcrossBaseline = driveForDistanceProvider.get();
+        driveAcrossBaseline.setDeltaDistance(poseSubsystem.getDistanceFromWallToBaseline());
+        this.addSequential(driveAcrossBaseline, poseSubsystem.getBreakBaselineMaximumTime());
     }
     
     public void setAlliance(Alliance color) {
