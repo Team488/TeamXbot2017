@@ -18,10 +18,11 @@ public class FireTracerRoundsCommandGroup extends CommandGroup {
 
         RunBeltTracerPowerMode runTracerPower =
                 new RunBeltTracerPowerMode(shooterBeltsManagerSubsystem.getBeltForRobotSide(side), 
-                        shooterWheelsManagerSubsystem.getShooterWheelWithRobotSide(side));
+                        shooterWheelsManagerSubsystem.getShooterWheelForRobotSide(side));
         
         IntakeAgitatorCommand runAgitator = 
-                new IntakeAgitatorCommand(agitatorsManagerSubsystem.getAgiatorWithRobotSide(side));
+                new IntakeAgitatorCommand(agitatorsManagerSubsystem.getAgiatorWithRobotSide(side), 
+                        shooterWheelsManagerSubsystem.getShooterWheelForRobotSide(side));
         
         this.addParallel(runTracerPower);
         this.addParallel(runAgitator);
