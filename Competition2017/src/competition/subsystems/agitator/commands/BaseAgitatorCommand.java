@@ -5,7 +5,7 @@ import xbot.common.command.BaseCommand;
 
 public abstract class BaseAgitatorCommand extends BaseCommand {
 
-    final AgitatorSubsystem agitatorSubsystem;
+    protected final AgitatorSubsystem agitatorSubsystem;
     
     public BaseAgitatorCommand(AgitatorSubsystem agitatorSubsystem) {
         this.agitatorSubsystem = agitatorSubsystem; 

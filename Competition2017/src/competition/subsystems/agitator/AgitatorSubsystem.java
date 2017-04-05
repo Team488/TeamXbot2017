@@ -30,7 +30,7 @@ public class AgitatorSubsystem extends BaseSubsystem implements PeriodicDataSour
         this.side = side;
         intakePowerProperty = propManager.createPersistentProperty("Agitator intake power", 0.5);
         ejectPowerProperty = propManager.createPersistentProperty("Agitator eject power", -0.5);
-
+        
         this.agitatorMotor = factory.getCANTalonSpeedController(motor);
 
         agitatorMotor.setBrakeEnableDuringNeutral(false);
@@ -61,7 +61,11 @@ public class AgitatorSubsystem extends BaseSubsystem implements PeriodicDataSour
     public void stop() {
         agitatorMotor.set(0);
     }
-
+    
+    public double getMotorSpeed() {
+        return agitatorMotor.getSpeed();
+    }
+    
     @Override
     public void updatePeriodicData() {
         agitatorMotor.updateTelemetryProperties();
