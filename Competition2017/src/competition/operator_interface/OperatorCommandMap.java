@@ -190,8 +190,10 @@ public class OperatorCommandMap {
             UnjamLeftCommandGroup unjamLeft,
             UnjamRightCommandGroup unjamRight)
     {
-        IntakeAgitatorCommand intakeLeft = new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator(), shooterWheelsManagerSubsystem.getLeftShooter());
-        IntakeAgitatorCommand intakeRight = new IntakeAgitatorCommand(agitatorManagerSubsystem.getRightAgitator(), shooterWheelsManagerSubsystem.getLeftShooter());
+        IntakeAgitatorCommand intakeLeft = new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator(), 
+                shooterWheelsManagerSubsystem.getLeftShooter());
+        IntakeAgitatorCommand intakeRight = new IntakeAgitatorCommand(agitatorManagerSubsystem.getRightAgitator(), 
+                shooterWheelsManagerSubsystem.getLeftShooter());
         EjectAgitatorCommand ejectLeft = new EjectAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator());
         EjectAgitatorCommand ejectRight = new EjectAgitatorCommand(agitatorManagerSubsystem.getRightAgitator());
         
@@ -217,13 +219,17 @@ public class OperatorCommandMap {
             ShooterBeltsManagerSubsystem shooterBeltsManagerSubsystem,
             ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem) {
             RunIntakeAgitatorIfWheelAtSpeedCommand leftIntakeCommand = 
-                    new RunIntakeAgitatorIfWheelAtSpeedCommand(agitatorManagerSubsystem.getLeftAgitator(), shooterWheelsManagerSubsystem.getLeftShooter());
+                    new RunIntakeAgitatorIfWheelAtSpeedCommand(agitatorManagerSubsystem.getLeftAgitator(), 
+                            shooterWheelsManagerSubsystem.getLeftShooter());
             RunIntakeAgitatorIfWheelAtSpeedCommand rightIntakeCommand = 
-                    new RunIntakeAgitatorIfWheelAtSpeedCommand(agitatorManagerSubsystem.getRightAgitator(), shooterWheelsManagerSubsystem.getRightShooter());
+                    new RunIntakeAgitatorIfWheelAtSpeedCommand(agitatorManagerSubsystem.getRightAgitator(), 
+                            shooterWheelsManagerSubsystem.getRightShooter());
             RunBeltIfWheelAtSpeedCommand leftBeltCommand = 
-                    new RunBeltIfWheelAtSpeedCommand(shooterBeltsManagerSubsystem.getLeftBelt(), shooterWheelsManagerSubsystem.getLeftShooter());
+                    new RunBeltIfWheelAtSpeedCommand(shooterBeltsManagerSubsystem.getLeftBelt(), 
+                            shooterWheelsManagerSubsystem.getLeftShooter());
             RunBeltIfWheelAtSpeedCommand rightBeltCommand = 
-                    new RunBeltIfWheelAtSpeedCommand(shooterBeltsManagerSubsystem.getRightBelt(), shooterWheelsManagerSubsystem.getRightShooter());
+                    new RunBeltIfWheelAtSpeedCommand(shooterBeltsManagerSubsystem.getRightBelt(), 
+                            shooterWheelsManagerSubsystem.getRightShooter());
             
             leftIntakeCommand.includeOnSmartDashboard("Left Agitator Intake With A Min Wheel Speed");
             rightIntakeCommand.includeOnSmartDashboard("Right Agitator Intake With A Min Wheel Speed");
