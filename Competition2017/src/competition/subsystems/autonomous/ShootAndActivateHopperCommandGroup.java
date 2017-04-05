@@ -1,5 +1,6 @@
 package competition.subsystems.autonomous;
 
+import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
@@ -7,7 +8,6 @@ import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shoot_fuel.ShootFuelForNSecondsCommandGroup;
-import competition.subsystems.shoot_fuel.StopAllShootingCommandGroup;
 import competition.subsystems.shoot_fuel.StopFeedingAndCollectionCommandGroup;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import xbot.common.properties.DoubleProperty;
@@ -15,7 +15,6 @@ import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
 public class ShootAndActivateHopperCommandGroup extends ShootAndDriveAcrossBaseLineCommandGroup {
-    private ShootAndDriveAcrossBaseLineCommandGroup shootAndBaseLine;
     private DriveForDistanceCommand driveToHopper;
     private RotateToHeadingCommand rotateToHopper;
 
@@ -24,6 +23,7 @@ public class ShootAndActivateHopperCommandGroup extends ShootAndDriveAcrossBaseL
     private final DoubleProperty distanceToHopperFromTurningPoint;
     private final DoubleProperty distanceFromShootingPositionToTurningPoint;
 
+    @Inject
     public ShootAndActivateHopperCommandGroup(XPropertyManager propManager,
             SetRobotHeadingCommand setHeading,
             Provider <DriveForDistanceCommand> driveForDistanceProvider,
