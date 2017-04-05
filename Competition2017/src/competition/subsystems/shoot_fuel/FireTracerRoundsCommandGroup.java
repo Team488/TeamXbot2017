@@ -1,28 +1,26 @@
 package competition.subsystems.shoot_fuel;
 
-import competition.subsystems.RobotSide;
-import competition.subsystems.agitator.AgitatorsManagerSubsystem;
+import competition.subsystems.agitator.AgitatorSubsystem;
 import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
-import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
+import competition.subsystems.shooter_belt.ShooterBeltSubsystem;
 import competition.subsystems.shooter_belt.commands.RunBeltTracerPowerMode;
-import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
+import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class FireTracerRoundsCommandGroup extends CommandGroup {
     
-    public FireTracerRoundsCommandGroup(RobotSide side,
-            ShooterBeltsManagerSubsystem shooterBeltsManagerSubsystem,
+    public FireTracerRoundsCommandGroup(ShooterBeltSubsystem shooterBeltSubsystem,
             RunBeltTracerPowerMode runBeltSlowlyUsingPowerCommand,
-            AgitatorsManagerSubsystem agitatorsManagerSubsystem,
-            ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem) {
+            AgitatorSubsystem agitatorSubsystem,
+            ShooterWheelSubsystem shooterWheelSubsystem) {
 
         RunBeltTracerPowerMode runTracerPower =
-                new RunBeltTracerPowerMode(shooterBeltsManagerSubsystem.getBeltForRobotSide(side), 
-                        shooterWheelsManagerSubsystem.getShooterWheelForRobotSide(side));
+                new RunBeltTracerPowerMode(shooterBeltSubsystem, 
+                        shooterWheelSubsystem);
         
         IntakeAgitatorCommand runAgitator = 
-                new IntakeAgitatorCommand(agitatorsManagerSubsystem.getAgiatorWithRobotSide(side), 
-                        shooterWheelsManagerSubsystem.getShooterWheelForRobotSide(side));
+                new IntakeAgitatorCommand(agitatorSubsystem, 
+                        shooterWheelSubsystem);
         
         this.addParallel(runTracerPower);
         this.addParallel(runAgitator);

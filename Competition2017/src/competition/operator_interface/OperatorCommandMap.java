@@ -186,11 +186,12 @@ public class OperatorCommandMap {
     public void setupAgitatorCommands(
             OperatorInterface oi,
             AgitatorsManagerSubsystem agitatorManagerSubsystem,
+            ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem,
             UnjamLeftCommandGroup unjamLeft,
             UnjamRightCommandGroup unjamRight)
     {
-        IntakeAgitatorCommand intakeLeft = new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator());
-        IntakeAgitatorCommand intakeRight = new IntakeAgitatorCommand(agitatorManagerSubsystem.getRightAgitator());
+        IntakeAgitatorCommand intakeLeft = new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator(), shooterWheelsManagerSubsystem.getLeftShooter());
+        IntakeAgitatorCommand intakeRight = new IntakeAgitatorCommand(agitatorManagerSubsystem.getRightAgitator(), shooterWheelsManagerSubsystem.getLeftShooter());
         EjectAgitatorCommand ejectLeft = new EjectAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator());
         EjectAgitatorCommand ejectRight = new EjectAgitatorCommand(agitatorManagerSubsystem.getRightAgitator());
         
@@ -335,15 +336,17 @@ public class OperatorCommandMap {
 
         RunBeltTracerPowerMode runBeltTracerPowerModeLeft = new RunBeltTracerPowerMode(
                 shooterBeltsManagerSubsystem.getLeftBelt(), shooterWheelsManagerSubsystem.getLeftShooter());
-        FireTracerRoundsCommandGroup tracerLeft = new FireTracerRoundsCommandGroup(RobotSide.Left,
-                shooterBeltsManagerSubsystem, runBeltTracerPowerModeLeft, agitatorsManagerSubsystem,
-                shooterWheelsManagerSubsystem);
+        FireTracerRoundsCommandGroup tracerLeft = new FireTracerRoundsCommandGroup(shooterBeltsManagerSubsystem.getLeftBelt(), 
+                runBeltTracerPowerModeLeft, 
+                agitatorsManagerSubsystem.getLeftAgitator(),
+                shooterWheelsManagerSubsystem.getLeftShooter());
 
         RunBeltTracerPowerMode runBeltTracerPowerModeRight = new RunBeltTracerPowerMode(
                 shooterBeltsManagerSubsystem.getRightBelt(), shooterWheelsManagerSubsystem.getRightShooter());
-        FireTracerRoundsCommandGroup tracerRight = new FireTracerRoundsCommandGroup(RobotSide.Right,
-                shooterBeltsManagerSubsystem, runBeltTracerPowerModeRight, agitatorsManagerSubsystem,
-                shooterWheelsManagerSubsystem);
+        FireTracerRoundsCommandGroup tracerRight = new FireTracerRoundsCommandGroup(shooterBeltsManagerSubsystem.getRightBelt(),
+                runBeltTracerPowerModeRight, 
+                agitatorsManagerSubsystem.getRightAgitator(),
+                shooterWheelsManagerSubsystem.getRightShooter());
 
         commandPutter.addCommandToSmartDashboard("Fire tracer left",tracerLeft);
         commandPutter.addCommandToSmartDashboard("Fire tracer right",tracerRight);
