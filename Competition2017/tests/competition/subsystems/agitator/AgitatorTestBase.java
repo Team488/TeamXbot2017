@@ -7,13 +7,15 @@ import competition.BaseTest;
 
 public class AgitatorTestBase extends BaseTest{
 
-    protected AgitatorSubsystem agitator;
+    protected TestAgitatorManagerSubsystem agitatorManager;
+    protected TestAgitatorSubsystem agitator;
     
     @Before
-    public void setup() {
+    public void setUp() {
         super.setUp();
         
-        agitator = injector.getInstance(TestAgitatorManagerSubsystem.class).getLeftAgitator();
+        agitatorManager = injector.getInstance(TestAgitatorManagerSubsystem.class);
+        agitator = (TestAgitatorSubsystem)agitatorManager.getLeftAgitator();
     }
     
     public void verifyAgitatorSetpoints(double leftPower) {

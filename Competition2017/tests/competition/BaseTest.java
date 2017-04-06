@@ -3,10 +3,8 @@ package competition;
 import org.junit.Ignore;
 
 import competition.networking.OffboardCommunicationServer;
-import competition.subsystems.pose.PoseSubsystem;
 import xbot.common.injection.BaseWPITest;
 import xbot.common.injection.UnitTestModule;
-import xbot.common.subsystems.pose.BasePoseSubsystem;
 
 @Ignore
 public class BaseTest extends BaseWPITest {

@@ -21,10 +21,10 @@ public class AgitatorSubsystem extends BaseSubsystem implements PeriodicDataSour
     
     private boolean isIntaking = false;
 
-    private DoubleProperty agitatorOverCurrentThreshold;
-    private DoubleProperty agitatorStallDuration;
-    private DoubleProperty unjamDuration;
-    private DoubleProperty unjamPower;
+    protected DoubleProperty agitatorOverCurrentThreshold;
+    protected DoubleProperty agitatorStallDuration;
+    protected DoubleProperty unjamDuration;
+    protected DoubleProperty unjamPower;
     private boolean isTrackingOverCurrent = false;
     private double overCurrentStart = 0;
     
@@ -47,7 +47,7 @@ public class AgitatorSubsystem extends BaseSubsystem implements PeriodicDataSour
         agitatorStallDuration = propManager.createPersistentProperty("Agitator stall duration threshold", 1);
 
         unjamDuration = propManager.createPersistentProperty("Agitator unjam duration", 1);
-        unjamPower = propManager.createPersistentProperty("Agitator unjam power", 0.7);
+        unjamPower = propManager.createPersistentProperty("Agitator unjam power", -0.7);
         
         this.agitatorMotor = factory.getCANTalonSpeedController(motor);
 
@@ -79,7 +79,9 @@ public class AgitatorSubsystem extends BaseSubsystem implements PeriodicDataSour
     }
 
     public void intake() {
-        setAgitatorPowerRaw(intakePowerProperty.get());
+        if(unjamEnd < 0 || Timer.getFPGATimestamp() > unjamEnd) {
+            setAgitatorPowerRaw(intakePowerProperty.get());
+        }
         isIntaking = true;
     }
 
