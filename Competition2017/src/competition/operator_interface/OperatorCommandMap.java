@@ -18,9 +18,11 @@ import competition.subsystems.agitator.commands.EjectAgitatorCommand;
 import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
 import competition.subsystems.agitator.commands.RunIntakeAgitatorIfWheelAtSpeedCommand;
 import competition.subsystems.autonomous.DriveToBoilerUsingHeuristicsWithVisionCommandGroup;
+import competition.subsystems.autonomous.ShootAndActivateHopperCommandGroup;
 import competition.subsystems.autonomous.selection.DisableAutonomousCommand;
 import competition.subsystems.autonomous.selection.SetupBreakBaselineCommand;
 import competition.subsystems.autonomous.selection.SetupDriveToHopperThenBoilerCommand;
+import competition.subsystems.autonomous.selection.SetupShootAndActivateHopperCommand;
 import competition.subsystems.autonomous.selection.SetupShootAndDriveAcrossBaseLineCommand;
 import competition.subsystems.climbing.commands.RopeAlignerCommand;
 import competition.subsystems.collector.CollectorSubsystem.Power;
@@ -296,17 +298,17 @@ public class OperatorCommandMap {
             OperatorInterface oi,
             DisableAutonomousCommand disableCommand,
             SetupShootAndDriveAcrossBaseLineCommand shootThenBaseline,
-            SetupDriveToHopperThenBoilerCommand driveToBoiler,
-            SetupBreakBaselineCommand breakBaseLine)
+            SetupBreakBaselineCommand breakBaseLine,
+            SetupShootAndActivateHopperCommand shootThenHopper)
     {
         oi.leftButtons.getIfAvailable(8).whenPressed(breakBaseLine);
-        oi.leftButtons.getIfAvailable(9).whenPressed(driveToBoiler);
+        oi.leftButtons.getIfAvailable(9).whenPressed(shootThenHopper);
         oi.rightButtons.getIfAvailable(8).whenPressed(disableCommand);
         oi.rightButtons.getIfAvailable(9).whenPressed(shootThenBaseline);
         
         breakBaseLine.includeOnSmartDashboard("Break Base Line");
         disableCommand.includeOnSmartDashboard("Disable Autonomous");
-        driveToBoiler.includeOnSmartDashboard("Run DriveToBoiler Autonomous Command");
+        shootThenHopper.includeOnSmartDashboard("Shoot then activate hopper autonmous command ");
         shootThenBaseline.includeOnSmartDashboard("Shoot then baseline autonomous command");
     }
     
