@@ -107,4 +107,100 @@ public class AgitatorSubsystemTest extends AgitatorTestBase{
         verifyAgitatorSetpoints(agitator.intakePowerProperty.get());
     }
 
+    @Test
+    public void agitatorStallEjectTest() {
+        MockCANTalon agitatorTalon = (MockCANTalon)agitator.agitatorMotor;
+        agitatorTalon.setOutputCurrent(5);
+        
+        agitator.eject();
+        agitator.updatePeriodicData();
+        verifyAgitatorSetpoints(agitator.ejectPowerProperty.get());
+        timer.setTimeInSeconds(100);
+        
+        agitatorTalon.setOutputCurrent(25);
+        agitator.updatePeriodicData();
+        agitator.eject();
+        verifyAgitatorSetpoints(agitator.ejectPowerProperty.get());
+
+        timer.advanceTimeInSecondsBy(0.4);
+        agitator.updatePeriodicData();
+        agitator.eject();
+        verifyAgitatorSetpoints(agitator.ejectPowerProperty.get());
+
+        timer.advanceTimeInSecondsBy(0.4);
+        agitator.updatePeriodicData();
+        agitator.eject();
+        verifyAgitatorSetpoints(agitator.ejectPowerProperty.get());
+
+        timer.advanceTimeInSecondsBy(0.4);
+        agitator.updatePeriodicData();
+        agitator.eject();
+        verifyAgitatorSetpoints(agitator.ejectPowerProperty.get());
+
+        agitatorTalon.setOutputCurrent(5);
+        
+        timer.advanceTimeInSecondsBy(0.4);
+        agitator.updatePeriodicData();
+        agitator.eject();
+        verifyAgitatorSetpoints(agitator.ejectPowerProperty.get());
+
+        timer.advanceTimeInSecondsBy(0.4);
+        agitator.updatePeriodicData();
+        agitator.eject();
+        verifyAgitatorSetpoints(agitator.ejectPowerProperty.get());
+
+        timer.advanceTimeInSecondsBy(0.4);
+        agitator.updatePeriodicData();
+        agitator.eject();
+        verifyAgitatorSetpoints(agitator.ejectPowerProperty.get());
+    }
+
+    @Test
+    public void agitatorStallStopTest() {
+        MockCANTalon agitatorTalon = (MockCANTalon)agitator.agitatorMotor;
+        agitatorTalon.setOutputCurrent(5);
+        
+        agitator.stop();
+        agitator.updatePeriodicData();
+        verifyAgitatorSetpoints(0);
+        timer.setTimeInSeconds(100);
+        
+        agitatorTalon.setOutputCurrent(25);
+        agitator.updatePeriodicData();
+        agitator.stop();
+        verifyAgitatorSetpoints(0);
+
+        timer.advanceTimeInSecondsBy(0.4);
+        agitator.updatePeriodicData();
+        agitator.stop();
+        verifyAgitatorSetpoints(0);
+
+        timer.advanceTimeInSecondsBy(0.4);
+        agitator.updatePeriodicData();
+        agitator.stop();
+        verifyAgitatorSetpoints(0);
+
+        timer.advanceTimeInSecondsBy(0.4);
+        agitator.updatePeriodicData();
+        agitator.stop();
+        verifyAgitatorSetpoints(0);
+
+        agitatorTalon.setOutputCurrent(5);
+        
+        timer.advanceTimeInSecondsBy(0.4);
+        agitator.updatePeriodicData();
+        agitator.stop();
+        verifyAgitatorSetpoints(0);
+
+        timer.advanceTimeInSecondsBy(0.4);
+        agitator.updatePeriodicData();
+        agitator.stop();
+        verifyAgitatorSetpoints(0);
+
+        timer.advanceTimeInSecondsBy(0.4);
+        agitator.updatePeriodicData();
+        agitator.stop();
+        verifyAgitatorSetpoints(0);
+    }
+
 }
