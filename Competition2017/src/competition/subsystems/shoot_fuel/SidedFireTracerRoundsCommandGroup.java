@@ -7,9 +7,9 @@ import competition.subsystems.shooter_belt.commands.RunBeltTracerPowerMode;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class FireTracerRoundsCommandGroup extends CommandGroup {
+public class SidedFireTracerRoundsCommandGroup extends CommandGroup {
     
-    public FireTracerRoundsCommandGroup(ShooterBeltSubsystem shooterBeltSubsystem,
+    public SidedFireTracerRoundsCommandGroup(ShooterBeltSubsystem shooterBeltSubsystem,
             AgitatorSubsystem agitatorSubsystem,
             ShooterWheelSubsystem shooterWheelSubsystem) {
 

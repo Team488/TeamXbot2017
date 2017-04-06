@@ -36,12 +36,13 @@ import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
 import competition.subsystems.drive.commands.TogglePrecisionMode;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
-import competition.subsystems.shoot_fuel.FireTracerRoundsCommandGroup;
+import competition.subsystems.shoot_fuel.SidedFireTracerRoundsCommandGroup;
 import competition.subsystems.shoot_fuel.LeftFeedingCommandGroup;
 import competition.subsystems.shoot_fuel.LeftShootFuelCommandGroup;
 import competition.subsystems.shoot_fuel.RightFeedingCommandGroup;
 import competition.subsystems.shoot_fuel.RightShootFuelCommandGroup;
 import competition.subsystems.shoot_fuel.ShootFuelCommandGroup;
+import competition.subsystems.shoot_fuel.ShootFuelTracerPowerCommandGroup;
 import competition.subsystems.shoot_fuel.UnjamLeftCommandGroup;
 import competition.subsystems.shoot_fuel.UnjamRightCommandGroup;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
@@ -73,12 +74,9 @@ public class OperatorCommandMap {
     @Inject
     public void setupClimbingCommands(
             OperatorInterface oi,
-            AscendClimbingCommand ascend,
-            RopeAlignerCommand aligner)   
+            AscendClimbingCommand ascend)   
     {
         oi.controller.getXboxButton(XboxButton.X).whileHeld(ascend);
-        
-        oi.controller.getXboxButton(XboxButton.Start).whileHeld(aligner);
         
         //oi.operatorPanelButtons.getifAvailable(4).whileHeld(ascend);
     }
@@ -327,6 +325,7 @@ public class OperatorCommandMap {
             OperatorInterface oi,
             LeftFeedingCommandGroup feedLeft,
             RightFeedingCommandGroup feedRight,
+            ShootFuelTracerPowerCommandGroup fireTracerPower,
             ShooterBeltsManagerSubsystem shooterBeltsManagerSubsystem,
             AgitatorsManagerSubsystem agitatorsManagerSubsystem,
             ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem,
@@ -335,18 +334,17 @@ public class OperatorCommandMap {
 
         oi.controller.getXboxButton(XboxButton.LeftBumper).whileHeld(feedLeft);
         oi.controller.getXboxButton(XboxButton.RightBumper).whileHeld(feedRight);
+        oi.controller.getXboxButton(XboxButton.Start).whileHeld(fireTracerPower);
 
-        FireTracerRoundsCommandGroup tracerLeft = new FireTracerRoundsCommandGroup(shooterBeltsManagerSubsystem.getLeftBelt(), 
+        SidedFireTracerRoundsCommandGroup tracerLeft = new SidedFireTracerRoundsCommandGroup(shooterBeltsManagerSubsystem.getLeftBelt(), 
                 agitatorsManagerSubsystem.getLeftAgitator(),
                 shooterWheelsManagerSubsystem.getLeftShooter());
 
-        FireTracerRoundsCommandGroup tracerRight = new FireTracerRoundsCommandGroup(shooterBeltsManagerSubsystem.getRightBelt(),
+        SidedFireTracerRoundsCommandGroup tracerRight = new SidedFireTracerRoundsCommandGroup(shooterBeltsManagerSubsystem.getRightBelt(),
                 agitatorsManagerSubsystem.getRightAgitator(),
                 shooterWheelsManagerSubsystem.getRightShooter());
 
         commandPutter.addCommandToSmartDashboard("Fire tracer left",tracerLeft);
         commandPutter.addCommandToSmartDashboard("Fire tracer right",tracerRight);
-        
-        // TODO: Find out how Andy would like to control these, potentially one command that fires both left/right?
     }
 }
