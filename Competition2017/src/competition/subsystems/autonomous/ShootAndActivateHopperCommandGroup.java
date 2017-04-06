@@ -37,9 +37,9 @@ public class ShootAndActivateHopperCommandGroup extends ShootAndDriveAcrossBaseL
         redAllianceHeadingToHopper = propManager.createPersistentProperty("Red alliance heading to face hopper", 90);
         blueAllianceHeadingToHopper = propManager.createPersistentProperty("Blue alliance heading to face hopper", 180);
         distanceToHopperFromTurningPoint = propManager.createPersistentProperty(
-                "Lateral distance from shoot position to hopper in inches", 43.25);
+                "Lateral distance from shoot position to hopper in inches", 70);
         distanceFromShootingPositionToTurningPoint = propManager.createPersistentProperty(
-                "Vertical distance from boiler to hopper", 43.25);
+                "Vertical distance from boiler to hopper", 100);
 
         this.driveAcrossBaseline.setDeltaDistance(distanceFromShootingPositionToTurningPoint.get());
         
