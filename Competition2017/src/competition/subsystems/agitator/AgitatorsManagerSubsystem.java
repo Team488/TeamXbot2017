@@ -34,4 +34,11 @@ public class AgitatorsManagerSubsystem extends BaseSubsystem {
     public AgitatorSubsystem getRightAgitator() {
         return rightAgitator;
     }
+    
+    public AgitatorSubsystem getAgiatorWithRobotSide(RobotSide side) {
+        if (side == RobotSide.Right) {
+            return rightAgitator;
+        }
+        return leftAgitator;
+    }
 }
