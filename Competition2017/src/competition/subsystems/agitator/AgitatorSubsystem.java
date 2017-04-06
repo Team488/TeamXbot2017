@@ -18,6 +18,8 @@ public class AgitatorSubsystem extends BaseSubsystem implements PeriodicDataSour
     protected final DoubleProperty intakePowerProperty;
     protected final DoubleProperty ejectPowerProperty;
 
+    protected final DoubleProperty intakeTracerPowerProperty;
+
     public AgitatorSubsystem(
             int motor,
             RobotSide side,
@@ -31,6 +33,8 @@ public class AgitatorSubsystem extends BaseSubsystem implements PeriodicDataSour
         intakePowerProperty = propManager.createPersistentProperty("Agitator intake power", 0.5);
         ejectPowerProperty = propManager.createPersistentProperty("Agitator eject power", -0.5);
 
+        intakeTracerPowerProperty = propManager.createPersistentProperty("Agitator intake tracer power", 0.2);
+        
         this.agitatorMotor = factory.getCANTalonSpeedController(motor);
 
         agitatorMotor.setBrakeEnableDuringNeutral(false);
@@ -56,6 +60,11 @@ public class AgitatorSubsystem extends BaseSubsystem implements PeriodicDataSour
 
     public void intake() {
         agitatorMotor.set(intakePowerProperty.get());
+    }
+
+
+    public void intakeTracerPower() {
+        agitatorMotor.set(intakeTracerPowerProperty.get());
     }
 
     public void stop() {

@@ -12,7 +12,6 @@ import xbot.common.math.PIDFactory;
 import xbot.common.properties.DoubleProperty;
 
 import competition.subsystems.climbing.commands.AscendClimbingCommand;
-import competition.subsystems.RobotSide;
 import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.EjectAgitatorCommand;
 import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
@@ -40,17 +39,17 @@ import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
 import competition.subsystems.drive.commands.TogglePrecisionMode;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
-import competition.subsystems.shoot_fuel.FireTracerRoundsCommandGroup;
+import competition.subsystems.shoot_fuel.SidedFireTracerRoundsCommandGroup;
 import competition.subsystems.shoot_fuel.LeftFeedingCommandGroup;
 import competition.subsystems.shoot_fuel.LeftShootFuelCommandGroup;
 import competition.subsystems.shoot_fuel.RightFeedingCommandGroup;
 import competition.subsystems.shoot_fuel.RightShootFuelCommandGroup;
 import competition.subsystems.shoot_fuel.ShootFuelCommandGroup;
+import competition.subsystems.shoot_fuel.ShootFuelTracerPowerCommandGroup;
 import competition.subsystems.shoot_fuel.UnjamLeftCommandGroup;
 import competition.subsystems.shoot_fuel.UnjamRightCommandGroup;
 import competition.subsystems.shooter_belt.ShooterBeltsManagerSubsystem;
 import competition.subsystems.shooter_belt.commands.RunBeltIfWheelAtSpeedCommand;
-import competition.subsystems.shooter_belt.commands.RunBeltTracerPowerMode;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
@@ -78,12 +77,9 @@ public class OperatorCommandMap {
     @Inject
     public void setupClimbingCommands(
             OperatorInterface oi,
-            AscendClimbingCommand ascend,
-            RopeAlignerCommand aligner)   
+            AscendClimbingCommand ascend)   
     {
         oi.controller.getXboxButton(XboxButton.X).whileHeld(ascend);
-        
-        oi.controller.getXboxButton(XboxButton.Start).whileHeld(aligner);
         
         //oi.operatorPanelButtons.getifAvailable(4).whileHeld(ascend);
     }
@@ -193,8 +189,8 @@ public class OperatorCommandMap {
             UnjamLeftCommandGroup unjamLeft,
             UnjamRightCommandGroup unjamRight)
     {
-        IntakeAgitatorCommand intakeLeft = new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator(), shooterWheelsManagerSubsystem.getLeftShooter());
-        IntakeAgitatorCommand intakeRight = new IntakeAgitatorCommand(agitatorManagerSubsystem.getRightAgitator(), shooterWheelsManagerSubsystem.getLeftShooter());
+        IntakeAgitatorCommand intakeLeft = new IntakeAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator());
+        IntakeAgitatorCommand intakeRight = new IntakeAgitatorCommand(agitatorManagerSubsystem.getRightAgitator());
         EjectAgitatorCommand ejectLeft = new EjectAgitatorCommand(agitatorManagerSubsystem.getLeftAgitator());
         EjectAgitatorCommand ejectRight = new EjectAgitatorCommand(agitatorManagerSubsystem.getRightAgitator());
         
@@ -220,13 +216,17 @@ public class OperatorCommandMap {
             ShooterBeltsManagerSubsystem shooterBeltsManagerSubsystem,
             ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem) {
             RunIntakeAgitatorIfWheelAtSpeedCommand leftIntakeCommand = 
-                    new RunIntakeAgitatorIfWheelAtSpeedCommand(agitatorManagerSubsystem.getLeftAgitator(), shooterWheelsManagerSubsystem.getLeftShooter());
+                    new RunIntakeAgitatorIfWheelAtSpeedCommand(agitatorManagerSubsystem.getLeftAgitator(), 
+                            shooterWheelsManagerSubsystem.getLeftShooter());
             RunIntakeAgitatorIfWheelAtSpeedCommand rightIntakeCommand = 
-                    new RunIntakeAgitatorIfWheelAtSpeedCommand(agitatorManagerSubsystem.getRightAgitator(), shooterWheelsManagerSubsystem.getRightShooter());
+                    new RunIntakeAgitatorIfWheelAtSpeedCommand(agitatorManagerSubsystem.getRightAgitator(), 
+                            shooterWheelsManagerSubsystem.getRightShooter());
             RunBeltIfWheelAtSpeedCommand leftBeltCommand = 
-                    new RunBeltIfWheelAtSpeedCommand(shooterBeltsManagerSubsystem.getLeftBelt(), shooterWheelsManagerSubsystem.getLeftShooter());
+                    new RunBeltIfWheelAtSpeedCommand(shooterBeltsManagerSubsystem.getLeftBelt(), 
+                            shooterWheelsManagerSubsystem.getLeftShooter());
             RunBeltIfWheelAtSpeedCommand rightBeltCommand = 
-                    new RunBeltIfWheelAtSpeedCommand(shooterBeltsManagerSubsystem.getRightBelt(), shooterWheelsManagerSubsystem.getRightShooter());
+                    new RunBeltIfWheelAtSpeedCommand(shooterBeltsManagerSubsystem.getRightBelt(), 
+                            shooterWheelsManagerSubsystem.getRightShooter());
             
             leftIntakeCommand.includeOnSmartDashboard("Left Agitator Intake With A Min Wheel Speed");
             rightIntakeCommand.includeOnSmartDashboard("Right Agitator Intake With A Min Wheel Speed");
@@ -331,6 +331,7 @@ public class OperatorCommandMap {
             OperatorInterface oi,
             LeftFeedingCommandGroup feedLeft,
             RightFeedingCommandGroup feedRight,
+            ShootFuelTracerPowerCommandGroup fireTracerPower,
             ShooterBeltsManagerSubsystem shooterBeltsManagerSubsystem,
             AgitatorsManagerSubsystem agitatorsManagerSubsystem,
             ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem,
@@ -339,24 +340,17 @@ public class OperatorCommandMap {
 
         oi.controller.getXboxButton(XboxButton.LeftBumper).whileHeld(feedLeft);
         oi.controller.getXboxButton(XboxButton.RightBumper).whileHeld(feedRight);
+        oi.controller.getXboxButton(XboxButton.Start).whileHeld(fireTracerPower);
 
-        RunBeltTracerPowerMode runBeltTracerPowerModeLeft = new RunBeltTracerPowerMode(
-                shooterBeltsManagerSubsystem.getLeftBelt(), shooterWheelsManagerSubsystem.getLeftShooter());
-        FireTracerRoundsCommandGroup tracerLeft = new FireTracerRoundsCommandGroup(shooterBeltsManagerSubsystem.getLeftBelt(), 
-                runBeltTracerPowerModeLeft, 
+        SidedFireTracerRoundsCommandGroup tracerLeft = new SidedFireTracerRoundsCommandGroup(shooterBeltsManagerSubsystem.getLeftBelt(), 
                 agitatorsManagerSubsystem.getLeftAgitator(),
                 shooterWheelsManagerSubsystem.getLeftShooter());
 
-        RunBeltTracerPowerMode runBeltTracerPowerModeRight = new RunBeltTracerPowerMode(
-                shooterBeltsManagerSubsystem.getRightBelt(), shooterWheelsManagerSubsystem.getRightShooter());
-        FireTracerRoundsCommandGroup tracerRight = new FireTracerRoundsCommandGroup(shooterBeltsManagerSubsystem.getRightBelt(),
-                runBeltTracerPowerModeRight, 
+        SidedFireTracerRoundsCommandGroup tracerRight = new SidedFireTracerRoundsCommandGroup(shooterBeltsManagerSubsystem.getRightBelt(),
                 agitatorsManagerSubsystem.getRightAgitator(),
                 shooterWheelsManagerSubsystem.getRightShooter());
 
         commandPutter.addCommandToSmartDashboard("Fire tracer left",tracerLeft);
         commandPutter.addCommandToSmartDashboard("Fire tracer right",tracerRight);
-        
-        // TODO: Find out how Andy would like to control these, potentially one command that fires both left/right?
     }
 }

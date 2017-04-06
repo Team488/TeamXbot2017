@@ -14,14 +14,13 @@ public class RightFeedingCommandGroup extends CommandGroup {
     @Inject
     public RightFeedingCommandGroup( 
             AgitatorsManagerSubsystem agitatorsManagerSubsystem,
-            ShooterBeltsManagerSubsystem shooterBeltsManagerSubsystem,
-            ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem) {
+            ShooterBeltsManagerSubsystem shooterBeltsManagerSubsystem) {
        
         RunShooterBeltPowerCommand runBelt = 
                 new RunShooterBeltPowerCommand(shooterBeltsManagerSubsystem.getRightBelt());
         
         IntakeAgitatorCommand runAgitator = 
-                new IntakeAgitatorCommand(agitatorsManagerSubsystem.getRightAgitator(), shooterWheelsManagerSubsystem.getRightShooter());
+                new IntakeAgitatorCommand(agitatorsManagerSubsystem.getRightAgitator());
         
         this.addParallel(runBelt);
         this.addParallel(runAgitator);

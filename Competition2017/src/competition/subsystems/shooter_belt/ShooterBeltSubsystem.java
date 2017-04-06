@@ -36,7 +36,7 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
         this.side = side;
         
         intakePowerProperty = propManager.createPersistentProperty("ShooterBelt intake power", 0.5);
-        intakeTracerPowerProperty = propManager.createPersistentProperty("ShooterBelt intake tracer power", 0.5);
+        intakeTracerPowerProperty = propManager.createPersistentProperty("ShooterBelt intake tracer power", 0.2);
         ejectPowerProperty = propManager.createPersistentProperty("ShooterBelt eject power", -0.5);
         beltIntakeTargetSpeed = propManager.createPersistentProperty("ShooterBelt intake speed", 100);
         beltIntakeTracerTargetSpeed = propManager.createPersistentProperty("ShooterBelt intake speed", 50);
