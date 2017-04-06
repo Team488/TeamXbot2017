@@ -18,6 +18,7 @@ import json.JSONArray;
 import json.JSONObject;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.PeriodicDataSource;
+import xbot.common.controls.actuators.XDigitalOutput;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
@@ -52,7 +53,11 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
     private DoubleProperty trackedBoilerXOffsetTelemetry;
     private DoubleProperty trackedBoilerDistanceTelemetry;
     
+    private DoubleProperty intrinsicCameraHorizontalOffset;
+    
     private BooleanProperty isGettingJetsonData;
+    
+    private XDigitalOutput trackedBoilerDigitalOut;
 
     @Inject
     public VisionSubsystem(WPIFactory factory, XPropertyManager propManager, OffboardCommunicationServer server) {
@@ -72,6 +77,10 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
         
         isGettingJetsonData = propManager.createEphemeralProperty("Is getting Jetson data", false);
         boilerSustainLengthProp = propManager.createEphemeralProperty("Tracked boiler sustain length", 0.1);
+        
+        intrinsicCameraHorizontalOffset = propManager.createPersistentProperty("Intrinsic horizontal camera offset", 0);
+    
+        trackedBoilerDigitalOut = factory.getDigitalOutput(0);
     }
     
     public DetectedLiftPeg getTrackedLiftPeg() {
@@ -122,7 +131,7 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
                     
                     DetectedLiftPeg newTarget = new DetectedLiftPeg();
     
-                    newTarget.pegOffsetX = jsonTarget.getDouble("pegOffsetX");
+                    newTarget.pegOffsetX = intrinsicCameraHorizontalOffset.get() + jsonTarget.getDouble("pegOffsetX");
                     newTarget.pegOffsetY = jsonTarget.getDouble("pegOffsetY");
                     newTarget.isTracked = jsonTarget.getBoolean("isTracked");
     
@@ -145,7 +154,7 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
                     
                     DetectedBoiler newTarget = new DetectedBoiler();
     
-                    newTarget.offsetX = jsonTarget.getDouble("offsetX");
+                    newTarget.offsetX = intrinsicCameraHorizontalOffset.get() + jsonTarget.getDouble("offsetX");
                     newTarget.targetAngleX = jsonTarget.getDouble("targetAngleX");
                     newTarget.targetAngleY = jsonTarget.getDouble("targetAngleY");
                     newTarget.isTracked = jsonTarget.getBoolean("isTracked");
@@ -185,6 +194,7 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
         if(timeSinceLastPacket > 0 && timeSinceLastPacket <= connectionTimeoutThreshold.get()) {
             if(!isConnected) {
                 log.info("Connected");
+                
                 isConnected = true;
                 isGettingJetsonData.set(true);
             }
@@ -202,11 +212,15 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
             trackedBoilers.clear();
             trackedLiftPegs.clear();
             log.info("Disconnected");
+            
             isConnected = false;
             isGettingJetsonData.set(false);
         }
         
-        DetectedBoiler trackedBoiler = getTrackedBoiler();
+        DetectedBoiler trackedBoiler = getSustainedTrackedBoiler();
+        // The receiving Arduino has a pull-up resistor configured, so we use
+        // "low" to represent a detected boiler.
+        trackedBoilerDigitalOut.set(!isConnected || trackedBoiler == null);
         trackedBoilerXOffsetTelemetry.set(trackedBoiler == null ? 0 : trackedBoiler.offsetX);
         trackedBoilerDistanceTelemetry.set(trackedBoiler == null ? 0 : trackedBoiler.distance);
     }
