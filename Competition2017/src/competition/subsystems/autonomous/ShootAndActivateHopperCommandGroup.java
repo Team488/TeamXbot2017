@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
+import competition.subsystems.drive.commands.DriveInfinitelyCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.shift.commands.ShiftGearCommand;
@@ -15,12 +16,12 @@ import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
 public class ShootAndActivateHopperCommandGroup extends ShootAndDriveAcrossBaseLineCommandGroup {
-    private DriveForDistanceCommand driveToHopper;
+    private DriveInfinitelyCommand driveToHopper;
     private RotateToHeadingCommand rotateToHopper;
 
     private final DoubleProperty redAllianceHeadingToHopper;
     private final DoubleProperty blueAllianceHeadingToHopper;
-    private final DoubleProperty distanceToHopperFromTurningPoint;
+    private final DoubleProperty timeToDriveIntoHopper;
     private final DoubleProperty distanceFromShootingPositionToTurningPoint;
 
     @Inject
@@ -30,14 +31,15 @@ public class ShootAndActivateHopperCommandGroup extends ShootAndDriveAcrossBaseL
             Provider<RotateToHeadingCommand> rotateToHeadingProvider,
             PoseSubsystem poseSubsystem,
             ShootFuelForNSecondsCommandGroup shootFuelCommandGroup,
+            DriveInfinitelyCommand driveToHopperCommand,
             StopFeedingAndCollectionCommandGroup stopFiring,
             ShiftGearCommand shiftCommand) {
         super(propManager, setHeading, driveForDistanceProvider, rotateToHeadingProvider.get(), poseSubsystem, shootFuelCommandGroup, stopFiring, shiftCommand);
         
         redAllianceHeadingToHopper = propManager.createPersistentProperty("Red alliance heading to face hopper", 90);
         blueAllianceHeadingToHopper = propManager.createPersistentProperty("Blue alliance heading to face hopper", 180);
-        distanceToHopperFromTurningPoint = propManager.createPersistentProperty(
-                "Lateral distance from shoot position to hopper in inches", 70);
+        timeToDriveIntoHopper = propManager.createPersistentProperty(
+                "Time to drive to activate hopper", 5);
         distanceFromShootingPositionToTurningPoint = propManager.createPersistentProperty(
                 "Vertical distance from boiler to hopper", 100);
 
@@ -47,9 +49,8 @@ public class ShootAndActivateHopperCommandGroup extends ShootAndDriveAcrossBaseL
         rotateToHopper.setTargetHeading(blueAllianceHeadingToHopper.get());
         this.addSequential(rotateToHopper);
         
-        driveToHopper = driveForDistanceProvider.get();
-        driveToHopper.setDeltaDistance(distanceToHopperFromTurningPoint);
-        this.addSequential(driveToHopper);
+        driveToHopper = driveToHopperCommand;
+        this.addSequential(driveToHopper, timeToDriveIntoHopper.get());
     }
     
     @Override

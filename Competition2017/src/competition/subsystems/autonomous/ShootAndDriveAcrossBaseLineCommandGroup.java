@@ -64,12 +64,12 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         
         //aim away from driver station (towards baseline)
         rotateToBaseline.setTargetHeading(90);
-        this.addSequential(rotateToBaseline, 1.2);
+        this.addSequential(rotateToBaseline, 3);
         
         // Maybe here we change it to high gear?
         driveAcrossBaseline = driveForDistanceProvider.get();
         driveAcrossBaseline.setDeltaDistance(poseSubsystem.getDistanceFromWallToBaseline());
-        this.addSequential(driveAcrossBaseline, poseSubsystem.getBreakBaselineMaximumTime());
+        this.addSequential(driveAcrossBaseline);
     }
     
     public void setAlliance(Alliance color) {
