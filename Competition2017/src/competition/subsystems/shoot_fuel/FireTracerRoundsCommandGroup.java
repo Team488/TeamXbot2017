@@ -1,7 +1,7 @@
 package competition.subsystems.shoot_fuel;
 
 import competition.subsystems.agitator.AgitatorSubsystem;
-import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
+import competition.subsystems.agitator.commands.RunIntakeAgitatorTracerPowerIfWheelAtSpeedCommand;
 import competition.subsystems.shooter_belt.ShooterBeltSubsystem;
 import competition.subsystems.shooter_belt.commands.RunBeltTracerPowerMode;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class FireTracerRoundsCommandGroup extends CommandGroup {
     
     public FireTracerRoundsCommandGroup(ShooterBeltSubsystem shooterBeltSubsystem,
-            RunBeltTracerPowerMode runBeltSlowlyUsingPowerCommand,
             AgitatorSubsystem agitatorSubsystem,
             ShooterWheelSubsystem shooterWheelSubsystem) {
 
@@ -18,8 +17,8 @@ public class FireTracerRoundsCommandGroup extends CommandGroup {
                 new RunBeltTracerPowerMode(shooterBeltSubsystem, 
                         shooterWheelSubsystem);
         
-        IntakeAgitatorCommand runAgitator = 
-                new IntakeAgitatorCommand(agitatorSubsystem, 
+        RunIntakeAgitatorTracerPowerIfWheelAtSpeedCommand runAgitator = 
+                new RunIntakeAgitatorTracerPowerIfWheelAtSpeedCommand(agitatorSubsystem, 
                         shooterWheelSubsystem);
         
         this.addParallel(runTracerPower);
