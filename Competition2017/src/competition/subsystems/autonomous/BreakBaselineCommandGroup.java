@@ -17,6 +17,6 @@ public class BreakBaselineCommandGroup extends CommandGroup {
         
         driveForDistance.setDeltaDistance(poseSubsystem.getDistanceFromWallToBaseline());
         
-        this.addParallel(driveForDistance, poseSubsystem.getBreakBaselineMaximumTime());
+        this.addParallel(driveForDistance);
     }
 }
