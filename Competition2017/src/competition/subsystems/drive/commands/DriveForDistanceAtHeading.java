@@ -24,6 +24,7 @@ public class DriveForDistanceAtHeading extends BaseDriveCommand {
     
     private final PIDManager headingDrivePid;
     private final PIDManager distancePid;
+    private final PIDManager alignmentPid;
     
     private XYPair initialPosition = null;
     
@@ -48,6 +49,8 @@ public class DriveForDistanceAtHeading extends BaseDriveCommand {
         headingDrivePid.setEnableDerivativeThreshold(true);
         
         this.distancePid = pidFactory.createPIDManager("Drive at heading position", 0.1, 0, 0, 0, 0.5, -0.5, 3, 1, 0.5);
+        this.alignmentPid = pidFactory.createPIDManager("Drive at heading alignment", 1/24d, 0, 0, 0, 0.5, -0.5);
+
     }
 
     public void setTargetHeading(double heading) {
@@ -109,15 +112,18 @@ public class DriveForDistanceAtHeading extends BaseDriveCommand {
             double errorInDegrees = poseSubsystem.getCurrentHeading().difference(targetHeading);
             double rotationalPower = headingDrivePid.calculate(0, errorInDegrees);
             
-            double distanceAlongHeading = poseSubsystem.getFieldOrientedTotalDistanceTraveled()
+            
+            XYPair targetRelativePositionalError = poseSubsystem.getFieldOrientedTotalDistanceTraveled()
                     .add(initialPosition.scale(-1))
-                    .rotate(-targetHeading.getValue())
-                    .y;
+                    .rotate(-targetHeading.getValue());
             
             double translationPowerFactor = Math.max(speedHeadingThresh.get() - Math.abs(errorInDegrees), 0) / speedHeadingThresh.get();
-            double translationPower = distancePid.calculate(targetDistance, distanceAlongHeading) * translationPowerFactor;
+            double translationPower = distancePid.calculate(targetDistance, targetRelativePositionalError.y) * translationPowerFactor;
             
-            driveSubsystem.tankDrivePowerMode(translationPower + rotationalPower, translationPower - rotationalPower);
+            // Using the translation power as a multiplication factor ensures that we only align when we are moving toward the goal
+            double alignmentPower = alignmentPid.calculate(targetRelativePositionalError.x, 0) * Math.abs(translationPower);
+            
+            driveSubsystem.tankDrivePowerMode(translationPower + rotationalPower - alignmentPower, translationPower - rotationalPower + alignmentPower);
         }
     }
     
