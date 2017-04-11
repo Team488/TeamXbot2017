@@ -3,6 +3,7 @@ package competition.subsystems.autonomous;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import competition.subsystems.drive.commands.DriveForDistanceAtHeadingCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.pose.PoseSubsystem;
@@ -25,15 +26,15 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
     
     private SetRobotHeadingCommand setInitialHeading;
     private ShootFuelForNSecondsCommandGroup shootFuel;
-    protected DriveForDistanceCommand driveAcrossBaseline;
+    protected DriveForDistanceAtHeadingCommand driveAcrossBaseline;
     private DriveForDistanceCommand driveBackABit;
     protected StopAllShootingCommandGroup stopFiring;
     
     @Inject
     public ShootAndDriveAcrossBaseLineCommandGroup(XPropertyManager propManager,
         SetRobotHeadingCommand setHeading,
-        Provider <DriveForDistanceCommand> driveForDistanceProvider,
-        RotateToHeadingCommand rotateToBaseline,
+        DriveForDistanceCommand driveBackABit,
+        DriveForDistanceAtHeadingCommand driveAcrossBaseline,
         PoseSubsystem poseSubsystem,
         ShootFuelForNSecondsCommandGroup shootFuelCommandGroup,
         StopAllShootingCommandGroup stopFiring,
@@ -55,20 +56,17 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         shootFuel = shootFuelCommandGroup;
         this.addSequential(shootFuel);
         
-        driveBackABit = driveForDistanceProvider.get();
+        this.driveBackABit = driveBackABit;
         driveBackABit.setDeltaDistance(distanceToBackUp);
         
         this.addSequential(driveBackABit, 0.25);
         this.stopFiring = stopFiring;
         this.addParallel(stopFiring, 0.25);
         
-        //aim away from driver station (towards baseline)
-        rotateToBaseline.setTargetHeading(90);
-        this.addSequential(rotateToBaseline, 3);
-        
         // Maybe here we change it to high gear?
-        driveAcrossBaseline = driveForDistanceProvider.get();
-        driveAcrossBaseline.setDeltaDistance(poseSubsystem.getDistanceFromWallToBaseline());
+        this.driveAcrossBaseline = driveAcrossBaseline;
+        driveAcrossBaseline.setTargetHeading(90);
+        driveAcrossBaseline.setTargetDistance(poseSubsystem.getDistanceFromWallToBaseline());
         this.addSequential(driveAcrossBaseline);
     }
     

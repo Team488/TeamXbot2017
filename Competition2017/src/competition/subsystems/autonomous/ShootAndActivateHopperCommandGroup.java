@@ -3,6 +3,7 @@ package competition.subsystems.autonomous;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import competition.subsystems.drive.commands.DriveForDistanceAtHeadingCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.DriveInfinitelyCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
@@ -27,14 +28,15 @@ public class ShootAndActivateHopperCommandGroup extends ShootAndDriveAcrossBaseL
     @Inject
     public ShootAndActivateHopperCommandGroup(XPropertyManager propManager,
             SetRobotHeadingCommand setHeading,
-            Provider <DriveForDistanceCommand> driveForDistanceProvider,
+            DriveForDistanceCommand driveBackABit,
+            DriveForDistanceAtHeadingCommand driveAcrossBaseline,
             Provider<RotateToHeadingCommand> rotateToHeadingProvider,
             PoseSubsystem poseSubsystem,
             ShootFuelForNSecondsCommandGroup shootFuelCommandGroup,
             DriveInfinitelyCommand driveToHopperCommand,
             StopFeedingAndCollectionCommandGroup stopFiring,
             ShiftGearCommand shiftCommand) {
-        super(propManager, setHeading, driveForDistanceProvider, rotateToHeadingProvider.get(), poseSubsystem, shootFuelCommandGroup, stopFiring, shiftCommand);
+        super(propManager, setHeading, driveBackABit, driveAcrossBaseline, poseSubsystem, shootFuelCommandGroup, stopFiring, shiftCommand);
         
         redAllianceHeadingToHopper = propManager.createPersistentProperty("Red alliance heading to face hopper", 90);
         blueAllianceHeadingToHopper = propManager.createPersistentProperty("Blue alliance heading to face hopper", 180);
@@ -43,11 +45,11 @@ public class ShootAndActivateHopperCommandGroup extends ShootAndDriveAcrossBaseL
         distanceFromShootingPositionToTurningPoint = propManager.createPersistentProperty(
                 "Vertical distance from boiler to hopper", 100);
 
-        this.driveAcrossBaseline.setDeltaDistance(distanceFromShootingPositionToTurningPoint.get());
+        this.driveAcrossBaseline.setTargetDistanceProp(distanceFromShootingPositionToTurningPoint);
         
         rotateToHopper = rotateToHeadingProvider.get();
         rotateToHopper.setTargetHeading(blueAllianceHeadingToHopper.get());
-        this.addSequential(rotateToHopper);
+        this.addSequential(rotateToHopper, 2);
         
         driveToHopper = driveToHopperCommand;
         this.addSequential(driveToHopper, timeToDriveIntoHopper.get());

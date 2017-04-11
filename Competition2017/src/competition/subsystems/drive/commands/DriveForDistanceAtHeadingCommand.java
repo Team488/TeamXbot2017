@@ -13,7 +13,7 @@ import xbot.common.properties.XPropertyManager;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 
-public class DriveForDistanceAtHeading extends BaseDriveCommand {
+public class DriveForDistanceAtHeadingCommand extends BaseDriveCommand {
     protected final DoubleProperty speedHeadingThresh;
     protected final PoseSubsystem poseSubsystem;
     protected ContiguousHeading targetHeading;
@@ -29,7 +29,7 @@ public class DriveForDistanceAtHeading extends BaseDriveCommand {
     private XYPair initialPosition = null;
     
     @Inject
-    public DriveForDistanceAtHeading(
+    public DriveForDistanceAtHeadingCommand(
             DriveSubsystem driveSubsystem, 
             XPropertyManager propMan,
             PoseSubsystem pose,
@@ -134,7 +134,7 @@ public class DriveForDistanceAtHeading extends BaseDriveCommand {
     
     @Override 
     public void end(){
-        log.info("Ending. Current heading is " + poseSubsystem.getCurrentHeading() + " and target heading was" 
+        log.info("Ending. Current heading is " + poseSubsystem.getCurrentHeading() + " and target heading was " 
                 + targetHeading);
     }
     
