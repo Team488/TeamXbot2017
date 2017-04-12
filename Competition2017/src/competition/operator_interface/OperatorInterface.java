@@ -31,14 +31,13 @@ public class OperatorInterface {
         
         leftJoystick = factory.getJoystick(1);
         rightJoystick = factory.getJoystick(2);
-     
+        operatorPanelJoystick = factory.getJoystick(3);
+        
         leftJoystick.setYInversion(true);
         rightJoystick.setYInversion(true);
         
         leftButtons = new JoystickButtonManager(12, factory, assertionManager, leftJoystick);
         rightButtons = new JoystickButtonManager(12, factory, assertionManager, rightJoystick);
-        
-        operatorPanelJoystick = factory.getJoystick(3);
         operatorPanelButtons = new JoystickButtonManager(11, factory, assertionManager, operatorPanelJoystick);
     }
 }

@@ -1,8 +1,8 @@
-package competition.subsystem.shift.commands;
+package competition.subsystems.shift.commands;
 
 import org.junit.Test;
 
-import competition.subsystem.shift.ShiftTestBase;
+import competition.subsystems.shift.ShiftTestBase;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 
