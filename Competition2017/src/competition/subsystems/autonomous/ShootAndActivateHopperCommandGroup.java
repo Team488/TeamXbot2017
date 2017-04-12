@@ -36,7 +36,7 @@ public class ShootAndActivateHopperCommandGroup extends ShootAndDriveAcrossBaseL
             ShiftGearCommand shiftCommand) {
         super(propManager, setHeading, driveForDistanceProvider, rotateToHeadingProvider.get(), poseSubsystem, shootFuelCommandGroup, stopFiring, shiftCommand);
         
-        redAllianceHeadingToHopper = propManager.createPersistentProperty("Red alliance heading to face hopper", 90);
+        redAllianceHeadingToHopper = propManager.createPersistentProperty("Red alliance heading to face hopper", 0);
         blueAllianceHeadingToHopper = propManager.createPersistentProperty("Blue alliance heading to face hopper", 180);
         timeToDriveIntoHopper = propManager.createPersistentProperty(
                 "Time to drive to activate hopper", 5);
@@ -47,10 +47,12 @@ public class ShootAndActivateHopperCommandGroup extends ShootAndDriveAcrossBaseL
         
         rotateToHopper = rotateToHeadingProvider.get();
         rotateToHopper.setTargetHeading(blueAllianceHeadingToHopper.get());
-        this.addSequential(rotateToHopper);
+        this.addSequential(rotateToHopper, 1.5);
         
-        driveToHopper = driveToHopperCommand;
-        this.addSequential(driveToHopper, timeToDriveIntoHopper.get());
+        //driveToHopperCommand.setDrivePower(0.5);
+        
+        //driveToHopper = driveToHopperCommand;
+        //this.addSequential(driveToHopper, timeToDriveIntoHopper.get());
     }
     
     @Override

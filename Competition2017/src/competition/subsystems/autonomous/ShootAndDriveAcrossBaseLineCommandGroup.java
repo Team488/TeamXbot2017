@@ -39,8 +39,8 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         StopAllShootingCommandGroup stopFiring,
         ShiftGearCommand shiftCommand) {
         
-        redAllianceStartingHeading =  propManager.createPersistentProperty("Red shooting starting heading", -5);
-        blueAllianceStartingHeading = propManager.createPersistentProperty("Blue shooting starting heading", -175);
+        redAllianceStartingHeading =  propManager.createPersistentProperty("Red shooting starting heading", -15);
+        blueAllianceStartingHeading = propManager.createPersistentProperty("Blue shooting starting heading", 195);
         
         shiftCommand.setGear(Gear.HIGH_GEAR);
         this.addSequential(shiftCommand, 0.1);
@@ -64,12 +64,12 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         
         //aim away from driver station (towards baseline)
         rotateToBaseline.setTargetHeading(90);
-        this.addSequential(rotateToBaseline, 3);
+        this.addSequential(rotateToBaseline, 2);
         
         // Maybe here we change it to high gear?
         driveAcrossBaseline = driveForDistanceProvider.get();
         driveAcrossBaseline.setDeltaDistance(poseSubsystem.getDistanceFromWallToBaseline());
-        this.addSequential(driveAcrossBaseline);
+        this.addSequential(driveAcrossBaseline, 5);
     }
     
     public void setAlliance(Alliance color) {
