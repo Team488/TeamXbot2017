@@ -10,12 +10,12 @@ import xbot.common.math.PIDManager;
 public class RunShooterWheelsForRangeVirtualThrottleCommand extends BaseShooterWheelCommand {
 
     protected final PIDManager pidManager;
-    protected final double range;
+    protected final TypicalShootingPosition range;
     protected double throttlePower;
     
     public RunShooterWheelsForRangeVirtualThrottleCommand(TypicalShootingPosition range, ShooterWheelSubsystem shooterWheelSubsystem, PIDFactory pidFactory) {
         super("RunShooterWheelsForRangeVirtualThrottleCommand: " + range, shooterWheelSubsystem);
-        this.range = shooterWheelSubsystem.translateTypicalShootingPositionToDistance(range);
+        this.range = range;
         this.pidManager = pidFactory.createPIDManager("Shooter virtual throttle", 0.1, 0.0, 0.0, 0.0, 1.0, -0.5, 50.0, 0.0, 0.0);
     }
 

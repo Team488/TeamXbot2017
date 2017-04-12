@@ -10,11 +10,12 @@ import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCom
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class LeftShootFuelCommandGroup extends CommandGroup {
+    protected final RunShooterWheelsForRangeCommand runWheel;
     
     @Inject
     public LeftShootFuelCommandGroup(ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem,
             ShooterBeltsManagerSubsystem shooterBeltsManagerSubsystem) {
-        RunShooterWheelsForRangeCommand runWheel =
+        runWheel =
                 new RunShooterWheelsForRangeCommand(
                         TypicalShootingPosition.FlushToBoiler,
                         shooterWheelsManagerSubsystem.getLeftShooter());
@@ -25,5 +26,9 @@ public class LeftShootFuelCommandGroup extends CommandGroup {
 
         this.addParallel(runWheel);
         this.addParallel(runBelt);
+    }
+    
+    public void setShooterRange(TypicalShootingPosition range) {
+        runWheel.setTargetRange(range);
     }
 }

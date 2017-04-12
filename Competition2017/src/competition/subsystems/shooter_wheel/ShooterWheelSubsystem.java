@@ -13,11 +13,15 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
     private final RobotSide side;
     protected final DoubleProperty flushToBoilerTargetSpeed;
     protected final DoubleProperty trimFlushToBoilerSpeed;
+    
+    protected final DoubleProperty offsetFromHopperTargetSpeed;
+    
     protected final DoubleProperty wheelSpeedThresholdPercentage;
     protected final BooleanProperty isShooterAtSpeed;
     
     public enum TypicalShootingPosition {
-        FlushToBoiler
+        FlushToBoiler,
+        OffsetFromHopper
     }
    
     public ShooterWheelSubsystem(
@@ -42,12 +46,18 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
                 propManager);
         log.info("Creating");
         this.side = side;
+        
         flushToBoilerTargetSpeed = 
                 propManager.createPersistentProperty(side + " flush to boiler target speed", 9000);
         trimFlushToBoilerSpeed =
                 propManager.createEphemeralProperty(side + " trim speed", 0.0);
+        
+        offsetFromHopperTargetSpeed = 
+                propManager.createPersistentProperty(side + " offset from hopper target speed", 1100);
+        
         wheelSpeedThresholdPercentage = 
                 propManager.createPersistentProperty("Wheel speed threshold percentage for feeding", 0.75);
+        
         isShooterAtSpeed = 
                 propManager.createPersistentProperty("Is " + side + "Shooter wheel at speed?", false);
     }
@@ -83,22 +93,19 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         }
     }
     
-    public double getTargetSpeedForRange(double rangeInInches) {
-        // TODO: convert from rangeInInches to target speeds (pending task)
-        // For now everything uses the same flushToBoilerTargetSpeed regardless
-        
-        return flushToBoilerTargetSpeed.get() + trimFlushToBoilerSpeed.get();
+    public double getTargetSpeedForRange(TypicalShootingPosition range) {
+        switch (range) {
+            case FlushToBoiler:
+                return flushToBoilerTargetSpeed.get() + trimFlushToBoilerSpeed.get();
+            case OffsetFromHopper:
+                return offsetFromHopperTargetSpeed.get();
+            default:
+                return 0;
+        }
     }
     
-    /**
-     * Set the ShooterWheel for any robot range.
-     * @param rangeInInches Inches between the front bumper and the boiler wall
-     */
-    public void setTargetSpeedForRange(double rangeInInches) {
-        // some day we may have an actual formula here, interpolating between known points.
-        // (flush to boiler, one robot width, some other range...)
-        // For now, it's just this one range.
-        setTargetSpeed(getTargetSpeedForRange(rangeInInches));
+    public void setTargetSpeedForRange(TypicalShootingPosition range) {
+        setTargetSpeed(getTargetSpeedForRange(range));
     }
     
     public boolean isWheelAtSpeed() {

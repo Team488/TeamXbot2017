@@ -6,16 +6,15 @@ import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
 
 public class RunShooterWheelsForRangeCommand extends BaseShooterWheelCommand {
     
-    final double range;
+    protected TypicalShootingPosition range;
     
     public RunShooterWheelsForRangeCommand(TypicalShootingPosition range, ShooterWheelSubsystem shooterWheelSubsystem) {
         super("RunShooterWheelsForRangeCommand: " + range, shooterWheelSubsystem);
-        this.range = shooterWheelSubsystem.translateTypicalShootingPositionToDistance(range);
+        this.range = range;
     }
     
-    public RunShooterWheelsForRangeCommand(double rangeInInches, ShooterWheelSubsystem shooterWheelSubsystem) {
-        super("RunShooterWheelsForRangeCommand: " + rangeInInches, shooterWheelSubsystem);
-        this.range = rangeInInches;
+    public void setTargetRange(TypicalShootingPosition range) {
+        this.range = range;
     }
 
     @Override
