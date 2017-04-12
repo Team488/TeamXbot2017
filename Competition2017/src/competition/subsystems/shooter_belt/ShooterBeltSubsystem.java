@@ -10,9 +10,12 @@ import xbot.common.properties.XPropertyManager;
 public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem {
 
     private final RobotSide side;
+    
     protected final DoubleProperty intakePowerProperty;
+    protected final DoubleProperty intakeTracerPowerProperty;
     protected final DoubleProperty ejectPowerProperty;
     protected final DoubleProperty beltIntakeTargetSpeed;
+    protected final DoubleProperty beltIntakeTracerTargetSpeed;
 
     public ShooterBeltSubsystem(
             RobotSide side,
@@ -23,7 +26,7 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
             PIDPropertyManager pidPropertyManager,
             XPropertyManager propManager){
         super(
-                side + " ShooterBelt",
+                side + "ShooterBelt",
                 masterChannel,
                 invertMaster,
                 invertMasterSensor,
@@ -33,8 +36,10 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
         this.side = side;
         
         intakePowerProperty = propManager.createPersistentProperty("ShooterBelt intake power", 0.5);
+        intakeTracerPowerProperty = propManager.createPersistentProperty("ShooterBelt intake tracer power", 0.2);
         ejectPowerProperty = propManager.createPersistentProperty("ShooterBelt eject power", -0.5);
         beltIntakeTargetSpeed = propManager.createPersistentProperty("ShooterBelt intake speed", 100);
+        beltIntakeTracerTargetSpeed = propManager.createPersistentProperty("ShooterBelt intake speed", 50);
     }
 
     public RobotSide getSide() {
@@ -51,6 +56,14 @@ public class ShooterBeltSubsystem extends BaseXCANTalonSpeedControlledSubsystem 
     
     public void intakeUsingSpeed() {
         setTargetSpeed(beltIntakeTargetSpeed.get());
+    }
+    
+    public void intakeUsingTracerPower(){
+        setPower(intakeTracerPowerProperty.get());
+    }
+    
+    public void intakeUsingTracerSpeed(){
+        setTargetSpeed(beltIntakeTracerTargetSpeed.get());
     }
     
     public void stop() {
