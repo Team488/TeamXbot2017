@@ -22,7 +22,6 @@ import competition.subsystems.autonomous.DriveToHopperThenBoilerCommandGroup;
 import competition.subsystems.autonomous.ShootAndDriveAcrossBaseLineCommandGroup;
 import competition.subsystems.autonomous.selection.DisableAutonomousCommand;
 import competition.subsystems.autonomous.selection.GenericAutonomousCommandSetter;
-import competition.subsystems.climbing.commands.RopeAlignerCommand;
 import competition.subsystems.collector.CollectorSubsystem.Power;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;

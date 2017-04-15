@@ -25,10 +25,10 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends BaseCommandGroup {
     private final DoubleProperty redAllianceStartingHeading;
     private final DoubleProperty blueAllianceStartingHeading;
     
-    private SetRobotHeadingCommand setInitialHeading;
-    private ShootFuelForNSecondsCommandGroup shootFuel;
-    private DriveForDistanceCommand breakBaselineAuto;
-    private DriveForDistanceCommand driveBackABit;
+    private final SetRobotHeadingCommand setInitialHeading;
+    private final ShootFuelForNSecondsCommandGroup shootFuel;
+    private final DriveForDistanceCommand breakBaselineAuto;
+    private final DriveForDistanceCommand driveBackABit;
     
     @Inject
     public ShootAndDriveAcrossBaseLineCommandGroup(XPropertyManager propManager,
@@ -46,6 +46,7 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends BaseCommandGroup {
         shiftCommand.setGear(Gear.HIGH_GEAR);
         this.addSequential(shiftCommand, 0.1);
         
+        this.setInitialHeading = setHeading;
         log.info("Setting alliance to " + poseSubsystem.getAllianceColor() + " alliance");
         if (poseSubsystem.getAllianceColor() == Alliance.Red) {
             setInitialHeading.setHeadingToApply(redAllianceStartingHeading.get());
@@ -53,7 +54,6 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends BaseCommandGroup {
             setInitialHeading.setHeadingToApply(blueAllianceStartingHeading.get());
         }
         
-        this.setInitialHeading = setHeading;
         this.addSequential(setInitialHeading);
         // Default to Red alliance, this can be changed later in setAlliance()
         this.setInitialHeading.setHeadingToApply(redAllianceStartingHeading.get());        
