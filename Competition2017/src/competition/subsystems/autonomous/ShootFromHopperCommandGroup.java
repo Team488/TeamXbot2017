@@ -21,10 +21,16 @@ public class ShootFromHopperCommandGroup extends CommandGroup {
     private final DoubleProperty redHeadingToHopper;
     private final DoubleProperty blueHeadingToHopper;
 
+    private final DoubleProperty redHeadingToBoiler;
+    private final DoubleProperty blueHeadingToBoiler;
+
     private final DoubleProperty distanceToTravelToHopper;
+    private final DoubleProperty distanceToReverseAfterHopper;
     
     protected final SetRobotHeadingCommand setInitialHeading;
     protected final DriveForDistanceAtHeadingCommand activateHopper;
+    protected final DriveForDistanceAtHeadingCommand positionForShoot;
+    protected final RotateToHeadingCommand rotateToBoiler;
     
     @Inject
     public ShootFromHopperCommandGroup(
@@ -37,13 +43,17 @@ public class ShootFromHopperCommandGroup extends CommandGroup {
             RotateToHeadingCommand rotateToBoiler,
             LeftShootFuelAndAgitateCommandGroup shootLeft
             ) {
-        redAllianceStartingHeading =  propMan.createPersistentProperty("Red shooting starting heading", -5);
-        blueAllianceStartingHeading = propMan.createPersistentProperty("Blue shooting starting heading", -175);
+        redAllianceStartingHeading =  propMan.createPersistentProperty("Red hopper and shoot starting heading", 90);
+        blueAllianceStartingHeading = propMan.createPersistentProperty("Blue hopper and shoot starting heading", 90);
         
         redHeadingToHopper =  propMan.createPersistentProperty("Red heading to travel toward hopper", -110);
         blueHeadingToHopper = propMan.createPersistentProperty("Blue heading to travel toward hopper", -70);
         
         distanceToTravelToHopper = propMan.createPersistentProperty("Distance to activate hopper for load", -100);
+        distanceToReverseAfterHopper = propMan.createPersistentProperty("Distance to reverse after hopper for shoot", -20);
+        
+        redHeadingToBoiler =  propMan.createPersistentProperty("Red heading to shoot at boiler", -40);
+        blueHeadingToBoiler = propMan.createPersistentProperty("Blue heading to shoot at boiler", 220);
         
         shiftToHigh.setGear(Gear.HIGH_GEAR);
         addSequential(shiftToHigh, 0.1);
@@ -57,7 +67,14 @@ public class ShootFromHopperCommandGroup extends CommandGroup {
         activateHopper.setTargetDistanceProp(distanceToTravelToHopper);
         addSequential(activateHopper);
         
-        // TODO: Rotate to boiler
+        this.positionForShoot = positionForShoot;
+        positionForShoot.setTargetHeadingProp(blueHeadingToHopper);
+        positionForShoot.setTargetDistanceProp(distanceToReverseAfterHopper);
+        addSequential(positionForShoot);
+        
+        this.rotateToBoiler = rotateToBoiler;
+        rotateToBoiler.setTargetHeadingProp(blueHeadingToBoiler);
+        addSequential(rotateToBoiler);
         
         shootLeft.setShooterRange(TypicalShootingPosition.OffsetFromHopper);
         addSequential(shootLeft);
@@ -67,9 +84,13 @@ public class ShootFromHopperCommandGroup extends CommandGroup {
         if (color == Alliance.Red) {
             setInitialHeading.setHeadingToApply(redAllianceStartingHeading.get());
             activateHopper.setTargetHeadingProp(redHeadingToHopper);
+            positionForShoot.setTargetHeadingProp(redHeadingToHopper);
+            rotateToBoiler.setTargetHeadingProp(redHeadingToBoiler);
         } else {
             setInitialHeading.setHeadingToApply(blueAllianceStartingHeading.get());
             activateHopper.setTargetHeadingProp(blueHeadingToHopper);
+            positionForShoot.setTargetHeadingProp(blueHeadingToHopper);
+            rotateToBoiler.setTargetHeadingProp(blueHeadingToBoiler);
         }
     }
 }
