@@ -28,6 +28,7 @@ import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
 import competition.subsystems.vision.commands.DriveTowardBoilerWithVisionAndJoysticksCommand;
 import competition.subsystems.vision.commands.RotateRobotToBoilerCommand;
+import competition.subsystems.drive.commands.DriveForDistanceAtHeadingCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.DriveToPointUsingHeuristicsCommand;
 import competition.subsystems.drive.commands.DriveToShootingRangeCommand;
@@ -290,7 +291,9 @@ public class OperatorCommandMap {
             DisableAutonomousCommand disableCommand,
             SetupShootAndDriveAcrossBaseLineCommand shootThenBaseline,
             SetupBreakBaselineCommand breakBaseLine,
-            SetupShootAndActivateHopperCommand shootThenHopper)
+            SetupShootAndActivateHopperCommand shootThenHopper,
+            DriveForDistanceAtHeadingCommand debugDFDAH,
+            XPropertyManager propMan)
     {
         oi.leftButtons.getIfAvailable(8).whenPressed(breakBaseLine);
         oi.leftButtons.getIfAvailable(9).whenPressed(shootThenHopper);
@@ -301,6 +304,11 @@ public class OperatorCommandMap {
         disableCommand.includeOnSmartDashboard("Disable Autonomous");
         shootThenHopper.includeOnSmartDashboard("Shoot then activate hopper autonmous command ");
         shootThenBaseline.includeOnSmartDashboard("Shoot then baseline autonomous command");
+        
+        
+        debugDFDAH.includeOnSmartDashboard("Debug DFDAH");
+        debugDFDAH.setTargetHeadingProp(propMan.createEphemeralProperty("Debug DFDAH Heading", 90));
+        debugDFDAH.setTargetDistanceProp(propMan.createEphemeralProperty("Debug DFDAH Distance", 100));
     }
     
     @Inject
