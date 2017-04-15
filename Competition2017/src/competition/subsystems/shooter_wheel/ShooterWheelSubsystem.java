@@ -48,12 +48,12 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         this.side = side;
         
         flushToBoilerTargetSpeed = 
-                propManager.createPersistentProperty(side + " flush to boiler target speed", 9000);
+                propManager.createPersistentProperty(side + " flush to boiler target speed", 9_000);
         trimFlushToBoilerSpeed =
                 propManager.createEphemeralProperty(side + " trim speed", 0.0);
         
         offsetFromHopperTargetSpeed = 
-                propManager.createPersistentProperty(side + " offset from hopper target speed", 1100);
+                propManager.createPersistentProperty(side + " offset from hopper target speed", 11_000);
         
         wheelSpeedThresholdPercentage = 
                 propManager.createPersistentProperty("Wheel speed threshold percentage for feeding", 0.75);
@@ -71,12 +71,12 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
             case FlushToBoiler:
                 trimFlushToBoilerSpeed.set(trimFlushToBoilerSpeed.get() + trimAmount);
                 
-                if (trimFlushToBoilerSpeed.get() > 10000) {
-                    trimFlushToBoilerSpeed.set(10000);
+                if (trimFlushToBoilerSpeed.get() > 10_000) {
+                    trimFlushToBoilerSpeed.set(10_000);
                 }
                 
-                if (trimFlushToBoilerSpeed.get() < -10000) {
-                    trimFlushToBoilerSpeed.set(-10000);
+                if (trimFlushToBoilerSpeed.get() < -10_000) {
+                    trimFlushToBoilerSpeed.set(-10_000);
                 }
                 break;
             default: 

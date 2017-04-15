@@ -14,7 +14,7 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 
 public class DriveForDistanceAtHeadingCommand extends BaseDriveCommand {
-    protected final DoubleProperty speedHeadingThresh;
+    protected final DoubleProperty headingThreshToAllowTranslation;
     protected final PoseSubsystem poseSubsystem;
     protected ContiguousHeading targetHeading;
     protected double targetDistance;
@@ -38,19 +38,12 @@ public class DriveForDistanceAtHeadingCommand extends BaseDriveCommand {
     {
         super(driveSubsystem);
         this.poseSubsystem = pose;
-        speedHeadingThresh = propMan.createPersistentProperty("Drive at heading threshold for translation", 5);
+        headingThreshToAllowTranslation = propMan.createPersistentProperty("Drive at heading threshold for translation", 5);
         
-        headingDrivePid = new PIDManager("Drive at heading rotation", propMan, assertionManager,  1 / 80d, 0, 0);
-        
-        headingDrivePid.setErrorThreshold(3); // error in degrees, since degrees are used for the calculate call in execute()
-        headingDrivePid.setDerivativeThreshold(3.0 / 20); // 3 degrees per second, divided by 20, since derivative is calculated 20 times a second
-        
-        headingDrivePid.setEnableErrorThreshold(true);
-        headingDrivePid.setEnableDerivativeThreshold(true);
+        headingDrivePid = pidFactory.createPIDManager("Drive at heading rotation", 1 / 80d, 0, 0, 0, 0.75, -0.75, 3, 3d / 20, 0);
         
         this.distancePid = pidFactory.createPIDManager("Drive at heading position", 0.1, 0, 0, 0, 0.5, -0.5, 3, 1, 0.5);
         this.alignmentPid = pidFactory.createPIDManager("Drive at heading alignment", 1/24d, 0, 0, 0, 0.5, -0.5);
-
     }
 
     public void setTargetHeading(double heading) {
@@ -117,13 +110,14 @@ public class DriveForDistanceAtHeadingCommand extends BaseDriveCommand {
                     .add(initialPosition.scale(-1))
                     .rotate(-targetHeading.getValue());
             
-            double translationPowerFactor = Math.max(speedHeadingThresh.get() - Math.abs(errorInDegrees), 0) / speedHeadingThresh.get();
+            double translationPowerFactor = Math.max(
+                    headingThreshToAllowTranslation.get() - Math.abs(errorInDegrees), 0) / headingThreshToAllowTranslation.get();
             double translationPower = distancePid.calculate(targetDistance, targetRelativePositionalError.y) * translationPowerFactor;
             
             // Using the translation power as a multiplication factor ensures that we only align when we are moving toward the goal
             double alignmentPower = alignmentPid.calculate(targetRelativePositionalError.x, 0) * Math.abs(translationPower);
             
-            driveSubsystem.tankDrivePowerMode(translationPower + rotationalPower - alignmentPower, translationPower - rotationalPower + alignmentPower);
+            driveSubsystem.tankDrivePowerMode(translationPower + rotationalPower + alignmentPower, translationPower - rotationalPower - alignmentPower);
         }
     }
     
@@ -137,5 +131,4 @@ public class DriveForDistanceAtHeadingCommand extends BaseDriveCommand {
         log.info("Ending. Current heading is " + poseSubsystem.getCurrentHeading() + " and target heading was " 
                 + targetHeading);
     }
-    
 }
