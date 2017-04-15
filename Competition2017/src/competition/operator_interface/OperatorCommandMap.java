@@ -19,6 +19,7 @@ import competition.subsystems.agitator.commands.RunIntakeAgitatorIfWheelAtSpeedC
 import competition.subsystems.autonomous.DriveToBoilerUsingHeuristicsWithVisionCommandGroup;
 import competition.subsystems.autonomous.selection.DisableAutonomousCommand;
 import competition.subsystems.autonomous.selection.SetupBreakBaselineCommand;
+import competition.subsystems.autonomous.selection.SetupDriveToCenterGear;
 import competition.subsystems.autonomous.selection.SetupDriveToHopperThenBoilerCommand;
 import competition.subsystems.autonomous.selection.SetupShootAndDriveAcrossBaseLineCommand;
 import competition.subsystems.climbing.commands.RopeAlignerCommand;
@@ -297,8 +298,10 @@ public class OperatorCommandMap {
             DisableAutonomousCommand disableCommand,
             SetupShootAndDriveAcrossBaseLineCommand shootThenBaseline,
             SetupDriveToHopperThenBoilerCommand driveToBoiler,
-            SetupBreakBaselineCommand breakBaseLine)
+            SetupBreakBaselineCommand breakBaseLine,
+            SetupDriveToCenterGear centerGear)
     {
+        oi.leftButtons.getIfAvailable(7).whenPressed(centerGear);
         oi.leftButtons.getIfAvailable(8).whenPressed(breakBaseLine);
         oi.leftButtons.getIfAvailable(9).whenPressed(driveToBoiler);
         oi.rightButtons.getIfAvailable(8).whenPressed(disableCommand);

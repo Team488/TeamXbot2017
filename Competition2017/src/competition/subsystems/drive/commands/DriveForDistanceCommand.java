@@ -54,7 +54,7 @@ public class DriveForDistanceCommand extends BaseDriveCommand {
      */
     public void setDeltaDistance(DoubleProperty deltaDistanceProp) {
         this.deltaDistanceProp = deltaDistanceProp;
-    }
+    }   
     
     @Override
     public void initialize() {
