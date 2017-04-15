@@ -20,7 +20,9 @@ public class GenericAutonomousCommandSetter<T extends Command> extends BaseAuton
 
     @Override
     public void initialize() {
-        this.autonomousCommandSelector.setCurrentAutonomousCommand(this.commandProvider.get());
+        T autonomousCommand = this.commandProvider.get();
+        log.info("Setting autonomous command to " + autonomousCommand.getName());
+        this.autonomousCommandSelector.setCurrentAutonomousCommand(autonomousCommand);
         
     }
 
