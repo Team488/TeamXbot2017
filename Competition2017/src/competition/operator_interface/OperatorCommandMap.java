@@ -292,7 +292,7 @@ public class OperatorCommandMap {
             SetupShootAndDriveAcrossBaseLineCommand shootThenBaseline,
             SetupBreakBaselineCommand breakBaseLine,
             SetupShootAndActivateHopperCommand shootThenHopper,
-            DriveForDistanceAtHeadingCommand debugDFDAH,
+            DriveForDistanceAtHeadingCommand debugDriveforDistanceAtHeading,
             XPropertyManager propMan)
     {
         oi.leftButtons.getIfAvailable(8).whenPressed(breakBaseLine);
@@ -306,9 +306,9 @@ public class OperatorCommandMap {
         shootThenBaseline.includeOnSmartDashboard("Shoot then baseline autonomous command");
         
         
-        debugDFDAH.includeOnSmartDashboard("Debug DFDAH");
-        debugDFDAH.setTargetHeadingProp(propMan.createEphemeralProperty("Debug DFDAH Heading", 90));
-        debugDFDAH.setTargetDistanceProp(propMan.createEphemeralProperty("Debug DFDAH Distance", 100));
+        debugDriveforDistanceAtHeading.includeOnSmartDashboard("Debug DFDAH");
+        debugDriveforDistanceAtHeading.setTargetHeadingProp(propMan.createEphemeralProperty("Debug DFDAH Heading", 90));
+        debugDriveforDistanceAtHeading.setTargetDistanceProp(propMan.createEphemeralProperty("Debug DFDAH Distance", 100));
     }
     
     @Inject
