@@ -13,11 +13,12 @@ import competition.subsystems.shoot_fuel.ShootFuelForNSecondsCommandGroup;
 import competition.subsystems.shoot_fuel.StopAllShootingCommandGroup;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import xbot.common.command.BaseCommandGroup;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
-public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
+public class ShootAndDriveAcrossBaseLineCommandGroup extends BaseCommandGroup {
     
     private final DoubleProperty distanceToBackUp;
     
@@ -45,6 +46,13 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         shiftCommand.setGear(Gear.HIGH_GEAR);
         this.addSequential(shiftCommand, 0.1);
         
+        log.info("Setting alliance to " + poseSubsystem.getAllianceColor() + " alliance");
+        if (poseSubsystem.getAllianceColor() == Alliance.Red) {
+            setInitialHeading.setHeadingToApply(redAllianceStartingHeading.get());
+        } else if (poseSubsystem.getAllianceColor() == Alliance.Blue) {
+            setInitialHeading.setHeadingToApply(blueAllianceStartingHeading.get());
+        }
+        
         this.setInitialHeading = setHeading;
         this.addSequential(setInitialHeading);
         // Default to Red alliance, this can be changed later in setAlliance()
@@ -69,13 +77,5 @@ public class ShootAndDriveAcrossBaseLineCommandGroup extends CommandGroup{
         breakBaselineAuto = driveForDistanceProvider.get();
         breakBaselineAuto.setDeltaDistance(poseSubsystem.getDistanceFromWallToBaseline());
         this.addSequential(breakBaselineAuto, poseSubsystem.getBreakBaselineMaximumTime());
-    }
-    
-    public void setAlliance(Alliance color) {
-        if (color == Alliance.Red) {
-            setInitialHeading.setHeadingToApply(redAllianceStartingHeading.get());
-        } else if (color == Alliance.Blue) {
-            setInitialHeading.setHeadingToApply(blueAllianceStartingHeading.get());
-        }
     }
 }

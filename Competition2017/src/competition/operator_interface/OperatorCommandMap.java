@@ -16,11 +16,12 @@ import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.EjectAgitatorCommand;
 import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
 import competition.subsystems.agitator.commands.RunIntakeAgitatorIfWheelAtSpeedCommand;
+import competition.subsystems.autonomous.BreakBaselineCommandGroup;
 import competition.subsystems.autonomous.DriveToBoilerUsingHeuristicsWithVisionCommandGroup;
+import competition.subsystems.autonomous.DriveToHopperThenBoilerCommandGroup;
+import competition.subsystems.autonomous.ShootAndDriveAcrossBaseLineCommandGroup;
 import competition.subsystems.autonomous.selection.DisableAutonomousCommand;
-import competition.subsystems.autonomous.selection.SetupBreakBaselineCommand;
-import competition.subsystems.autonomous.selection.SetupDriveToHopperThenBoilerCommand;
-import competition.subsystems.autonomous.selection.SetupShootAndDriveAcrossBaseLineCommand;
+import competition.subsystems.autonomous.selection.GenericAutonomousCommandSetter;
 import competition.subsystems.climbing.commands.RopeAlignerCommand;
 import competition.subsystems.collector.CollectorSubsystem.Power;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
@@ -295,9 +296,9 @@ public class OperatorCommandMap {
     public void setupAutonomous(
             OperatorInterface oi,
             DisableAutonomousCommand disableCommand,
-            SetupShootAndDriveAcrossBaseLineCommand shootThenBaseline,
-            SetupDriveToHopperThenBoilerCommand driveToBoiler,
-            SetupBreakBaselineCommand breakBaseLine)
+            GenericAutonomousCommandSetter<ShootAndDriveAcrossBaseLineCommandGroup> shootThenBaseline,
+            GenericAutonomousCommandSetter<DriveToHopperThenBoilerCommandGroup> driveToBoiler,
+            GenericAutonomousCommandSetter<BreakBaselineCommandGroup> breakBaseLine)
     {
         oi.leftButtons.getIfAvailable(8).whenPressed(breakBaseLine);
         oi.leftButtons.getIfAvailable(9).whenPressed(driveToBoiler);
