@@ -17,6 +17,7 @@ import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
 import competition.subsystems.agitator.commands.RunIntakeAgitatorIfWheelAtSpeedCommand;
 import competition.subsystems.autonomous.DriveToBoilerUsingHeuristicsWithVisionCommandGroup;
 import competition.subsystems.autonomous.ShootAndActivateHopperCommandGroup;
+import competition.subsystems.autonomous.ShootFromHopperCommandGroup;
 import competition.subsystems.autonomous.selection.DisableAutonomousCommand;
 import competition.subsystems.autonomous.selection.SetupBreakBaselineCommand;
 import competition.subsystems.autonomous.selection.SetupDriveToHopperThenBoilerCommand;
@@ -28,6 +29,7 @@ import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
 import competition.subsystems.vision.commands.DriveTowardBoilerWithVisionAndJoysticksCommand;
 import competition.subsystems.vision.commands.RotateRobotToBoilerCommand;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import competition.subsystems.drive.commands.DriveForDistanceAtHeadingCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.DriveToPointUsingHeuristicsCommand;
@@ -293,7 +295,8 @@ public class OperatorCommandMap {
             SetupBreakBaselineCommand breakBaseLine,
             SetupShootAndActivateHopperCommand shootThenHopper,
             DriveForDistanceAtHeadingCommand debugDriveforDistanceAtHeading,
-            XPropertyManager propMan)
+            XPropertyManager propMan,
+            ShootFromHopperCommandGroup shootFromHopper)
     {
         oi.leftButtons.getIfAvailable(8).whenPressed(breakBaseLine);
         oi.leftButtons.getIfAvailable(9).whenPressed(shootThenHopper);
@@ -308,7 +311,10 @@ public class OperatorCommandMap {
         
         debugDriveforDistanceAtHeading.includeOnSmartDashboard("Debug DFDAH");
         debugDriveforDistanceAtHeading.setTargetHeadingProp(propMan.createEphemeralProperty("Debug DFDAH Heading", 90));
-        debugDriveforDistanceAtHeading.setTargetDistanceProp(propMan.createEphemeralProperty("Debug DFDAH Distance", 100));
+        debugDriveforDistanceAtHeading.setTargetDistanceProp(propMan.createEphemeralProperty("Debug DFDAH Distance", 100)); 
+        
+        shootFromHopper.includeOnSmartDashboard();
+        shootFromHopper.setAlliance(Alliance.Red);
     }
     
     @Inject

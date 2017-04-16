@@ -40,7 +40,7 @@ public class DriveForDistanceAtHeadingCommand extends BaseDriveCommand {
         this.poseSubsystem = pose;
         headingThreshToAllowTranslation = propMan.createPersistentProperty("Drive at heading threshold for translation", 5);
         
-        headingDrivePid = pidFactory.createPIDManager("Drive at heading rotation", 1 / 80d, 0, 0, 0, 0.75, -0.75, 3, 3d / 20, 0);
+        headingDrivePid = pidFactory.createPIDManager("Drive at heading rotation", 1 / 80d, 0, 0, 0, 0.75, -0.75, 4, 3d / 20, 0);
         
         this.distancePid = pidFactory.createPIDManager("Drive at heading position", 0.1, 0, 0, 0, 0.5, -0.5, 3, 1, 0.5);
         this.alignmentPid = pidFactory.createPIDManager("Drive at heading alignment", 1/24d, 0, 0, 0, 0.5, -0.5);
@@ -107,8 +107,8 @@ public class DriveForDistanceAtHeadingCommand extends BaseDriveCommand {
             
             
             XYPair targetRelativePositionalError = poseSubsystem.getFieldOrientedTotalDistanceTraveled()
-                    .add(initialPosition.scale(-1))
-                    .rotate(-targetHeading.getValue());
+                    .add(initialPosition.clone().scale(-1))
+                    .rotate(90 - targetHeading.getValue());
             
             double translationPowerFactor = Math.max(
                     headingThreshToAllowTranslation.get() - Math.abs(errorInDegrees), 0) / headingThreshToAllowTranslation.get();

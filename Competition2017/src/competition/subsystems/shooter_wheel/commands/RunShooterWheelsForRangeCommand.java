@@ -15,6 +15,7 @@ public class RunShooterWheelsForRangeCommand extends BaseShooterWheelCommand {
     
     public void setTargetRange(TypicalShootingPosition range) {
         this.range = range;
+        // TODO: Update name
     }
 
     @Override

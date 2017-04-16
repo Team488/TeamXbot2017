@@ -17,12 +17,10 @@ import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
 public class ShootAndActivateHopperCommandGroup extends ShootAndDriveAcrossBaseLineCommandGroup {
-    private DriveInfinitelyCommand driveToHopper;
     private RotateToHeadingCommand rotateToHopper;
 
     private final DoubleProperty redAllianceHeadingToHopper;
     private final DoubleProperty blueAllianceHeadingToHopper;
-    private final DoubleProperty timeToDriveIntoHopper;
     private final DoubleProperty distanceFromShootingPositionToTurningPoint;
 
     @Inject
@@ -33,26 +31,20 @@ public class ShootAndActivateHopperCommandGroup extends ShootAndDriveAcrossBaseL
             Provider<RotateToHeadingCommand> rotateToHeadingProvider,
             PoseSubsystem poseSubsystem,
             ShootFuelForNSecondsCommandGroup shootFuelCommandGroup,
-            DriveInfinitelyCommand driveToHopperCommand,
             StopFeedingAndCollectionCommandGroup stopFiring,
             ShiftGearCommand shiftCommand) {
         super(propManager, setHeading, driveBackABit, driveAcrossBaseline, poseSubsystem, shootFuelCommandGroup, stopFiring, shiftCommand);
         
-        redAllianceHeadingToHopper = propManager.createPersistentProperty("Red alliance heading to face hopper", 90);
+        redAllianceHeadingToHopper = propManager.createPersistentProperty("Red alliance heading to face hopper", 0);
         blueAllianceHeadingToHopper = propManager.createPersistentProperty("Blue alliance heading to face hopper", 180);
-        timeToDriveIntoHopper = propManager.createPersistentProperty(
-                "Time to drive to activate hopper", 5);
         distanceFromShootingPositionToTurningPoint = propManager.createPersistentProperty(
                 "Vertical distance from boiler to hopper", 100);
 
         this.driveAcrossBaseline.setTargetDistanceProp(distanceFromShootingPositionToTurningPoint);
         
         rotateToHopper = rotateToHeadingProvider.get();
-        rotateToHopper.setTargetHeading(blueAllianceHeadingToHopper.get());
+        rotateToHopper.setTargetHeadingProp(blueAllianceHeadingToHopper);
         this.addSequential(rotateToHopper, 2);
-        
-        driveToHopper = driveToHopperCommand;
-        this.addSequential(driveToHopper, timeToDriveIntoHopper.get());
     }
     
     @Override
@@ -60,9 +52,9 @@ public class ShootAndActivateHopperCommandGroup extends ShootAndDriveAcrossBaseL
         super.setAlliance(color);
         
         if(color == Alliance.Red) {
-            rotateToHopper.setTargetHeading(redAllianceHeadingToHopper.get());
+            rotateToHopper.setTargetHeadingProp(redAllianceHeadingToHopper);
         } else {
-            rotateToHopper.setTargetHeading(blueAllianceHeadingToHopper.get());
+            rotateToHopper.setTargetHeadingProp(blueAllianceHeadingToHopper);
         }
     }
 }

@@ -87,6 +87,7 @@ public abstract class BaseXCANTalonSpeedControlledSubsystem extends BaseSubsyste
         masterMotor.setInverted(motorInverted);
         masterMotor.reverseSensor(motorSensorInverted);
         masterMotor.setControlMode(TalonControlMode.Speed);
+        masterMotor.setBrakeEnableDuringNeutral(false);
         masterMotor.setProfile(0);
     }
         
