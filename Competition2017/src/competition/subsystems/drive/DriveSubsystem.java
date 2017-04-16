@@ -206,6 +206,13 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         updatePeriodicData();
     }
     
+    public void stop() {
+        leftDrive.set(0);
+        rightDrive.set(0);
+        
+        updatePeriodicData();
+    }
+    
     /**
      * Updates the motor with new values without resetting the robot
      * @param motor used to access the motor to set and give data
