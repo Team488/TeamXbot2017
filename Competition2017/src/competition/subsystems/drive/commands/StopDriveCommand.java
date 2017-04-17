@@ -10,12 +10,13 @@ public class StopDriveCommand extends BaseDriveCommand {
 
     @Override
     public void initialize() {
-        log.info("initializing");
+        log.info("Initializing");
+        driveSubsystem.stop();
     }
 
     @Override
     public void execute() {
-        driveSubsystem.stop();
+        
     }
     
     @Override
