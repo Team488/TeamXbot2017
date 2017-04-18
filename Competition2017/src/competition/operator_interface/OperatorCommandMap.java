@@ -118,12 +118,12 @@ public class OperatorCommandMap {
         TrimShooterWheelCommand rightDown = new TrimShooterWheelCommand(rightWheel, propMan);
         rightUp.setTrimDirection(TrimDirection.Down);
         
-        RunShooterWheelsForRangeCommand runLeftWheel = 
+        RunShooterWheelsForRangeCommand runLeftWheel =
                 new RunShooterWheelsForRangeCommand(
                         TypicalShootingPosition.FlushToBoiler,
                         shooterWheelsManagerSubsystem.getLeftShooter());
         
-        RunShooterWheelsForRangeCommand runRightWheel = 
+        RunShooterWheelsForRangeCommand runRightWheel =
                 new RunShooterWheelsForRangeCommand(
                         TypicalShootingPosition.FlushToBoiler,
                         shooterWheelsManagerSubsystem.getRightShooter());
