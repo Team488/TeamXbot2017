@@ -207,6 +207,8 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     }
     
     public void stop() {
+        ensurePowerModeForDrive();
+        
         leftDrive.set(0);
         rightDrive.set(0);
         
