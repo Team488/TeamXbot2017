@@ -6,6 +6,7 @@ public class StopAgitatorCommand extends BaseAgitatorCommand {
     
     public StopAgitatorCommand(AgitatorSubsystem agitatorSubsystem) {
         super(agitatorSubsystem);
+        this.setRunWhenDisabled(true);
     }
 
     @Override
