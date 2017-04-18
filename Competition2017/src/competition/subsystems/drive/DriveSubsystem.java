@@ -5,12 +5,16 @@ import com.google.inject.Singleton;
 
 import competition.subsystems.shift.ShiftSubsystem;
 
+import java.util.Observable;
+
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.WPIFactory;
+import xbot.common.logic.Latch;
+import xbot.common.logic.Latch.EdgeType;
 import xbot.common.math.MathUtils;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
@@ -42,7 +46,9 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
     private double leftInchesTraveled;
     private double rightInchesTraveled;
     
+    private Latch drivingStateLatch = new Latch(false, EdgeType.Both);
     
+ 
     @Inject
     public DriveSubsystem(WPIFactory factory, XPropertyManager propManager, ShiftSubsystem shift) {
         log.info("Creating");
@@ -82,6 +88,19 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         previousRightTicks = rightDrive.getPosition();
         leftInchesTraveled = 0;
         rightInchesTraveled = 0;
+        
+        drivingStateLatch.addObserver((observable, arg) -> {
+            if(arg instanceof EdgeType) {
+                EdgeType edge = (EdgeType)arg;
+                if(edge == EdgeType.RisingEdge) {
+                    log.info("Drive starting");
+                }
+                else if(edge == EdgeType.FallingEdge) {
+                    log.info("Drive stopping");
+                }
+                
+            }
+        });
     }
 
     private void configMotorTeam(XCANTalon master, XCANTalon slave) {
@@ -187,6 +206,15 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         updatePeriodicData();
     }
     
+    public void stop() {
+        ensurePowerModeForDrive();
+        
+        leftDrive.set(0);
+        rightDrive.set(0);
+        
+        updatePeriodicData();
+    }
+    
     /**
      * Updates the motor with new values without resetting the robot
      * @param motor used to access the motor to set and give data
@@ -246,6 +274,8 @@ public class DriveSubsystem extends BaseSubsystem implements PeriodicDataSource 
         rightInchesTraveled += convertTicksToInches(rightDrive.getPosition() - previousRightTicks);
         previousLeftTicks = leftDrive.getPosition();
         previousRightTicks = rightDrive.getPosition();
+        
+        drivingStateLatch.setValue(Math.abs(this.leftDrive.get()) + Math.abs(this.rightDrive.get()) > 0.01);
         
     }
 }

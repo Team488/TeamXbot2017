@@ -27,9 +27,14 @@ public class PoseSubsystem extends BasePoseSubsystem {
     private final DoubleProperty headingFacingBlueBoiler;
     private final DoubleProperty headingFacingRedBoiler;
     private final DoubleProperty distanceBetweenDistanceSensorsProp;
+
+    private final DoubleProperty breakBaselineMaxTime;
+    private final DoubleProperty centerGearAutoMaxTime;
+
     private final DoubleProperty idealShootingRange;
     private final DoubleProperty leftLidarDistance;
     private final DoubleProperty rightLidarDistance;
+    private final DoubleProperty distanceFromWallToCenterGear;
     protected final DistanceSensorPair frontLidars;
 
         
@@ -40,6 +45,8 @@ public class PoseSubsystem extends BasePoseSubsystem {
         
         frontLidars = factory.getMultiplexedLidarPair(Port.kOnboard, (byte)0, (byte)1);
         
+        distanceFromWallToCenterGear = propManager.createPersistentProperty("Distance from wall to center gear", 80);
+        centerGearAutoMaxTime = propManager.createPersistentProperty("Center gear auto max time", 5.0);
         distanceToWallFromBaseline = propManager.createPersistentProperty("Distance to wall from baseline", 96.0);
         headingFacingBlueBoiler = propManager.createPersistentProperty("Heading facing blue boiler", -135);
         headingFacingRedBoiler = propManager.createPersistentProperty("Heading facing red boiler", -45);
@@ -57,6 +64,10 @@ public class PoseSubsystem extends BasePoseSubsystem {
     @Override
     protected double getRightDriveDistance() {
         return drive.getRightDistanceInInches();
+    }
+    
+    public double getDistanceFromWallToCenterGear(){
+        return distanceFromWallToCenterGear.get();
     }
     
     public Alliance getAllianceColor() {
@@ -93,6 +104,14 @@ public class PoseSubsystem extends BasePoseSubsystem {
     
     public double getDistanceFromWallToBaseline() {
         return distanceToWallFromBaseline.get();
+    }
+    
+    public double getBreakBaselineMaximumTime() {
+        return breakBaselineMaxTime.get();
+    }
+    
+    public double getCenterGearAutoMaxTime(){
+        return centerGearAutoMaxTime.get();
     }
     
     public double getIdealShootingRange() {

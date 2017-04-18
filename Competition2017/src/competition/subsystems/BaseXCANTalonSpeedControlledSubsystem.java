@@ -161,4 +161,3 @@ public abstract class BaseXCANTalonSpeedControlledSubsystem extends BaseSubsyste
         }
     }
 }
-

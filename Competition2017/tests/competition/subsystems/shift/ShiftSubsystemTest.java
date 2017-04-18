@@ -1,4 +1,4 @@
-package competition.subsystem.shift;
+package competition.subsystems.shift;
 
 import static org.junit.Assert.*;
 

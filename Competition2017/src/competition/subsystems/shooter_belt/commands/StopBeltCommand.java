@@ -6,6 +6,7 @@ public class StopBeltCommand extends BaseShooterBeltCommand {
     
     public StopBeltCommand(ShooterBeltSubsystem shooterBeltSubsystem) {
         super(shooterBeltSubsystem);
+        this.setRunWhenDisabled(true);
     }
     
     @Override
