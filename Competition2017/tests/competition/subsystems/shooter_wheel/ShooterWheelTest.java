@@ -1,6 +1,6 @@
 package competition.subsystems.shooter_wheel;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,16 +13,16 @@ import xbot.common.properties.XPropertyManager;
 
 public class ShooterWheelTest extends ShooterWheelTestBase {
     
-     ShooterWheelSubsystem leftShooter;
-     ShooterWheelSubsystem rightShooter;
+     TestShooterWheelSubsystem leftShooter;
+     TestShooterWheelSubsystem rightShooter;
      XPropertyManager propertyManager;
     
     @Before
     @Override
     public void setup() {
         super.setup();
-        leftShooter = shooter.getLeftShooter();
-        rightShooter = shooter.getRightShooter();
+        leftShooter = (TestShooterWheelSubsystem)shooter.getLeftShooter();
+        rightShooter = (TestShooterWheelSubsystem)shooter.getRightShooter();
         propertyManager = injector.getInstance(XPropertyManager.class);
         
     }
@@ -36,17 +36,41 @@ public class ShooterWheelTest extends ShooterWheelTestBase {
         
         rscLeft.initialize();
         rscLeft.execute();
-        rscLeft.isFinished();
         
         rscRight.initialize();
         rscRight.execute();
-        rscRight.isFinished();
                 
         assertTrue(leftShooter.getTargetSpeed() > 0);
         assertTrue(rightShooter.getTargetSpeed() > 0);
         
         assertTrue(shooter.getLeftShooter().getPower() > 0);
         assertTrue(shooter.getRightShooter().getPower() > 0);
+
+        assertEquals(0, leftShooter.getAimServo().getValue(), 1e-5);
+        assertEquals(1, rightShooter.getAimServo().getValue(), 1e-5);
+    }
+    
+    @Test
+    public void testRunShooterCommandLongRange(){
+        RunShooterWheelsForRangeCommand rscLeft = 
+                new RunShooterWheelsForRangeCommand(TypicalShootingPosition.OffsetFromHopper, leftShooter);
+        RunShooterWheelsForRangeCommand rscRight = 
+                new RunShooterWheelsForRangeCommand(TypicalShootingPosition.OffsetFromHopper, rightShooter);
+        
+        rscLeft.initialize();
+        rscLeft.execute();
+        
+        rscRight.initialize();
+        rscRight.execute();
+                
+        assertTrue(leftShooter.getTargetSpeed() > 0);
+        assertTrue(rightShooter.getTargetSpeed() > 0);
+        
+        assertTrue(shooter.getLeftShooter().getPower() > 0);
+        assertTrue(shooter.getRightShooter().getPower() > 0);
+
+        assertEquals(1, leftShooter.getAimServo().getValue(), 1e-5);
+        assertEquals(0, rightShooter.getAimServo().getValue(), 1e-5);
     }
     
     @Test 

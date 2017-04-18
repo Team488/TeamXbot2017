@@ -2,6 +2,7 @@ package competition.subsystems.shooter_wheel;
 
 import competition.subsystems.BaseXCANTalonPairSpeedControlledSubsystem;
 import competition.subsystems.RobotSide;
+import xbot.common.controls.actuators.XServo;
 import xbot.common.injection.wpi_factories.WPIFactory;
 import xbot.common.math.PIDPropertyManager;
 import xbot.common.properties.BooleanProperty;
@@ -18,6 +19,12 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
     
     protected final DoubleProperty wheelSpeedThresholdPercentage;
     protected final BooleanProperty isShooterAtSpeed;
+
+    protected final XServo aimServo;
+    protected final boolean aimServoInverted;
+
+    protected final DoubleProperty flushToBoilerServoPosition;
+    protected final DoubleProperty offsetFromHopperServoPosition;
     
     public enum TypicalShootingPosition {
         FlushToBoiler,
@@ -27,9 +34,11 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
     public ShooterWheelSubsystem(
             int masterChannel,
             int followerChannel,
+            int aimServoChannel,
             boolean masterInverted,
             boolean masterSensorInverted,
             boolean followerInverted,
+            boolean aimServoInverted,
             RobotSide side,
             PIDPropertyManager pidPropertyManager,
             WPIFactory factory,
@@ -46,14 +55,21 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
                 propManager);
         log.info("Creating");
         this.side = side;
+        this.aimServoInverted = aimServoInverted;
+        
+        aimServo = factory.getServo(aimServoChannel);
         
         flushToBoilerTargetSpeed = 
                 propManager.createPersistentProperty(side + " flush to boiler target speed", 9_000);
         trimFlushToBoilerSpeed =
                 propManager.createEphemeralProperty(side + " trim speed", 0.0);
+        flushToBoilerServoPosition = 
+                propManager.createPersistentProperty(side + " flush to boiler servo position", 0);
         
         offsetFromHopperTargetSpeed = 
                 propManager.createPersistentProperty(side + " offset from hopper target speed", 11_000);
+        offsetFromHopperServoPosition = 
+                propManager.createPersistentProperty(side + " offset from hopper servo position", 1);
         
         wheelSpeedThresholdPercentage = 
                 propManager.createPersistentProperty("Wheel speed threshold percentage for feeding", 0.75);
@@ -104,7 +120,18 @@ public class ShooterWheelSubsystem extends BaseXCANTalonPairSpeedControlledSubsy
         }
     }
     
-    public void setTargetSpeedForRange(TypicalShootingPosition range) {
+    protected double getAimServoPositionForRange(TypicalShootingPosition range) {
+        switch (range) {
+            case OffsetFromHopper:
+                return offsetFromHopperServoPosition.get();
+            default:
+                return flushToBoilerServoPosition.get();
+        }
+    }
+    
+    public void runForRange(TypicalShootingPosition range) {
+        final double normalizedServoPosition = getAimServoPositionForRange(range);
+        aimServo.set(aimServoInverted ? (1 - normalizedServoPosition) : normalizedServoPosition);
         setTargetSpeed(getTargetSpeedForRange(range));
     }
     

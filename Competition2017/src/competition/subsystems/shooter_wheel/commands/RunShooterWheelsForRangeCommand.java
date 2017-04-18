@@ -25,6 +25,6 @@ public class RunShooterWheelsForRangeCommand extends BaseShooterWheelCommand {
 
     @Override
     public void execute() {
-        shooterWheelSubsystem.setTargetSpeedForRange(range);
+        shooterWheelSubsystem.runForRange(range);
     }
 }

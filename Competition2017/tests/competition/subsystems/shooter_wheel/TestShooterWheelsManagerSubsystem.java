@@ -22,9 +22,11 @@ public class TestShooterWheelsManagerSubsystem extends ShooterWheelsManagerSubsy
         leftShooter = new TestShooterWheelSubsystem(
                 leftMotorMasterIndex,
                 leftMotorFollowerIndex,
+                leftAimServoIndex,
                 leftMasterInverted.get(),
                 leftMasterEncoderInverted.get(),
                 leftFollowerInverted.get(),
+                leftServoInverted.get(),
                 RobotSide.Left,
                 leftPIDValues,
                 factory,
@@ -33,9 +35,11 @@ public class TestShooterWheelsManagerSubsystem extends ShooterWheelsManagerSubsy
         rightShooter = new TestShooterWheelSubsystem(
                 rightMotorMasterIndex,
                 rightMotorFollowerIndex,
+                rightAimServoIndex,
                 rightMasterInverted.get(),
                 rightMasterEncoderInverted.get(),
                 rightFollowerInverted.get(),
+                rightServoInverted.get(),
                 RobotSide.Right,
                 rightPIDValues,
                 factory,
