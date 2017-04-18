@@ -18,9 +18,11 @@ public class DriveForDistanceAtHeadingCommand extends BaseDriveCommand {
     protected final PoseSubsystem poseSubsystem;
     protected ContiguousHeading targetHeading;
     protected double targetDistance;
+    protected double rampDistance;
 
     protected DoubleSupplier targetHeadingSupplier;
     protected DoubleSupplier targetDistanceSupplier;
+    protected DoubleSupplier rampDistanceSupplier;
     
     private final PIDManager headingDrivePid;
     private final PIDManager distancePid;
@@ -69,6 +71,18 @@ public class DriveForDistanceAtHeadingCommand extends BaseDriveCommand {
     public void setTargetDistanceSupplier(DoubleSupplier distanceSupplier) {
         targetHeadingSupplier = distanceSupplier;
     }
+
+    public void setRampDistance(double rampDistance) {
+        rampDistanceSupplier = () -> rampDistance;
+    }
+
+    public void setRampDistanceProp(DoubleProperty rampDistance) {
+        rampDistanceSupplier = () -> rampDistance.get();
+    }
+    
+    public void overrideTranslationSpeedConstraints(Double min, Double max) {
+        distancePid.overrideOutputConstraints(min, max);
+    }
     
     public void reset(){
         log.info("Resetting PID");
@@ -89,9 +103,14 @@ public class DriveForDistanceAtHeadingCommand extends BaseDriveCommand {
             targetDistance = 0;
             return;
         }
+        
+        if(rampDistanceSupplier == null) {
+            rampDistance = Double.NaN;
+        }
 
         targetHeading = new ContiguousHeading(targetHeadingSupplier.getAsDouble());
         targetDistance = targetDistanceSupplier.getAsDouble();
+        rampDistance = rampDistanceSupplier.getAsDouble();
         
         initialPosition = poseSubsystem.getFieldOrientedTotalDistanceTraveled();
         
@@ -105,13 +124,18 @@ public class DriveForDistanceAtHeadingCommand extends BaseDriveCommand {
             double errorInDegrees = poseSubsystem.getCurrentHeading().difference(targetHeading);
             double rotationalPower = headingDrivePid.calculate(0, errorInDegrees);
             
-            
             XYPair targetRelativePositionalError = poseSubsystem.getFieldOrientedTotalDistanceTraveled()
                     .add(initialPosition.clone().scale(-1))
                     .rotate(90 - targetHeading.getValue());
             
             double translationPowerFactor = Math.max(
                     headingThreshToAllowTranslation.get() - Math.abs(errorInDegrees), 0) / headingThreshToAllowTranslation.get();
+            
+            if(rampDistance > 0 && Double.isFinite(rampDistance)) {
+                translationPowerFactor *= Math.min(
+                    initialPosition.getDistanceToPoint(poseSubsystem.getFieldOrientedTotalDistanceTraveled()) / rampDistance, 1);
+            }
+            
             double translationPower = distancePid.calculate(targetDistance, targetRelativePositionalError.y) * translationPowerFactor;
             
             // Using the translation power as a multiplication factor ensures that we only align when we are moving toward the goal

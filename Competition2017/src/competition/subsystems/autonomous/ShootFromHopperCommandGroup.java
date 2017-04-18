@@ -3,14 +3,14 @@ package competition.subsystems.autonomous;
 import com.google.inject.Inject;
 
 import competition.subsystems.drive.commands.DriveForDistanceAtHeadingCommand;
-import competition.subsystems.drive.commands.RotateToHeadingCommand;
+import competition.subsystems.drive.commands.StopDriveCommand;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shoot_fuel.EndToEndShootingCommandGroup;
-import competition.subsystems.shoot_fuel.LeftShootFuelAndAgitateCommandGroup;
+import competition.subsystems.shoot_fuel.StartBothShootersCommandGroup;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
+import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 import xbot.common.command.BaseCommandGroup;
 import xbot.common.command.TimeoutCommand;
 import xbot.common.properties.DoubleProperty;
@@ -31,6 +31,7 @@ public class ShootFromHopperCommandGroup extends BaseCommandGroup {
     private final DoubleProperty distanceToReverseAfterHopper;
 
     private final DoubleProperty shiftWaitTime;
+    private final DoubleProperty rampDistance;
     
     protected final SetRobotHeadingCommand setInitialHeading;
     protected final DriveForDistanceAtHeadingCommand activateHopper;
@@ -40,10 +41,12 @@ public class ShootFromHopperCommandGroup extends BaseCommandGroup {
     public ShootFromHopperCommandGroup(
             XPropertyManager propMan,
             SetRobotHeadingCommand setInitialHeading,
+            StartBothShootersCommandGroup startShooters,
             ShiftGearCommand shiftToHigh,
             ShiftGearCommand shiftToLow,
             DriveForDistanceAtHeadingCommand activateHopper,
             DriveForDistanceAtHeadingCommand positionForShoot,
+            StopDriveCommand stopDrive,
             EndToEndShootingCommandGroup shootBoth
             ) {
         redAllianceStartingHeading =  propMan.createPersistentProperty("Red hopper and shoot starting heading", -90);
@@ -59,24 +62,29 @@ public class ShootFromHopperCommandGroup extends BaseCommandGroup {
         redHeadingToBoiler =  propMan.createPersistentProperty("Red heading to shoot at boiler", -78);
         blueHeadingToBoiler = propMan.createPersistentProperty("Blue heading to shoot at boiler", -102);
 
-        shiftWaitTime = propMan.createPersistentProperty("Wait time after shift", 0.488);
+        shiftWaitTime = propMan.createPersistentProperty("Wait time after shift", 0.1);
+        rampDistance = propMan.createPersistentProperty("Ramp distance in auto", 30);
         
         shiftToHigh.setGear(Gear.HIGH_GEAR);
-        //addSequential(shiftToHigh, 0.1);
+        addSequential(shiftToHigh, 0.1);
         
         this.setInitialHeading = setInitialHeading;
         setInitialHeading.setHeadingToApply(blueAllianceStartingHeading.get()); 
         addSequential(setInitialHeading);
         
         //addSequential(new TimeoutCommand(shiftWaitTime));
+
+        startShooters.setTargetRange(TypicalShootingPosition.OffsetFromHopper);
+        addSequential(startShooters);
         
         this.activateHopper = activateHopper;
         activateHopper.setTargetHeadingProp(blueHeadingToHopper);
         activateHopper.setTargetDistanceProp(distanceToTravelToHopper);
+        activateHopper.setRampDistanceProp(rampDistance);
         addSequential(activateHopper);
 
         shiftToLow.setGear(Gear.LOW_GEAR);
-        //addSequential(shiftToLow, 0.1);
+        addSequential(shiftToLow, 0.1);
 
         //addSequential(new TimeoutCommand(shiftWaitTime));
         
@@ -84,6 +92,7 @@ public class ShootFromHopperCommandGroup extends BaseCommandGroup {
         positionForShoot.setTargetHeadingProp(blueHeadingToBoiler);
         positionForShoot.setTargetDistanceProp(distanceToReverseAfterHopper);
         addSequential(positionForShoot);
+        addSequential(stopDrive);
         
         shootBoth.setShooterRange(TypicalShootingPosition.OffsetFromHopper);
         addSequential(shootBoth);
