@@ -19,6 +19,8 @@ public class StopDriveCommandTest extends DriveTestBase {
     
     @Test
     public void stopTest() {
+        drive.tankDrivePowerMode(0.5, 0.75);
+        verifyDriveSetpoints(0.5, 0.75);
         stopCommand.initialize();
         verifyDriveSetpoints(0, 0);
         assertTrue(stopCommand.isFinished());
