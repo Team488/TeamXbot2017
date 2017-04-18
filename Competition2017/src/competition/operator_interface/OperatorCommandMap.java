@@ -44,6 +44,7 @@ import competition.subsystems.drive.commands.TogglePrecisionMode;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shoot_fuel.SidedFireTracerRoundsCommandGroup;
+import competition.subsystems.shoot_fuel.EndToEndShootingCommandGroup;
 import competition.subsystems.shoot_fuel.LeftFeedingCommandGroup;
 import competition.subsystems.shoot_fuel.LeftShootFuelCommandGroup;
 import competition.subsystems.shoot_fuel.RightFeedingCommandGroup;
@@ -94,6 +95,7 @@ public class OperatorCommandMap {
             ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem,
             LeftShootFuelCommandGroup shootLeft,
             RightShootFuelCommandGroup shootRight,
+            EndToEndShootingCommandGroup shootLongRange,
             XPropertyManager propMan,
             PIDFactory pidFactory
             )
@@ -128,6 +130,9 @@ public class OperatorCommandMap {
         
         oi.controller.getXboxButton(XboxButton.LeftTrigger).whileHeld(runLeftWheel);
         oi.controller.getXboxButton(XboxButton.RightTrigger).whileHeld(runRightWheel);
+        
+        shootLongRange.setShooterRange(TypicalShootingPosition.OffsetFromHopper);
+        oi.controller.getXboxButton(XboxButton.Back).whileHeld(shootLongRange);
         
         runLeftPower.includeOnSmartDashboard("Run shooter wheel using power - left");
         runRightPower.includeOnSmartDashboard("Run shooter wheel using power - right");
