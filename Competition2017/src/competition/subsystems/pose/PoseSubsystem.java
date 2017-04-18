@@ -51,6 +51,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
         headingFacingBlueBoiler = propManager.createPersistentProperty("Heading facing blue boiler", -135);
         headingFacingRedBoiler = propManager.createPersistentProperty("Heading facing red boiler", -45);
         distanceBetweenDistanceSensorsProp = propManager.createPersistentProperty("Distance between distance sensors", 20);
+        breakBaselineMaxTime = propManager.createPersistentProperty("Break baseline maximum time", 3.0);
         idealShootingRange = propManager.createPersistentProperty("Ideal shooting range", 18.0);
         leftLidarDistance = propManager.createEphemeralProperty("Left lidar distance", 0);      
         rightLidarDistance = propManager.createEphemeralProperty("Right lidar distance", 0);

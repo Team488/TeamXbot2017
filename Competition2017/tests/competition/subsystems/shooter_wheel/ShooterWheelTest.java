@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import competition.subsystems.shooter_wheel.ShooterWheelSubsystem;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
 import competition.subsystems.shooter_wheel.commands.StopShooterCommand;
@@ -73,7 +72,7 @@ public class ShooterWheelTest extends ShooterWheelTestBase {
         assertEquals(0, rightShooter.getAimServo().getValue(), 1e-5);
     }
     
-    @Test 
+    @Test
     public void testStopShooterCommand(){
         StopShooterCommand stop = new StopShooterCommand(this.leftShooter);
                 
