@@ -35,6 +35,7 @@ import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.DriveToPointUsingHeuristicsCommand;
 import competition.subsystems.drive.commands.DriveToShootingRangeCommand;
 import competition.subsystems.drive.commands.FieldOrientedTankDriveWithJoystick;
+import competition.subsystems.drive.commands.ResistMovementCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
 import competition.subsystems.drive.commands.TogglePrecisionMode;
@@ -243,7 +244,8 @@ public class OperatorCommandMap {
             XPropertyManager propManager,
             TankDriveWithGamePadCommand gamepad,
             DriveToPointUsingHeuristicsCommand driveUsingHeuristics,
-            FieldOrientedTankDriveWithJoystick fieldOrientedTankDrive)
+            FieldOrientedTankDriveWithJoystick fieldOrientedTankDrive,
+            ResistMovementCommand resistMovement)
     {
         oi.rightButtons.getIfAvailable(3).whenPressed(toggle);
         DoubleProperty deltaDistance = propManager.createPersistentProperty("Drive for distance test distance", 20);
@@ -263,6 +265,8 @@ public class OperatorCommandMap {
         
         oi.rightButtons.getIfAvailable(2).whileHeld(driveToShootingRange);
         oi.leftButtons.getIfAvailable(4).whileHeld(fieldOrientedTankDrive);
+        
+        oi.rightButtons.getIfAvailable(4).whileHeld(resistMovement);
     }
     
     @Inject
