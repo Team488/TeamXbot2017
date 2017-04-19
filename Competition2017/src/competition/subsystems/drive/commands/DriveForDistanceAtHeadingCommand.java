@@ -107,10 +107,12 @@ public class DriveForDistanceAtHeadingCommand extends BaseDriveCommand {
         if(rampDistanceSupplier == null) {
             rampDistance = Double.NaN;
         }
+        else {
+            rampDistance = rampDistanceSupplier.getAsDouble();
+        }
 
         targetHeading = new ContiguousHeading(targetHeadingSupplier.getAsDouble());
         targetDistance = targetDistanceSupplier.getAsDouble();
-        rampDistance = rampDistanceSupplier.getAsDouble();
         
         initialPosition = poseSubsystem.getFieldOrientedTotalDistanceTraveled();
         

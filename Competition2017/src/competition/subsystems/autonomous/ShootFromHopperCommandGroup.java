@@ -3,13 +3,14 @@ package competition.subsystems.autonomous;
 import com.google.inject.Inject;
 
 import competition.subsystems.drive.commands.DriveForDistanceAtHeadingCommand;
+import competition.subsystems.drive.commands.DriveInfinitelyCommand;
 import competition.subsystems.drive.commands.StopDriveCommand;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shoot_fuel.EndToEndShootingCommandGroup;
-import competition.subsystems.shoot_fuel.StartBothShootersCommandGroup;
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
 import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
+import competition.subsystems.shooter_wheel.commands.StaggerStartBothShootersCommandGroup;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import xbot.common.command.BaseCommandGroup;
 import xbot.common.command.TimeoutCommand;
@@ -32,6 +33,8 @@ public class ShootFromHopperCommandGroup extends BaseCommandGroup {
 
     private final DoubleProperty shiftWaitTime;
     private final DoubleProperty rampDistance;
+    private final DoubleProperty nudgePower;
+    private final DoubleProperty nudgeTime;
     
     protected final SetRobotHeadingCommand setInitialHeading;
     protected final DriveForDistanceAtHeadingCommand activateHopper;
@@ -41,7 +44,8 @@ public class ShootFromHopperCommandGroup extends BaseCommandGroup {
     public ShootFromHopperCommandGroup(
             XPropertyManager propMan,
             SetRobotHeadingCommand setInitialHeading,
-            StartBothShootersCommandGroup startShooters,
+            DriveInfinitelyCommand nudgeIntoGear,
+            StaggerStartBothShootersCommandGroup startShooters,
             ShiftGearCommand shiftToHigh,
             ShiftGearCommand shiftToLow,
             DriveForDistanceAtHeadingCommand activateHopper,
@@ -63,7 +67,10 @@ public class ShootFromHopperCommandGroup extends BaseCommandGroup {
         blueHeadingToBoiler = propMan.createPersistentProperty("Blue heading to shoot at boiler", -102);
 
         shiftWaitTime = propMan.createPersistentProperty("Wait time after shift", 0.1);
-        rampDistance = propMan.createPersistentProperty("Ramp distance in auto", 30);
+        rampDistance = propMan.createPersistentProperty("Ramp distance in auto", -1);
+        nudgePower = propMan.createPersistentProperty("Nudge into gear power", -0.3);
+        nudgeTime = propMan.createPersistentProperty("Nudge into gear time", 0.1);
+
         
         shiftToHigh.setGear(Gear.HIGH_GEAR);
         addSequential(shiftToHigh, 0.1);
@@ -72,15 +79,18 @@ public class ShootFromHopperCommandGroup extends BaseCommandGroup {
         setInitialHeading.setHeadingToApply(blueAllianceStartingHeading.get()); 
         addSequential(setInitialHeading);
         
+        nudgeIntoGear.setDrivePowerProp(nudgePower);
+        addSequential(nudgeIntoGear, nudgeTime.get());
+        
         //addSequential(new TimeoutCommand(shiftWaitTime));
 
         startShooters.setTargetRange(TypicalShootingPosition.OffsetFromHopper);
-        addSequential(startShooters);
+        addParallel(startShooters);
         
         this.activateHopper = activateHopper;
         activateHopper.setTargetHeadingProp(blueHeadingToHopper);
         activateHopper.setTargetDistanceProp(distanceToTravelToHopper);
-        activateHopper.setRampDistanceProp(rampDistance);
+        //activateHopper.setRampDistanceProp(rampDistance);
         addSequential(activateHopper);
 
         shiftToLow.setGear(Gear.LOW_GEAR);

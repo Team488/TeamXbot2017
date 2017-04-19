@@ -1,23 +1,22 @@
-package competition.subsystems.shoot_fuel;
+package competition.subsystems.shooter_wheel.commands;
 
 import com.google.inject.Inject;
 
 import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootingPosition;
 import competition.subsystems.shooter_wheel.ShooterWheelsManagerSubsystem;
-import competition.subsystems.shooter_wheel.commands.RunShooterWheelsForRangeCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class StartBothShootersCommandGroup extends CommandGroup {
+public class StaggerStartBothShootersCommandGroup extends CommandGroup {
     protected TypicalShootingPosition range = TypicalShootingPosition.FlushToBoiler;
     
     protected final RunShooterWheelsForRangeCommand left;
     protected final RunShooterWheelsForRangeCommand right;
     
     @Inject
-    public StartBothShootersCommandGroup(ShooterWheelsManagerSubsystem wheelsManager) {
+    public StaggerStartBothShootersCommandGroup(ShooterWheelsManagerSubsystem wheelsManager) {
         
-        this.left = new RunShooterWheelsForRangeCommand(range, wheelsManager.getLeftShooter());
-        this.right = new RunShooterWheelsForRangeCommand(range, wheelsManager.getRightShooter());
+        this.left = new RunShooterWheelsForRangeCommand(range, wheelsManager.getLeftShooter(), 1);
+        this.right = new RunShooterWheelsForRangeCommand(range, wheelsManager.getRightShooter(), 4);
         
         this.addParallel(left);
         this.addParallel(right);

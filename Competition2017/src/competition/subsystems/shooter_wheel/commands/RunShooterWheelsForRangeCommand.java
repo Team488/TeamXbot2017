@@ -6,10 +6,19 @@ import competition.subsystems.shooter_wheel.ShooterWheelSubsystem.TypicalShootin
 public class RunShooterWheelsForRangeCommand extends BaseShooterWheelCommand {
     
     protected TypicalShootingPosition range;
+    protected final boolean isDelayed;
     
-    public RunShooterWheelsForRangeCommand(TypicalShootingPosition range, ShooterWheelSubsystem shooterWheelSubsystem) {
+    public RunShooterWheelsForRangeCommand(TypicalShootingPosition range, ShooterWheelSubsystem shooterWheelSubsystem, double delay) {
         super("RunShooterWheelsForRangeCommand", shooterWheelSubsystem);
         this.range = range;
+        
+        if(isDelayed = (delay > 0)) {
+            setTimeout(delay);
+        }
+    }
+    
+    public RunShooterWheelsForRangeCommand(TypicalShootingPosition range, ShooterWheelSubsystem shooterWheelSubsystem) {
+        this(range, shooterWheelSubsystem, 0);
     }
     
     public void setTargetRange(TypicalShootingPosition range) {
@@ -19,11 +28,15 @@ public class RunShooterWheelsForRangeCommand extends BaseShooterWheelCommand {
     @Override
     public void initialize() {
         log.info("Initializing");
-        shooterWheelSubsystem.runForRange(range);
+        if(!isDelayed || isTimedOut()) {
+            shooterWheelSubsystem.runForRange(range);
+        }
     }
 
     @Override
     public void execute() {
-        shooterWheelSubsystem.runForRange(range);
+        if(!isDelayed || isTimedOut()) {
+            shooterWheelSubsystem.runForRange(range);
+        }
     }
 }
