@@ -16,7 +16,7 @@ public class StaggerStartBothShootersCommandGroup extends CommandGroup {
     public StaggerStartBothShootersCommandGroup(ShooterWheelsManagerSubsystem wheelsManager) {
         
         this.left = new RunShooterWheelsForRangeCommand(range, wheelsManager.getLeftShooter(), 1);
-        this.right = new RunShooterWheelsForRangeCommand(range, wheelsManager.getRightShooter(), 4);
+        this.right = new RunShooterWheelsForRangeCommand(range, wheelsManager.getRightShooter(), 5);
         
         this.addParallel(left);
         this.addParallel(right);
