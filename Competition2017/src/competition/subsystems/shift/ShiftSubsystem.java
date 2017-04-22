@@ -22,6 +22,7 @@ public class ShiftSubsystem extends BaseSubsystem {
         log.info("Creating");
     
         this.solenoid = factory.getSolenoid(1);
+        this.solenoid.setInverted(true);
         gear = Gear.LOW_GEAR;
     }
     

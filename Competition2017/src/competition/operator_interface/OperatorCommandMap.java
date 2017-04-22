@@ -158,8 +158,8 @@ public class OperatorCommandMap {
        shiftLow.includeOnSmartDashboard("Shift low");
        shiftHigh.includeOnSmartDashboard("Shift high");
        
-       oi.leftButtons.getIfAvailable(1).whenPressed(shiftHigh);
-       oi.rightButtons.getIfAvailable(1).whenPressed(shiftLow);
+       oi.leftButtons.getIfAvailable(1).whenPressed(shiftLow);
+       oi.rightButtons.getIfAvailable(1).whenPressed(shiftHigh);
    }
     
     @Inject
