@@ -2,7 +2,6 @@ package competition;
 
 import org.junit.Ignore;
 
-import competition.networking.OffboardCommunicationServer;
 import competition.subsystems.pose.PoseSubsystem;
 import xbot.common.injection.BaseWPITest;
 import xbot.common.injection.UnitTestModule;
@@ -15,8 +14,6 @@ public class BaseTest extends BaseWPITest {
         @Override
         protected void configure() {
             super.configure();
-            
-            this.bind(OffboardCommunicationServer.class).to(MockOffboardCommServer.class);
         }
     }
     

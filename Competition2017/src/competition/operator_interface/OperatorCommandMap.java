@@ -16,18 +16,13 @@ import competition.subsystems.agitator.AgitatorsManagerSubsystem;
 import competition.subsystems.agitator.commands.EjectAgitatorCommand;
 import competition.subsystems.agitator.commands.IntakeAgitatorCommand;
 import competition.subsystems.agitator.commands.RunIntakeAgitatorIfWheelAtSpeedCommand;
-import competition.subsystems.autonomous.DriveToBoilerUsingHeuristicsWithVisionCommandGroup;
 import competition.subsystems.autonomous.selection.DisableAutonomousCommand;
 import competition.subsystems.autonomous.selection.SetupBreakBaselineCommand;
 import competition.subsystems.autonomous.selection.SetupDriveToCenterGear;
 import competition.subsystems.autonomous.selection.SetupDriveToHopperThenBoilerCommand;
-import competition.subsystems.autonomous.selection.SetupShootAndDriveAcrossBaseLineCommand;
-import competition.subsystems.climbing.commands.RopeAlignerCommand;
-import competition.subsystems.collector.CollectorSubsystem.Power;
+import competition.subsystems.autonomous.selection.SetupShootAndDriveAcrossBaseLineCommand;import competition.subsystems.collector.CollectorSubsystem.Power;
 import competition.subsystems.collector.commands.EjectCollectorCommand;
 import competition.subsystems.collector.commands.IntakeCollectorCommand;
-import competition.subsystems.vision.commands.DriveTowardBoilerWithVisionAndJoysticksCommand;
-import competition.subsystems.vision.commands.RotateRobotToBoilerCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.DriveToPointUsingHeuristicsCommand;
 import competition.subsystems.drive.commands.DriveToShootingRangeCommand;
@@ -273,18 +268,10 @@ public class OperatorCommandMap {
     @Inject
     public void setupVisionCommands(
             OperatorInterface oi,
-            RotateRobotToBoilerCommand rotateCommand,
-            DriveTowardBoilerWithVisionAndJoysticksCommand driverControlledBoilerApproachCommand,
-            DriveToBoilerUsingHeuristicsWithVisionCommandGroup driveToBoilerCommand,
             SetRobotHeadingCommand setBlueHeadingCommand,
             SetRobotHeadingCommand setRedHeadingCommand,
             RotateToHeadingCommand rotateToHeadingCommand
     )   {
-        oi.leftButtons.getIfAvailable(2).whileHeld(rotateCommand);
-        driverControlledBoilerApproachCommand.setControlJoystick(oi.leftJoystick);
-        oi.leftButtons.getIfAvailable(3).whileHeld(driverControlledBoilerApproachCommand);
-        oi.leftButtons.getIfAvailable(10).whileHeld(driveToBoilerCommand);
-
         setBlueHeadingCommand.setHeadingToApply(-135);
         setBlueHeadingCommand.includeOnSmartDashboard("Set heading to blue boiler orientation (-135)");
 

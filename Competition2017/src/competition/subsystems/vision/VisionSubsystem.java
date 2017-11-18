@@ -5,190 +5,189 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import competition.networking.NetworkedCommunicationServer;
-import competition.networking.OffboardCommPacket;
-import competition.networking.OffboardCommunicationServer;
+import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.pose.PoseSubsystem;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import json.JSONArray;
-import json.JSONObject;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XDigitalOutput;
 import xbot.common.injection.wpi_factories.WPIFactory;
+import xbot.common.math.Quaternion;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.can.CANInvalidBufferException;
+import edu.wpi.first.wpilibj.can.CANJNI;
+import edu.wpi.first.wpilibj.can.CANMessageNotAllowedException;
+import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
+import edu.wpi.first.wpilibj.can.CANNotInitializedException;
 
 @Singleton
 public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource {
     private static Logger log = Logger.getLogger(VisionSubsystem.class);
-    
-    private static final String targetSnapshotPacketType = "trackedTargetsSnapshot";
-    private static final String trackedLiftPegsProperty = "trackedLiftPegs";
-    private static final String trackedBoilersProperty = "trackedBoilers";
-    
-    OffboardCommunicationServer server;
-    List<DetectedLiftPeg> trackedLiftPegs = Collections.synchronizedList(new ArrayList<>());
-    List<DetectedBoiler> trackedBoilers = Collections.synchronizedList(new ArrayList<>());
 
-    private volatile double lastTimePacketRecieved = -1;
-    private volatile double lastPacketCounterResetTime = -1;
-    private volatile int numPacketsSinceReset = 0;
+    private static final double INCHES_TO_CM = 2.54;
+    
+    private DriveSubsystem driveSubsystem;
+    private PoseSubsystem poseSubsystem;
+    
+    private double lastTimePacketRecieved = -1;
+    private double lastPacketCounterResetTime = -1;
+    private int numPacketsSinceReset = 0;
 
-    private volatile boolean isConnected = false;
+    private boolean isConnected = false;
     
     private DoubleProperty connectionTimeoutThreshold;
     private DoubleProperty connectionReportInterval;
     
-    private DetectedBoiler sustainedBoiler = null;
-    private double sustainedBoilerTime = 0;
-    private DoubleProperty boilerSustainLengthProp;
-    
-    private DoubleProperty trackedBoilerXOffsetTelemetry;
-    private DoubleProperty trackedBoilerDistanceTelemetry;
-    
-    private DoubleProperty intrinsicCameraHorizontalOffset;
-    
     private BooleanProperty isGettingJetsonData;
-    
-    private XDigitalOutput trackedBoilerDigitalOut;
 
+    private static final int CAN_ARBID_ROOT = 0x1E040000;
+    private static final int CAN_ARBID_ROOT_MASK = 0xFFFF0000;
+    private static final int CAN_ARBID_ROOT_AND_SOURCE_MASK = 0xFFFFFF00;
+
+    private static final byte PACKET_TYPE_WHEEL_ODOM = 0x01;
+    private static final byte PACKET_TYPE_ORIENTATION = 0x02;
+
+    private Double lastWheelOdomSend = null;
+    private double lastLeftDriveDistance;
+    private double lastRightDriveDistance;
+    
     @Inject
-    public VisionSubsystem(WPIFactory factory, XPropertyManager propManager, OffboardCommunicationServer server) {
+    public VisionSubsystem(WPIFactory factory, XPropertyManager propManager, DriveSubsystem driveSubsystem, PoseSubsystem poseSubsystem) {
         log.info("Creating");
         
-        this.server = server;
-        server.setNewPacketHandler(packet -> handleCommPacket(packet));
-        server.start();
-        
-        log.info("Started server");
+        this.driveSubsystem = driveSubsystem;
+        this.poseSubsystem = poseSubsystem;
         
         connectionTimeoutThreshold = propManager.createPersistentProperty("Vision connection timeout threshold", 1);
         connectionReportInterval = propManager.createPersistentProperty("Vision telemetry report interval", 20);
         
-        trackedBoilerXOffsetTelemetry = propManager.createEphemeralProperty("Tracked boiler X offset", 0);
-        trackedBoilerDistanceTelemetry = propManager.createEphemeralProperty("Tracked boiler distance", 0);
-        
         isGettingJetsonData = propManager.createEphemeralProperty("Is getting Jetson data", false);
-        boilerSustainLengthProp = propManager.createEphemeralProperty("Tracked boiler sustain length", 0.1);
-        
-        intrinsicCameraHorizontalOffset = propManager.createPersistentProperty("Intrinsic horizontal camera offset", 0);
-    
-        trackedBoilerDigitalOut = factory.getDigitalOutput(0);
-    }
-    
-    public DetectedLiftPeg getTrackedLiftPeg() {
-        synchronized (trackedLiftPegs) {
-            return trackedLiftPegs.stream().filter(target -> target != null && target.isTracked).findFirst().orElse(null);
-        }
-    }
-
-    public DetectedBoiler getTrackedBoiler() {
-        synchronized (trackedBoilers) {
-            return trackedBoilers.stream().filter(target -> target != null && target.isTracked).findFirst().orElse(null);
-        }
-    }
-    
-    public DetectedBoiler getSustainedTrackedBoiler() {
-        DetectedBoiler trackedBoiler = getTrackedBoiler();
-        if(trackedBoiler != null) {
-            return trackedBoiler;
-        }
-        
-        if(sustainedBoiler != null && Timer.getFPGATimestamp() - sustainedBoilerTime < boilerSustainLengthProp.get()) {
-            return sustainedBoiler;
-        }
-        else {
-            return sustainedBoiler = null;
-        }
     }
     
     public boolean isConnected() {
         return isConnected;
     }
-
-    private void handleCommPacket(OffboardCommPacket packet) {
-        lastTimePacketRecieved = Timer.getFPGATimestamp();
-        numPacketsSinceReset++;
-
-        if (packet.packetType.equals(targetSnapshotPacketType)) {
-            synchronized(trackedLiftPegs) {
-                loadJsonArray(trackedLiftPegs, packet.payload, trackedLiftPegsProperty, jsonTarget -> {
-                    //CHECKSTYLE:OFF
-                    if(!(
-                            jsonTarget.has("pegOffsetX")
-                            && jsonTarget.has("pegOffsetY")
-                            && jsonTarget.has("isTracked"))) {
-                            return null;
-                    }
-                    //CHECKSTYLE:ON
-                    
-                    DetectedLiftPeg newTarget = new DetectedLiftPeg();
     
-                    newTarget.pegOffsetX = intrinsicCameraHorizontalOffset.get() + jsonTarget.getDouble("pegOffsetX");
-                    newTarget.pegOffsetY = jsonTarget.getDouble("pegOffsetY");
-                    newTarget.isTracked = jsonTarget.getBoolean("isTracked");
     
-                    return newTarget;
-                });
-            }
-
-            synchronized (trackedBoilers) {
-                loadJsonArray(trackedBoilers, packet.payload, trackedBoilersProperty, jsonTarget -> {
-                    //CHECKSTYLE:OFF
-                    if(!(
-                            jsonTarget.has("offsetX")
-                            && jsonTarget.has("targetAngleX")
-                            && jsonTarget.has("targetAngleY")
-                            && jsonTarget.has("isTracked")
-                            && jsonTarget.has("distance"))) {
-                            return null;
-                    }
-                    //CHECKSTYLE:ON
-                    
-                    DetectedBoiler newTarget = new DetectedBoiler();
-    
-                    newTarget.offsetX = intrinsicCameraHorizontalOffset.get() + jsonTarget.getDouble("offsetX");
-                    newTarget.targetAngleX = jsonTarget.getDouble("targetAngleX");
-                    newTarget.targetAngleY = jsonTarget.getDouble("targetAngleY");
-                    newTarget.isTracked = jsonTarget.getBoolean("isTracked");
-    
-                    newTarget.distance = jsonTarget.getDouble("distance");
-    
-                    return newTarget;
-                });
-            }
-            
-
-            sustainedBoiler = getTrackedBoiler();
-            sustainedBoilerTime = Timer.getFPGATimestamp();
-        }
+    public void sendRaw(byte packetType, byte[] data) {
+        int arbitrationId = CAN_ARBID_ROOT;
+        arbitrationId |= 1 << 8; // This packet came from the RIO
+        arbitrationId |= packetType;
+        
+        ByteBuffer buffer = ByteBuffer.allocateDirect(data.length);
+        buffer.put(data);
+        CANJNI.FRCNetCommCANSessionMuxSendMessage(arbitrationId, buffer, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
     }
 
-    private <T> void loadJsonArray(List<T> outList, JSONObject payload, String jsonKey,
-            Function<JSONObject, T> objectParser) {
-        outList.clear();
-        if (payload.has(jsonKey)) {
-            JSONArray jsonTargets = payload.getJSONArray(jsonKey);
-            for (Object targetObj : jsonTargets) {
-                if (JSONObject.class.isInstance(targetObj)) {
-                    T newValue = objectParser.apply((JSONObject) targetObj);
-                    if(newValue != null) {
-                        outList.add(newValue);
-                    }
-                }
-            }
+    public class CustomCanPacket {
+        public final byte packetType;
+        public final byte[] data;
+        
+        public CustomCanPacket(byte packetType, byte[] data) {
+            this.packetType = packetType;
+            this.data = data;
         }
+    }
+    
+    public CustomCanPacket receiveRaw() {
+        ByteBuffer messageIdBuffer = ByteBuffer.allocateDirect(4);
+        messageIdBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        IntBuffer messageIdIntBuffer = messageIdBuffer.asIntBuffer();
+        messageIdIntBuffer.put(CAN_ARBID_ROOT);
+        
+        // A buffer is required, but we don't care about the timestamp value.
+        ByteBuffer timeStamp = ByteBuffer.allocateDirect(4);
+                
+        try {
+            ByteBuffer resultBuf = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(messageIdIntBuffer, CAN_ARBID_ROOT_AND_SOURCE_MASK, timeStamp);
+            
+            byte[] resultBytes = new byte[resultBuf.remaining()];
+            resultBuf.get(resultBytes);
+            
+            int messageId = messageIdIntBuffer.get();
+            byte packetType = (byte)(messageId & (~CAN_ARBID_ROOT_AND_SOURCE_MASK));
+            
+            return new CustomCanPacket(packetType,  resultBytes);
+        }
+        catch (CANMessageNotFoundException e) {
+            return null;
+        }
+        catch(CANInvalidBufferException|CANMessageNotAllowedException|CANNotInitializedException ex) {
+            log.error("Exception encountered while receiving from CAN device", ex);
+            return null;
+        }
+    }
+    
+    public static byte[] packWheelOdomFrame(double leftDriveDelta, double rightDriveDelta, double timeDelta) {
+        short leftDriveDeltaInteger = (short)(leftDriveDelta * 1_000);
+        short rightDriveDeltaInteger = (short)(rightDriveDelta * 1_000);
+        // TODO: check for time overflow
+        short timeDeltaInteger = (short)(timeDelta * 10_000);
+        
+        return new byte[] {
+            (byte)(leftDriveDeltaInteger >>> 8),
+            (byte)(leftDriveDeltaInteger & 0xFF),
+            (byte)(rightDriveDeltaInteger >>> 8),
+            (byte)(rightDriveDeltaInteger & 0xFF),
+            (byte)(timeDeltaInteger >>> 8),
+            (byte)(timeDeltaInteger & 0xFF)
+        };
+    }
+    
+    public static byte[] packOrientationFrame(float w, float x, float y, float z) {
+        short wInteger = (short)(w * 10_000);
+        short xInteger = (short)(x * 10_000);
+        short yInteger = (short)(y * 10_000);
+        short zInteger = (short)(z * 10_000);
+        
+        return new byte[] {
+            (byte)(wInteger >>> 8),
+            (byte)(wInteger & 0xFF),
+            (byte)(xInteger >>> 8),
+            (byte)(xInteger & 0xFF),
+            (byte)(yInteger >>> 8),
+            (byte)(yInteger & 0xFF),
+            (byte)(zInteger >>> 8),
+            (byte)(zInteger & 0xFF)
+        };
+    }
+    
+    private void sendWheelOdomUpdate() {
+        final double timestamp = Timer.getFPGATimestamp();
+        
+        double leftDriveDistance = this.driveSubsystem.getLeftDistanceInInches();
+        double rightDriveDistance = this.driveSubsystem.getRightDistanceInInches();
+        
+        double leftDriveDelta = (leftDriveDistance - lastLeftDriveDistance) * INCHES_TO_CM;
+        double rightDriveDelta = (rightDriveDistance - lastRightDriveDistance) * INCHES_TO_CM;
+        
+        double timeDelta = timestamp - lastWheelOdomSend;
+        lastWheelOdomSend = timestamp;
+        
+        sendRaw(PACKET_TYPE_WHEEL_ODOM, packWheelOdomFrame(leftDriveDelta, rightDriveDelta, timeDelta));
+    }
+    
+    private void sendOrientationUpdate() {
+        Quaternion orientation = poseSubsystem.getImuOrientationQuaternion();
+        sendRaw(PACKET_TYPE_ORIENTATION, packOrientationFrame(orientation.w, orientation.x, orientation.y, orientation.z));
     }
 
     @Override
     public void updatePeriodicData() {
+        sendWheelOdomUpdate();
+        sendOrientationUpdate();
+        /*
         double timeSinceLastPacket = lastTimePacketRecieved >= 0 ? Timer.getFPGATimestamp() - lastTimePacketRecieved : 0;
         
         if(timeSinceLastPacket > 0 && timeSinceLastPacket <= connectionTimeoutThreshold.get()) {
@@ -216,12 +215,6 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
             isConnected = false;
             isGettingJetsonData.set(false);
         }
-        
-        DetectedBoiler trackedBoiler = getSustainedTrackedBoiler();
-        // The receiving Arduino has a pull-up resistor configured, so we use
-        // "low" to represent a detected boiler.
-        trackedBoilerDigitalOut.set(!isConnected || trackedBoiler == null);
-        trackedBoilerXOffsetTelemetry.set(trackedBoiler == null ? 0 : trackedBoiler.offsetX);
-        trackedBoilerDistanceTelemetry.set(trackedBoiler == null ? 0 : trackedBoiler.distance);
+        */
     }
 }
