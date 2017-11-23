@@ -133,6 +133,7 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
         short leftDriveDeltaInteger = (short)(leftDriveDelta * 1_000);
         short rightDriveDeltaInteger = (short)(rightDriveDelta * 1_000);
         // TODO: check for time overflow
+        // TODO: unsigned
         short timeDeltaInteger = (short)(timeDelta * 10_000);
         
         return new byte[] {
