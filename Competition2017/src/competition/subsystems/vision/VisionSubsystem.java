@@ -173,6 +173,9 @@ public class VisionSubsystem extends BaseSubsystem implements PeriodicDataSource
         double leftDriveDelta = (leftDriveDistance - lastLeftDriveDistance) * INCHES_TO_CM;
         double rightDriveDelta = (rightDriveDistance - lastRightDriveDistance) * INCHES_TO_CM;
         
+        if (lastWheelOdomSend == null) {
+            lastWheelOdomSend = timestamp;
+        }
         double timeDelta = timestamp - lastWheelOdomSend;
         lastWheelOdomSend = timestamp;
         
