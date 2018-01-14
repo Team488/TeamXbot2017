@@ -7,13 +7,16 @@ import competition.subsystems.offboard.packets.CommandFinishedPacket;
 import xbot.common.command.BaseCommand;
 
 public abstract class OffboardProcessingCommand extends BaseCommand {
-    
     protected final int commandId;
     protected final OffboardInterfaceSubsystem subsystem;
     
     private boolean isRemoteFinished = false;
     
-    private OffboardProcessingCommand(int commandId, OffboardInterfaceSubsystem subsystem) {
+    protected OffboardProcessingCommand(int commandId, OffboardInterfaceSubsystem subsystem) {
+        if(commandId <= 0 || commandId > 255) {
+            throw new IllegalArgumentException("Command ID must be a valid nonzero unsigned byte value");
+        }
+        
         this.commandId = commandId;
         this.subsystem = subsystem;
         

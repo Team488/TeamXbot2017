@@ -52,12 +52,16 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
         double timeDelta = timestamp - lastWheelOdomSend;
         lastWheelOdomSend = timestamp;
         
-        rawCommsInterface.sendRaw(OffboardCommsConstants.PACKET_TYPE_WHEEL_ODOM, OffboardFramePackingUtils.packWheelOdomFrame(leftDriveDelta, rightDriveDelta, timeDelta));
+        rawCommsInterface.sendRaw(
+                OffboardCommsConstants.PACKET_TYPE_WHEEL_ODOM,
+                OffboardFramePackingUtils.packWheelOdomFrame(leftDriveDelta, rightDriveDelta, timeDelta));
     }
     
     private void sendOrientationUpdate() {
         Quaternion orientation = poseSubsystem.getImuOrientationQuaternion();
-        rawCommsInterface.sendRaw(OffboardCommsConstants.PACKET_TYPE_ORIENTATION, OffboardFramePackingUtils.packOrientationFrame(orientation.w, orientation.x, orientation.y, orientation.z));
+        rawCommsInterface.sendRaw(
+                OffboardCommsConstants.PACKET_TYPE_ORIENTATION,
+                OffboardFramePackingUtils.packOrientationFrame(orientation.w, orientation.x, orientation.y, orientation.z));
     }
     
     private void sendHeadingUpdate() {
