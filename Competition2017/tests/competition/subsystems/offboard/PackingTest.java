@@ -1,15 +1,16 @@
-package competition.subsystems.vision;
+package competition.subsystems.offboard;
 
 import static org.junit.Assert.assertArrayEquals;
 
 import org.junit.Test;
 
 import competition.BaseTest;
+import competition.subsystems.offboard.OffboardInterfaceSubsystem;
 
 public class PackingTest extends BaseTest {
     @Test
     public void testWheelOdomSmallPositiveValues() {
-       byte[] result = VisionSubsystem.packWheelOdomFrame(5, 7, 2);
+       byte[] result = OffboardFramePackingUtils.packWheelOdomFrame(5, 7, 2);
        
        assertArrayEquals(new byte[] {
            // 5 * 1,000
@@ -26,7 +27,7 @@ public class PackingTest extends BaseTest {
     
     @Test
     public void testWheelOdomFractionalPositiveValues() {
-       byte[] result = VisionSubsystem.packWheelOdomFrame(0.5, 0.07, 0.002);
+       byte[] result = OffboardFramePackingUtils.packWheelOdomFrame(0.5, 0.07, 0.002);
        
        assertArrayEquals(new byte[] {
            // 0.5 * 1,000
@@ -43,7 +44,7 @@ public class PackingTest extends BaseTest {
     
     @Test
     public void testWheelOdomSmallNegativeValues() {
-       byte[] result = VisionSubsystem.packWheelOdomFrame(-5, -7, 2);
+       byte[] result = OffboardFramePackingUtils.packWheelOdomFrame(-5, -7, 2);
        
        assertArrayEquals(new byte[] {
            // -5 * 1,000 (two's complement)

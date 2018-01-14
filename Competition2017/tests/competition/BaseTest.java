@@ -2,10 +2,10 @@ package competition;
 
 import org.junit.Ignore;
 
-import competition.subsystems.pose.PoseSubsystem;
+import competition.subsystems.offboard.MockOffboardCommsInterface;
+import competition.subsystems.offboard.XOffboardCommsInterface;
 import xbot.common.injection.BaseWPITest;
 import xbot.common.injection.UnitTestModule;
-import xbot.common.subsystems.pose.BasePoseSubsystem;
 
 @Ignore
 public class BaseTest extends BaseWPITest {
@@ -14,6 +14,7 @@ public class BaseTest extends BaseWPITest {
         @Override
         protected void configure() {
             super.configure();
+            super.bind(XOffboardCommsInterface.class).to(MockOffboardCommsInterface.class);
         }
     }
     
