@@ -31,6 +31,7 @@ import competition.subsystems.drive.commands.ResistMovementCommand;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
 import competition.subsystems.drive.commands.TogglePrecisionMode;
+import competition.subsystems.offboard.commands.AcquireVisibleCubeCommand;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shoot_fuel.SidedFireTracerRoundsCommandGroup;
@@ -71,76 +72,13 @@ public class OperatorCommandMap {
     @Inject
     public void setupClimbingCommands(
             OperatorInterface oi,
-            AscendClimbingCommand ascend)   
+            AcquireVisibleCubeCommand ascend)   
     {
         oi.controller.getXboxButton(XboxButton.X).whileHeld(ascend);
         
         //oi.operatorPanelButtons.getifAvailable(4).whileHeld(ascend);
     }
 
-    @Inject
-    public void setupShooterWheelCommands(
-            OperatorInterface oi,
-            ShooterWheelsManagerSubsystem shooterWheelsManagerSubsystem,
-            LeftShootFuelCommandGroup shootLeft,
-            RightShootFuelCommandGroup shootRight,
-            XPropertyManager propMan,
-            PIDFactory pidFactory
-            )
-    {
-        ShooterWheelSubsystem leftWheel = shooterWheelsManagerSubsystem.getLeftShooter();
-        ShooterWheelSubsystem rightWheel = shooterWheelsManagerSubsystem.getRightShooter();
-        
-        RunShooterWheelUsingPowerCommand runLeftPower = new RunShooterWheelUsingPowerCommand(
-                leftWheel);
-        RunShooterWheelUsingPowerCommand runRightPower = new RunShooterWheelUsingPowerCommand(
-                rightWheel);
-        
-        TrimShooterWheelCommand leftUp = new TrimShooterWheelCommand(leftWheel, propMan);
-        leftUp.setTrimDirection(TrimDirection.Up);
-        TrimShooterWheelCommand rightUp = new TrimShooterWheelCommand(rightWheel, propMan);
-        rightUp.setTrimDirection(TrimDirection.Up);
-        
-        TrimShooterWheelCommand leftDown = new TrimShooterWheelCommand(leftWheel, propMan);
-        leftUp.setTrimDirection(TrimDirection.Down);
-        TrimShooterWheelCommand rightDown = new TrimShooterWheelCommand(rightWheel, propMan);
-        rightUp.setTrimDirection(TrimDirection.Down);
-        
-        RunShooterWheelsForRangeCommand runLeftWheel = 
-                new RunShooterWheelsForRangeCommand(
-                        TypicalShootingPosition.FlushToBoiler,
-                        shooterWheelsManagerSubsystem.getLeftShooter());
-        
-        RunShooterWheelsForRangeCommand runRightWheel = 
-                new RunShooterWheelsForRangeCommand(
-                        TypicalShootingPosition.FlushToBoiler,
-                        shooterWheelsManagerSubsystem.getRightShooter());
-        
-        oi.controller.getXboxButton(XboxButton.LeftTrigger).whileHeld(runLeftWheel);
-        oi.controller.getXboxButton(XboxButton.RightTrigger).whileHeld(runRightWheel);
-        
-        runLeftPower.includeOnSmartDashboard("Run shooter wheel using power - left");
-        runRightPower.includeOnSmartDashboard("Run shooter wheel using power - right");
-        
-        oi.operatorPanelButtons.getIfAvailable(9).whenPressed(leftUp);
-        oi.operatorPanelButtons.getIfAvailable(8).whenPressed(leftDown);
-        
-        oi.operatorPanelButtons.getIfAvailable(7).whenPressed(rightUp);
-        oi.operatorPanelButtons.getIfAvailable(6).whenPressed(rightDown);
-        
-        RunShooterWheelsForRangeVirtualThrottleCommand runVirtualThrottleLeft = new RunShooterWheelsForRangeVirtualThrottleCommand(
-                TypicalShootingPosition.FlushToBoiler,
-                shooterWheelsManagerSubsystem.getLeftShooter(),
-                pidFactory
-                );
-        RunShooterWheelsForRangeVirtualThrottleCommand runVirtualThrottleRight = new RunShooterWheelsForRangeVirtualThrottleCommand(
-                TypicalShootingPosition.FlushToBoiler,
-                shooterWheelsManagerSubsystem.getRightShooter(),
-                pidFactory
-                );
-        runVirtualThrottleLeft.includeOnSmartDashboard("Run shooter wheel using virtual throttle - left");
-        runVirtualThrottleRight.includeOnSmartDashboard("Run shooter wheel using virtual throttle - right");
-    }
     
    @Inject
    public void setupShiftCommand(

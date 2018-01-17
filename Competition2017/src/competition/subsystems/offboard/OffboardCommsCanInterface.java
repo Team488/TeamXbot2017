@@ -29,7 +29,6 @@ public class OffboardCommsCanInterface implements XOffboardCommsInterface {
         ByteBuffer messageIdBuffer = ByteBuffer.allocateDirect(4);
         messageIdBuffer.order(ByteOrder.LITTLE_ENDIAN);
         IntBuffer messageIdIntBuffer = messageIdBuffer.asIntBuffer();
-        messageIdIntBuffer.put(OffboardCommsConstants.CAN_ARBID_ROOT);
         
         // A buffer is required, but we don't care about the timestamp value.
         ByteBuffer timeStamp = ByteBuffer.allocateDirect(4);
