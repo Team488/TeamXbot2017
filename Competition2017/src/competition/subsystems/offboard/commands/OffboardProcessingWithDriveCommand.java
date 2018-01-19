@@ -25,7 +25,7 @@ public abstract class OffboardProcessingWithDriveCommand extends OffboardProcess
                 this.driveSubsystem.tankDrivePowerMode(drivePacket.leftPower, drivePacket.rightPower);
             }
             else {
-                log.warn("Received \"drive command\" packet for command which is not currently running!");
+                log.warn("Received \"drive command\" packet for command which is not currently running! Command ID: " + drivePacket.commandId);
             }
         }
         else {

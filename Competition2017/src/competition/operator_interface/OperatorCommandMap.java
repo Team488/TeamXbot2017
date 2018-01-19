@@ -7,6 +7,7 @@ import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.pose.commands.ResetDistanceCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 import xbot.common.command.SmartDashboardCommandPutter;
+import xbot.common.controls.sensors.AdvancedXboxButton;
 import xbot.common.controls.sensors.XXboxController.XboxButton;
 import xbot.common.math.PIDFactory;
 import xbot.common.properties.DoubleProperty;
@@ -32,6 +33,8 @@ import competition.subsystems.drive.commands.RotateToHeadingCommand;
 import competition.subsystems.drive.commands.TankDriveWithGamePadCommand;
 import competition.subsystems.drive.commands.TogglePrecisionMode;
 import competition.subsystems.offboard.commands.AcquireVisibleCubeCommand;
+import competition.subsystems.offboard.commands.OffboardIdleCommand;
+import competition.subsystems.offboard.commands.SingleRunNeverFinishCommand;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftGearCommand;
 import competition.subsystems.shoot_fuel.SidedFireTracerRoundsCommandGroup;
@@ -72,9 +75,10 @@ public class OperatorCommandMap {
     @Inject
     public void setupClimbingCommands(
             OperatorInterface oi,
-            AcquireVisibleCubeCommand ascend)   
+            SingleRunNeverFinishCommand c)   
     {
-        oi.controller.getXboxButton(XboxButton.X).whileHeld(ascend);
+        AdvancedXboxButton button = oi.controller.getXboxButton(XboxButton.X);
+        button.whileHeld(c);
         
         //oi.operatorPanelButtons.getifAvailable(4).whileHeld(ascend);
     }
